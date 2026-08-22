@@ -1,0 +1,37 @@
+import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
+
+const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-jwt-key';
+
+export interface AuthRequest extends Request {
+  user?: {
+    userId: number;
+    email: string;
+  };
+  workspaceId?: number;
+}
+
+export const requireAuth = (req: AuthRequest, res: Response, next: NextFunction): void => {
+  const authHeader = req.headers.authorization;
+  
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    res.status(401).json({ error: 'Unauthorized: No token provided' });
+    return;
+  }
+
+  const token = authHeader.split(' ')[1];
+  
+  if (!token) {
+    res.status(401).json({ error: 'Unauthorized: Malformed token' });
+    return;
+  }
+
+  try {
+    const secretKey = process.env.JWT_SECRET ? String(process.env.JWT_SECRET) : 'your-super-secret-jwt-key';
+    const decoded = jwt.verify(token, secretKey) as unknown as { userId: number; email: string };
+    req.user = decoded;
+    next();
+  } catch (error) {
+    res.status(401).json({ error: 'Unauthorized: Invalid token' });
+  }
+};

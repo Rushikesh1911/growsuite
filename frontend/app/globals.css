@@ -1,26 +1,299 @@
 @import "tailwindcss";
 
+/* ─── Design Tokens ──────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Base palette */
+  --gs-bg: #FAFAF8;
+  --gs-bg-alt: #F5F5F0;
+  --gs-surface: #FFFFFF;
+  --gs-surface-raised: #F9F9F6;
+  --gs-border: rgba(0, 0, 0, 0.08);
+  --gs-border-strong: rgba(0, 0, 0, 0.14);
+  --gs-fg: #0F0F0F;
+  --gs-fg-secondary: #3D3D3D;
+  --gs-muted: #8A8A8A;
+  --gs-muted-light: #AFAFAF;
+
+  /* ── GrowSuite brand identity ── */
+  --gs-accent: #0F0F0F;          /* primary action */
+  --gs-accent-hover: #222222;
+  --gs-indigo: #0F0F0F;          /* interactive / focus accent */
+  --gs-indigo-bg: #F5F5F0;       /* pure minimal gray */
+  --gs-indigo-muted: rgba(0,0,0,0.06);
+
+  /* Dark surfaces (stats / footer) */
+  --gs-dark-bg: #080808;
+  --gs-dark-surface: #111111;
+  --gs-dark-border: rgba(255, 255, 255, 0.07);
+  --gs-dark-muted: #6B6B6B;
+
+  /* Motion system */
+  --gs-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --gs-ease-out: cubic-bezier(0.0, 0.0, 0.2, 1);
+  --gs-duration-fast: 150ms;
+  --gs-duration-base: 200ms;
+  --gs-duration-slow: 400ms;
+
+  /* Legacy compat */
+  --background: var(--gs-bg);
+  --foreground: var(--gs-fg);
+  --secondary: var(--gs-surface-raised);
+  --muted: var(--gs-muted);
+  --border: var(--gs-border);
+  --hover: var(--gs-bg-alt);
+  --active: #EFEFEF;
+}
+
+/* ─── Notion Dark Theme (Post-Auth) ──────────────────────── */
+.dark-theme {
+  --gs-bg: #000000;
+  --gs-bg-alt: #0A0A0A;
+  --gs-surface: #000000;
+  --gs-surface-raised: #111111;
+  --gs-border: #222222;
+  --gs-border-strong: #333333;
+  --gs-fg: #EDEDED;
+  --gs-fg-secondary: #A3A3A3;
+  --gs-muted: #888888;
+  --gs-muted-light: #666666;
+
+  --gs-accent: #FFFFFF;
+  --gs-accent-hover: #E0E0E0;
+  --gs-indigo: #FFFFFF;
+  --gs-indigo-bg: #111111;
+  --gs-indigo-muted: rgba(255, 255, 255, 0.08);
+
+  --background: var(--gs-bg);
+  --foreground: var(--gs-fg);
+  --secondary: var(--gs-surface-raised);
+  --muted: var(--gs-muted);
+  --border: var(--gs-border);
+  --hover: var(--gs-bg-alt);
+  --active: #3F3F3F;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--gs-bg);
+  --color-foreground: var(--gs-fg);
+  --color-secondary: var(--gs-surface-raised);
+  --color-muted: var(--gs-muted);
+  --color-border: var(--gs-border);
+  --color-hover: var(--gs-bg-alt);
+  --color-active: var(--active);
+  --font-sans: var(--font-geist-sans), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ─── Base ───────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--gs-bg);
+  color: var(--gs-fg);
+  font-family: var(--font-geist-sans), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+/* ─── Scrollbar ──────────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.2); }
+
+/* ─── Keyframes ──────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes tabProgress {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50%       { opacity: 0.8; transform: scale(1.05); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ─── Animation Utilities ────────────────────────────────── */
+.animate-fade-up {
+  animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.animate-fade-in {
+  animation: fadeIn 0.4s ease both;
+}
+.animate-scale-in {
+  animation: scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.animate-marquee {
+  animation: marquee 28s linear infinite;
+}
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+.animate-spin-slow {
+  animation: spin-slow 20s linear infinite;
+}
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+/* Staggered delays */
+.delay-100 { animation-delay: 0.10s; }
+.delay-200 { animation-delay: 0.20s; }
+.delay-300 { animation-delay: 0.30s; }
+.delay-400 { animation-delay: 0.40s; }
+.delay-500 { animation-delay: 0.50s; }
+.delay-600 { animation-delay: 0.60s; }
+.delay-700 { animation-delay: 0.70s; }
+
+/* ─── Glass Morphism ──────────────────────────────────────── */
+.glass {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.glass-dark {
+  background: rgba(10, 10, 10, 0.82);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ─── Glow Orb ───────────────────────────────────────────── */
+.glow-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+/* ─── Gradient Border Card ───────────────────────────────── */
+.gradient-border {
+  position: relative;
+  background: #FFFFFF;
+}
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.04) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* ─── Shimmer Loading ────────────────────────────────────── */
+.shimmer {
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.6) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+/* ─── Noise Texture ──────────────────────────────────────── */
+.noise-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+/* ─── Focus Ring — GrowSuite indigo ─────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--gs-indigo);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ─── Selection ──────────────────────────────────────────── */
+::selection {
+  background: var(--gs-indigo-muted);
+  color: var(--gs-fg);
+}
+
+/* ─── GrowSuite Interactive System ──────────────────────── */
+
+/* Uniform card hover — 2px lift + shadow increase */
+.gs-card-hover {
+  transition: transform var(--gs-duration-base) var(--gs-ease-out),
+              box-shadow var(--gs-duration-base) var(--gs-ease-out),
+              border-color var(--gs-duration-fast) var(--gs-ease-out);
+}
+.gs-card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.08);
+  border-color: rgba(0,0,0,0.11);
+}
+
+/* Button micro-lift */
+.gs-btn {
+  transition: background var(--gs-duration-fast) var(--gs-ease-out),
+              box-shadow var(--gs-duration-fast) var(--gs-ease-out),
+              transform var(--gs-duration-fast) var(--gs-ease-out);
+}
+.gs-btn:hover  { transform: translateY(-1px); }
+.gs-btn:active { transform: translateY(0) scale(0.98); }
+
+/* Link / nav transition — color only, no bg flash */
+.gs-link {
+  transition: color var(--gs-duration-fast) var(--gs-ease-out);
+}
+
+/* Horizontal rule motif — GrowSuite signature divider */
+.gs-rule {
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(0,0,0,0.07) 20%, rgba(0,0,0,0.07) 80%, transparent);
 }
