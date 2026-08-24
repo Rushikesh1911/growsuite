@@ -16,7 +16,7 @@ export class RazorpayController {
     try {
       // 1. Fetch the invoice and the workspace's razorpay keys
       const invoice = await prisma.invoice.findUnique({
-        where: { id: parseInt(invoiceId) },
+        where: { id: parseInt(invoiceId as string) },
         include: { workspace: true, client: true }
       });
 

@@ -186,7 +186,7 @@ export class ProjectController {
   static async updateProject(req: AuthRequest, res: Response) {
     try {
       const workspaceId = req.workspaceId!;
-      const projectId = parseInt(req.params.id, 10);
+      const projectId = parseInt(req.params.id as string, 10);
       const { name, description, status, deadline, clientId } = req.body;
 
       if (isNaN(projectId)) {
@@ -229,7 +229,13 @@ export class ProjectController {
         }
       });
 
-      ActivityService.logActivity(workspaceId, req.userId!, "UPDATED_PROJECT", `Updated project: ${updatedProject.name}`);
+      ActivityService.logActivity({
+        workspaceId,
+        actorId: (req.user as any)?.userId,
+        action: "UPDATED_PROJECT",
+        title: `Updated project: ${updatedProject.name}`,
+        projectId: updatedProject.id
+      });
 
       res.json(updatedProject);
     } catch (error) {

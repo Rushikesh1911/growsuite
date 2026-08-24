@@ -513,7 +513,7 @@ export class LeadController {
   static async addNote(req: AuthRequest, res: Response) {
     try {
       const workspaceId = req.workspaceId!;
-      const leadId = parseInt(req.params.id);
+      const leadId = parseInt(req.params.id as string);
       const { content } = req.body;
       const userId = (req.user as any)?.userId;
 
@@ -588,8 +588,7 @@ export class LeadController {
         company: lead.company || lead.Company || null,
         email: lead.email || lead.Email || null,
         phone: lead.phone || lead.Phone || null,
-        source: lead.source || lead.Source || 'Import',
-        status: 'NEW',
+        status: LeadStatus.NEW,
       }));
 
       const result = await prisma.lead.createMany({

@@ -149,9 +149,14 @@ export function TaskDrawer({ isOpen, onClose, task, onUpdate }: TaskDrawerProps)
 
             <div className="flex flex-col gap-1.5">
               <span className="text-[12px] font-semibold text-[var(--gs-muted)]">Due Date</span>
-              <div className="flex items-center gap-2 text-[13px] text-[var(--gs-fg)] font-medium hover:bg-[var(--gs-bg-alt)] p-1 -ml-1 rounded transition-colors cursor-pointer">
+              <div className="flex items-center gap-2 text-[13px] text-[var(--gs-fg)] font-medium">
                 <Calendar className="h-4 w-4 text-[var(--gs-muted)]" />
-                {task.dueDate ? new Date(task.dueDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : "No due date"}
+                <input 
+                  type="date"
+                  value={task.dueDate ? new Date(task.dueDate).toISOString().split('T')[0] : ""}
+                  onChange={(e) => onUpdate(task.id, { dueDate: e.target.value ? new Date(e.target.value).toISOString() : null })}
+                  className="bg-transparent border border-transparent hover:border-[var(--gs-border)] focus:border-[var(--gs-fg)] rounded p-1 text-[13px] text-[var(--gs-fg)] font-medium outline-none cursor-pointer transition-colors"
+                />
               </div>
             </div>
 

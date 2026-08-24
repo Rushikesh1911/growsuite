@@ -5,7 +5,7 @@ import { PrismaClient } from '../../generated/prisma';
 const prisma = new PrismaClient();
 
 export class CalendarController {
-  // Get all time-sensitive items (Tasks, Invoices) to display on the calendar board
+  // Get all time-sensitive items (Tasks, Invoices, Projects) to display on the calendar board
   static async getCalendarEvents(req: AuthRequest, res: Response) {
     try {
       const workspaceId = req.workspaceId!;
@@ -34,6 +34,18 @@ export class CalendarController {
         }
       });
 
+      // Fetch active projects with deadlines
+      const projects = await prisma.project.findMany({
+        where: {
+          workspaceId,
+          deadline: { not: null },
+          status: { notIn: ['COMPLETED', 'CANCELLED'] }
+        },
+        include: {
+          client: { select: { name: true } }
+        }
+      });
+
       // Format them into a generic "Event" structure for the frontend Kanban
       const events = [
         ...tasks.map(t => ({
@@ -55,8 +67,19 @@ export class CalendarController {
           metadata: {
             amount: Number(i.balanceDue)
           }
+        })),
+        ...projects.map(p => ({
+          id: `project_${p.id}`,
+          type: 'PROJECT',
+          title: `Project: ${p.name}`,
+          description: p.client?.name || 'Internal',
+          date: p.deadline,
+          metadata: {}
         }))
       ];
+
+      // Sort events chronologically
+      events.sort((a, b) => new Date(a.date!).getTime() - new Date(b.date!).getTime());
 
       res.json(events);
     } catch (error) {

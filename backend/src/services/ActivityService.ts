@@ -1,4 +1,6 @@
-import { Prisma } from '../../generated/prisma';
+import { Prisma, PrismaClient } from '../../generated/prisma';
+
+const prisma = new PrismaClient();
 
 interface CreateActivityParams {
   action: string;
@@ -38,5 +40,14 @@ export class ActivityService {
       ...(params.invoiceId && { invoice: { connect: { id: params.invoiceId } } }),
       ...(params.paymentId && { payment: { connect: { id: params.paymentId } } }),
     };
+  }
+
+  /**
+   * Directly creates an activity log in the database.
+   */
+  static async logActivity(params: CreateActivityParams) {
+    return prisma.activityLog.create({
+      data: this.generateLog(params),
+    });
   }
 }

@@ -213,7 +213,7 @@ export class DealController {
   static async addNote(req: AuthRequest, res: Response) {
     try {
       const workspaceId = req.workspaceId!;
-      const dealId = parseInt(req.params.id);
+      const dealId = parseInt(req.params.id as string);
       const { content } = req.body;
       const userId = (req.user as any)?.userId;
 
