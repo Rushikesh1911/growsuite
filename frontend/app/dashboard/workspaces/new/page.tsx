@@ -68,18 +68,18 @@ export default function CreateWorkspacePage() {
   };
 
   return (
-    <div className="flex-1 w-full min-h-screen bg-[#000000] flex flex-col items-center justify-center p-4 relative overflow-hidden">
+    <div className="flex-1 w-full min-h-screen bg-[var(--gs-bg)] flex flex-col items-center justify-center p-4 relative overflow-hidden">
       
       {/* Background gradients */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[#222222] rounded-full blur-[120px] opacity-20 pointer-events-none" />
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[var(--gs-border)] rounded-full blur-[120px] opacity-20 pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-[#1A1A1A] rounded-full blur-[120px] opacity-20 pointer-events-none" />
 
       {/* Brand Logo */}
       <div className="absolute top-8 left-8 flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity z-10" onClick={() => router.push("/dashboard")}>
-        <div className="h-8 w-8 bg-[#EDEDED] rounded-lg flex items-center justify-center">
-          <Command className="h-4 w-4 text-[#000000]" />
+        <div className="h-8 w-8 bg-[var(--gs-fg)] rounded-lg flex items-center justify-center">
+          <Command className="h-4 w-4 text-[var(--gs-bg)]" />
         </div>
-        <span className="text-lg font-bold text-[#EDEDED] tracking-tight">GrowSuite</span>
+        <span className="text-lg font-bold text-[var(--gs-fg)] tracking-tight">GrowSuite</span>
       </div>
 
       <div className="w-full max-w-[480px] animate-in fade-in slide-in-from-bottom-4 duration-500 z-10">
@@ -87,28 +87,28 @@ export default function CreateWorkspacePage() {
         {step === 1 && (
           <>
             <div className="flex flex-col mb-8 gap-2">
-              <div className="text-[12px] font-bold tracking-wider text-[#666666] uppercase mb-1">Workspace / Create</div>
-              <h1 className="text-2xl font-bold text-[#EDEDED] tracking-tight">Create a workspace</h1>
-              <p className="text-[14px] text-[#888888]">Set up a separate space for your business or team.</p>
+              <div className="text-[12px] font-bold tracking-wider text-[var(--gs-muted-light)] uppercase mb-1">Workspace / Create</div>
+              <h1 className="text-2xl font-bold text-[var(--gs-fg)] tracking-tight">Create a workspace</h1>
+              <p className="text-[14px] text-[var(--gs-muted)]">Set up a separate space for your business or team.</p>
             </div>
 
-            <Card className="bg-[#0A0A0A] border-[#222222] p-8 shadow-2xl rounded-[12px] flex flex-col gap-6">
+            <Card className="bg-[var(--gs-bg-alt)] border-[var(--gs-border)] p-8 shadow-2xl rounded-[12px] flex flex-col gap-6">
               <div className="flex flex-col gap-2">
-                <div className="text-[10px] font-bold text-[#666666] tracking-wider uppercase mb-2">Workspace Details</div>
-                <label className="text-[12px] font-medium text-[#888888]">Workspace name *</label>
+                <div className="text-[10px] font-bold text-[var(--gs-muted-light)] tracking-wider uppercase mb-2">Workspace Details</div>
+                <label className="text-[12px] font-medium text-[var(--gs-muted)]">Workspace name *</label>
                 <input
                   type="text"
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Acme Studio"
-                  className="w-full bg-[#000000] border border-[#333333] rounded-[6px] px-4 py-2.5 text-[14px] text-[#EDEDED] focus:outline-none focus:border-[#666666] transition-colors placeholder:text-[#444444]"
+                  className="w-full bg-[var(--gs-bg)] border border-[var(--gs-border)] rounded-[6px] px-4 py-2.5 text-[14px] text-[var(--gs-fg)] focus:outline-none focus:border-[var(--gs-muted-light)] transition-colors placeholder:text-[var(--gs-border-strong)]"
                 />
-                <span className="text-[11px] text-[#666666] mt-1">You can change this later.</span>
+                <span className="text-[11px] text-[var(--gs-muted-light)] mt-1">You can change this later.</span>
               </div>
 
               <div className="flex flex-col gap-3">
-                <label className="text-[12px] font-medium text-[#888888]">What will you use GrowSuite for? (Optional)</label>
+                <label className="text-[12px] font-medium text-[var(--gs-muted)]">What will you use GrowSuite for? (Optional)</label>
                 <div className="grid grid-cols-2 gap-2">
                   {useCases.map((uc) => (
                     <button
@@ -116,8 +116,8 @@ export default function CreateWorkspacePage() {
                       onClick={() => setUseCase(uc)}
                       className={`py-2 px-3 rounded-[6px] border text-[13px] font-medium transition-colors ${
                         useCase === uc
-                          ? "bg-[#111111] border-[#EDEDED] text-[#EDEDED]"
-                          : "bg-[#000000] border-[#333333] text-[#888888] hover:border-[#666666] hover:text-[#EDEDED]"
+                          ? "bg-[var(--gs-surface)] border-[var(--gs-fg)] text-[var(--gs-fg)]"
+                          : "bg-[var(--gs-bg)] border-[var(--gs-border)] text-[var(--gs-muted)] hover:border-[var(--gs-muted-light)] hover:text-[var(--gs-fg)]"
                       }`}
                     >
                       {uc}
@@ -129,14 +129,14 @@ export default function CreateWorkspacePage() {
               <div className="flex justify-between items-center mt-4">
                 <button
                   onClick={() => router.push("/dashboard")}
-                  className="text-[13px] text-[#888888] hover:text-[#EDEDED] font-medium transition-colors"
+                  className="text-[13px] text-[var(--gs-muted)] hover:text-[var(--gs-fg)] font-medium transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={() => setStep(2)}
                   disabled={!name.trim()}
-                  className="bg-[#EDEDED] hover:bg-[#FFFFFF] text-[#000000] rounded-[6px] py-2 px-4 text-[13px] font-bold flex items-center gap-2 transition-all disabled:opacity-50"
+                  className="bg-[var(--gs-fg)] hover:bg-[var(--gs-fg)] text-[var(--gs-bg)] rounded-[6px] py-2 px-4 text-[13px] font-bold flex items-center gap-2 transition-all disabled:opacity-50"
                 >
                   Continue <ArrowRight className="h-4 w-4" />
                 </button>
@@ -148,16 +148,16 @@ export default function CreateWorkspacePage() {
         {step === 2 && (
           <>
             <div className="flex flex-col mb-8 gap-2">
-              <div className="text-[12px] font-bold tracking-wider text-[#666666] uppercase mb-1">Create workspace</div>
-              <h1 className="text-2xl font-bold text-[#EDEDED] tracking-tight">Workspace preferences</h1>
-              <p className="text-[14px] text-[#888888]">Configure how information is displayed in this workspace.</p>
-              <p className="text-[12px] text-[#666666]">These settings can be changed later in Workspace settings.</p>
+              <div className="text-[12px] font-bold tracking-wider text-[var(--gs-muted-light)] uppercase mb-1">Create workspace</div>
+              <h1 className="text-2xl font-bold text-[var(--gs-fg)] tracking-tight">Workspace preferences</h1>
+              <p className="text-[14px] text-[var(--gs-muted)]">Configure how information is displayed in this workspace.</p>
+              <p className="text-[12px] text-[var(--gs-muted-light)]">These settings can be changed later in Workspace settings.</p>
             </div>
 
-            <Card className="bg-[#0A0A0A] border-[#222222] p-8 shadow-2xl rounded-[12px] flex flex-col gap-6">
+            <Card className="bg-[var(--gs-bg-alt)] border-[var(--gs-border)] p-8 shadow-2xl rounded-[12px] flex flex-col gap-6">
               
               <div className="flex flex-col gap-2 relative">
-                <label className="text-[12px] font-medium text-[#888888]">Currency</label>
+                <label className="text-[12px] font-medium text-[var(--gs-muted)]">Currency</label>
                 <PopoverSelect
                   value={currency}
                   onChange={setCurrency}
@@ -167,12 +167,12 @@ export default function CreateWorkspacePage() {
                     { label: "EUR (€)", value: "EUR" },
                     { label: "GBP (£)", value: "GBP" },
                   ]}
-                  className="w-full h-[40px] bg-[#000000] border border-[#333333] rounded-[6px] px-3 m-0 flex justify-between"
+                  className="w-full h-[40px] bg-[var(--gs-bg)] border border-[var(--gs-border)] rounded-[6px] px-3 m-0 flex justify-between"
                 />
               </div>
 
               <div className="flex flex-col gap-2 relative">
-                <label className="text-[12px] font-medium text-[#888888]">Timezone</label>
+                <label className="text-[12px] font-medium text-[var(--gs-muted)]">Timezone</label>
                 <PopoverSelect
                   value={timezone}
                   onChange={setTimezone}
@@ -182,12 +182,12 @@ export default function CreateWorkspacePage() {
                     { label: "America/New_York", value: "America/New_York" },
                     { label: "Europe/London", value: "Europe/London" },
                   ]}
-                  className="w-full h-[40px] bg-[#000000] border border-[#333333] rounded-[6px] px-3 m-0 flex justify-between"
+                  className="w-full h-[40px] bg-[var(--gs-bg)] border border-[var(--gs-border)] rounded-[6px] px-3 m-0 flex justify-between"
                 />
               </div>
 
               <div className="flex flex-col gap-2 relative">
-                <label className="text-[12px] font-medium text-[#888888]">Date format</label>
+                <label className="text-[12px] font-medium text-[var(--gs-muted)]">Date format</label>
                 <PopoverSelect
                   value={dateFormat}
                   onChange={setDateFormat}
@@ -196,7 +196,7 @@ export default function CreateWorkspacePage() {
                     { label: "MM/DD/YYYY", value: "MM/DD/YYYY" },
                     { label: "YYYY-MM-DD", value: "YYYY-MM-DD" },
                   ]}
-                  className="w-full h-[40px] bg-[#000000] border border-[#333333] rounded-[6px] px-3 m-0 flex justify-between"
+                  className="w-full h-[40px] bg-[var(--gs-bg)] border border-[var(--gs-border)] rounded-[6px] px-3 m-0 flex justify-between"
                 />
               </div>
 
@@ -209,14 +209,14 @@ export default function CreateWorkspacePage() {
               <div className="flex justify-between items-center mt-4">
                 <button
                   onClick={() => setStep(1)}
-                  className="text-[13px] text-[#888888] hover:text-[#EDEDED] font-medium transition-colors flex items-center gap-1"
+                  className="text-[13px] text-[var(--gs-muted)] hover:text-[var(--gs-fg)] font-medium transition-colors flex items-center gap-1"
                 >
                   <ArrowLeft className="h-4 w-4" /> Back
                 </button>
                 <button
                   onClick={handleCreate}
                   disabled={loading}
-                  className="bg-[#EDEDED] hover:bg-[#FFFFFF] text-[#000000] rounded-[6px] py-2 px-4 text-[13px] font-bold flex items-center gap-2 transition-all disabled:opacity-50"
+                  className="bg-[var(--gs-fg)] hover:bg-[var(--gs-fg)] text-[var(--gs-bg)] rounded-[6px] py-2 px-4 text-[13px] font-bold flex items-center gap-2 transition-all disabled:opacity-50"
                 >
                   {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Create workspace"}
                 </button>

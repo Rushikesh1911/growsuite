@@ -1,17 +1,36 @@
 "use client";
 
 import Link from "next/link";
+import { Logo } from "@/components/ui/Logo";
+import { ArrowRight } from "lucide-react";
 
-// Only real links — no fake apps, no fake integrations
 const footerLinks = [
   {
     title: "Product",
     links: [
-      { label: "Pipeline", href: "#product" },
-      { label: "Clients & Projects", href: "#product" },
-      { label: "Invoices & Payments", href: "#product" },
-      { label: "Activity Feed", href: "#product" },
+      { label: "Pipeline", href: "#pipeline" },
+      { label: "Clients & Projects", href: "#projects" },
+      { label: "Invoices & Payments", href: "#invoicing" },
+      { label: "Activity Feed", href: "#activity" },
       { label: "Pricing", href: "#pricing" },
+    ],
+  },
+  {
+    title: "Compare",
+    links: [
+      { label: "vs Salesforce", href: "#" },
+      { label: "vs HubSpot", href: "#" },
+      { label: "vs Pipedrive", href: "#" },
+      { label: "vs Monday", href: "#" },
+    ],
+  },
+  {
+    title: "Resources",
+    links: [
+      { label: "Blog", href: "#" },
+      { label: "Help Center", href: "#" },
+      { label: "Community", href: "#" },
+      { label: "Agency Partners", href: "#" },
     ],
   },
   {
@@ -19,14 +38,8 @@ const footerLinks = [
     links: [
       { label: "About", href: "#" },
       { label: "Changelog", href: "#" },
-      { label: "Help center", href: "#" },
-    ],
-  },
-  {
-    title: "Legal",
-    links: [
       { label: "Privacy Policy", href: "#" },
-      { label: "Services Agreement", href: "#" },
+      { label: "Terms of Service", href: "#" },
     ],
   },
 ];
@@ -63,34 +76,29 @@ const socials = [
 
 export function Footer() {
   return (
-    <footer className="bg-white border-t border-[rgba(0,0,0,0.07)]">
-      <div className="max-w-[1100px] mx-auto px-6 py-16">
+    <footer className="bg-[#FAFAF8]">
+      
+      <div className="max-w-[1200px] mx-auto px-6 py-20 pb-10">
 
-        {/* Top row */}
-        <div className="flex flex-col lg:flex-row justify-between gap-16 pb-12 border-b border-[rgba(0,0,0,0.06)]">
+        {/* Top row of links */}
+        <div className="flex flex-col lg:flex-row justify-between gap-16 pb-16 border-b border-[rgba(0,0,0,0.06)]">
           {/* Brand */}
-          <div className="flex flex-col gap-5 shrink-0">
-            <Link href="/" className="flex items-center gap-2.5 group" aria-label="GrowSuite home">
-              <div className="h-7 w-7 rounded-[6px] bg-[#0A0A0A] flex items-center justify-center">
-                <svg width="16" height="12" viewBox="0 0 18 14" fill="none" aria-hidden="true">
-                  <path d="M7.2 1C4.1 1 1.6 3.5 1.6 6.9C1.6 10.3 4.1 12.8 7.2 12.8C9.5 12.8 11.3 11.6 12 9.8H7.8V7.8H14.2V9C14.2 11.8 11.1 14 7.2 14C3.2 14 0 10.8 0 6.9C0 3 3.2 0 7.2 0C9.5 0 11.5 1 12.7 2.6L11.3 3.9C10.4 2.7 8.9 2 7.2 2" fill="white" transform="scale(0.72) translate(0.5, 0)"/>
-                  <text x="12.5" y="8.5" fontSize="6" fontWeight="700" fill="white" fontFamily="ui-sans-serif, system-ui, sans-serif">s</text>
-                </svg>
-              </div>
-              <span className="text-[15px] font-[700] tracking-[-0.03em] text-[#0A0A0A]">GrowSuite</span>
+          <div className="flex flex-col gap-6 shrink-0 lg:w-[280px]">
+            <Link href="/" aria-label="GrowSuite home">
+              <Logo />
             </Link>
-            <p className="text-[13px] text-[#8A8A8A] leading-[1.6] max-w-[220px]">
-              Simple business management for freelancers and small teams.
+            <p className="text-[13.5px] text-[var(--gs-muted)] leading-[1.6]">
+              The unified workspace for modern agencies. Clients, projects, and revenue in one place.
             </p>
 
             {/* Socials */}
-            <div className="flex items-center gap-5">
+            <div className="flex items-center gap-5 pt-2">
               {socials.map((s) => (
                 <a
                   key={s.label}
                   href={s.href}
                   aria-label={s.label}
-                  className="text-[#AFAFAF] hover:text-[#0A0A0A] transition-colors duration-150"
+                  className="text-[#AFAFAF] hover:text-[var(--gs-bg-alt)] hover:-translate-y-0.5 transition-all"
                 >
                   {s.icon}
                 </a>
@@ -98,17 +106,17 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Links */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-10">
+          {/* Links Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 w-full lg:w-auto">
             {footerLinks.map((col) => (
-              <div key={col.title} className="flex flex-col gap-4">
-                <h4 className="text-[11px] font-[600] text-[#0A0A0A] uppercase tracking-[0.07em]">{col.title}</h4>
-                <ul className="flex flex-col gap-2.5">
+              <div key={col.title} className="flex flex-col gap-5">
+                <h4 className="text-[12px] font-[700] text-[var(--gs-bg-alt)] uppercase tracking-[0.06em]">{col.title}</h4>
+                <ul className="flex flex-col gap-3">
                   {col.links.map((link, i) => (
                     <li key={i}>
                       <a
                         href={link.href}
-                        className="text-[13px] text-[#8A8A8A] hover:text-[#0A0A0A] transition-colors duration-150 font-[400]"
+                        className="text-[13.5px] text-[var(--gs-muted-light)] hover:text-[var(--gs-bg-alt)] transition-colors font-[500]"
                       >
                         {link.label}
                       </a>
@@ -121,19 +129,19 @@ export function Footer() {
         </div>
 
         {/* Bottom row */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-8 text-[11px] text-[#AFAFAF]">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-8 text-[12.5px] text-[#AFAFAF] font-[500]">
           <span>
-            © {new Date().getFullYear()} GrowSuite. Developed by{" "}
-            <a
-              href="https://rushixh.vercel.app"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#8A8A8A] hover:text-[#0A0A0A] underline underline-offset-2 transition-colors"
-            >
-              Rushikesh
-            </a>.
+            © {new Date().getFullYear()} GrowSuite. All rights reserved.
           </span>
-          <span className="text-[#D5D5D0]">Made for businesses that move fast.</span>
+          <span className="flex items-center gap-4">
+            <span className="flex items-center gap-2">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#28CA41] opacity-40"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#28CA41]"></span>
+              </span>
+              All systems operational
+            </span>
+          </span>
         </div>
 
       </div>

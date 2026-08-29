@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowUpDown, Inbox, MoreHorizontal, User, LayoutGrid, Receipt, PenLine, Archive } from "lucide-react";
+import { ArrowUpDown, Inbox, MoreHorizontal, User, LayoutGrid, Receipt, PenLine, Archive, CheckCircle2 } from "lucide-react";
 import { Client, SortField } from "./types";
 import { formatCurrency } from "@/lib/currency";
 import { TableSkeleton } from "@/components/ui/skeleton";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 interface ClientTableProps {
   filteredClients: Client[];
@@ -76,13 +77,15 @@ export function ClientTable({
         <thead>
           <tr className="border-b border-[var(--gs-border)] text-[11px] font-semibold text-[var(--gs-muted)] uppercase tracking-wider select-none whitespace-nowrap">
             <th className="px-5 py-3 w-10 text-center">
-              <input
-                type="checkbox"
-                aria-label="Select all clients"
-                checked={selectedIds.length === filteredClients.length && filteredClients.length > 0}
-                onChange={toggleSelectAll}
-                className="h-3.5 w-3.5 rounded-[3px] border-[var(--gs-border-strong)] bg-transparent text-[var(--gs-fg)] focus:ring-0 focus:ring-offset-0 cursor-pointer transition-colors"
-              />
+              <div
+                role="checkbox"
+                aria-checked={selectedIds.length === filteredClients.length && filteredClients.length > 0}
+                tabIndex={0}
+                onClick={toggleSelectAll}
+                className={`w-4 h-4 rounded-[4px] border cursor-pointer flex items-center justify-center transition-colors ${selectedIds.length === filteredClients.length && filteredClients.length > 0 ? 'bg-[var(--gs-fg)] border-[var(--gs-fg)]' : 'border-[var(--gs-border-strong)] hover:border-[var(--gs-muted)]'}`}
+              >
+                {selectedIds.length === filteredClients.length && filteredClients.length > 0 && <CheckCircle2 className="h-3 w-3 text-[var(--gs-bg)]" strokeWidth={3} />}
+              </div>
             </th>
             <th
               role="columnheader"
@@ -141,14 +144,16 @@ export function ClientTable({
                 className={`group border-b border-[var(--gs-border)] last:border-b-0 hover:bg-[var(--gs-surface-raised)] transition-colors cursor-pointer ${isSelected ? 'bg-[var(--gs-surface-raised)]' : ''}`}
                 onClick={() => window.location.href = `/dashboard/clients/${client.id}`}
               >
-                <td className="px-4 py-4 w-10 relative" onClick={(e) => e.stopPropagation()}>
-                  <input 
-                    type="checkbox" 
-                    aria-label={`Select client ${client.name}`}
-                    checked={isSelected}
-                    onChange={() => toggleSelectClient(client.id)}
-                    className="h-3.5 w-3.5 rounded-[3px] border-[var(--gs-border-strong)] bg-transparent text-[var(--gs-fg)] focus:ring-0 focus:ring-offset-0 cursor-pointer transition-colors"
-                  />
+                <td className="px-5 py-4 w-10 relative" onClick={(e) => e.stopPropagation()}>
+                  <div 
+                    role="checkbox"
+                    aria-checked={isSelected}
+                    tabIndex={0}
+                    onClick={() => toggleSelectClient(client.id)}
+                    className={`w-4 h-4 rounded-[4px] border cursor-pointer flex items-center justify-center transition-colors ${isSelected ? 'bg-[var(--gs-fg)] border-[var(--gs-fg)]' : 'border-[var(--gs-border-strong)] group-hover:border-[var(--gs-muted)]'}`}
+                  >
+                    {isSelected && <CheckCircle2 className="h-3 w-3 text-[var(--gs-bg)]" strokeWidth={3} />}
+                  </div>
                 </td>
                 
                 {/* Client Cell */}
@@ -169,9 +174,10 @@ export function ClientTable({
                 <td className="px-4 py-3 font-medium text-[var(--gs-muted)] truncate max-w-[140px]">{client.company}</td>
                 
                 <td className="px-4 py-3">
-                  <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[4px] text-[11px] font-bold bg-[var(--gs-bg-alt)] border border-[var(--gs-border-strong)] text-[var(--gs-fg)]">
-                    <div className="h-1.5 w-1.5 rounded-full bg-[#2E7D32]"></div> Active
-                  </span>
+                  <StatusBadge 
+                    label={client.status === 'ACTIVE' ? 'Active' : 'Inactive'} 
+                    status={client.status === 'ACTIVE' ? 'positive' : 'neutral'} 
+                  />
                 </td>
                 
                 <td className="px-4 py-3 font-medium text-[var(--gs-fg)]" onClick={(e) => e.stopPropagation()}>

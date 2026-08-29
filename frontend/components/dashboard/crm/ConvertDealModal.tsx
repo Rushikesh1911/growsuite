@@ -23,7 +23,7 @@ export function ConvertDealModal({ lead, isOpen, onClose, onConvert }: any) {
   };
 
   return (
-    <div className="fixed inset-0 bg-[#000000]/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-in fade-in duration-200">
+    <div className="fixed inset-0 bg-[var(--gs-bg)]/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-in fade-in duration-200">
       <div className="bg-[var(--gs-bg)] border border-[var(--gs-border)] rounded-[12px] w-full max-w-md shadow-2xl overflow-hidden">
         <div className="px-6 py-4 border-b border-[var(--gs-border)] flex items-center justify-between bg-[var(--gs-surface)]">
           <h2 className="text-[15px] font-semibold text-[var(--gs-fg)]">Create Deal</h2>
@@ -89,7 +89,7 @@ export function ConvertDealModal({ lead, isOpen, onClose, onConvert }: any) {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="bg-[var(--gs-fg)] hover:bg-[#FFFFFF] text-[#000000] px-4 py-2 rounded-[6px] text-[13px] font-semibold transition-colors disabled:opacity-50"
+              className="bg-[var(--gs-fg)] hover:bg-[var(--gs-fg)] text-[var(--gs-bg)] px-4 py-2 rounded-[6px] text-[13px] font-semibold transition-colors disabled:opacity-50"
             >
               {isSubmitting ? "Creating..." : "Create Deal"}
             </button>

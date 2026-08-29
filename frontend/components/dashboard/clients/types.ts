@@ -8,6 +8,7 @@ export interface Client {
   createdAt: string;
   updatedAt: string;
   archivedAt?: string | null;
+  status?: string;
   projects?: { id: number }[];
   invoices?: { balanceDue: string | number; total: string | number }[];
 }

@@ -26,7 +26,7 @@ function timeAgo(dateString: string) {
 }
 
 function getNotificationIcon(type: string, isRead: boolean) {
-  const className = `h-3.5 w-3.5 ${!isRead ? 'text-blue-500' : 'text-[#666666]'}`;
+  const className = `h-3.5 w-3.5 ${!isRead ? 'text-blue-500' : 'text-[var(--gs-muted-light)]'}`;
   switch (type) {
     case 'INVOICE_PAID':
     case 'INVOICE_PARTIALLY_PAID':
@@ -270,7 +270,7 @@ export function Topbar({ currentView = "overview", breadcrumbs }: TopbarProps) {
   };
 
   return (
-    <header className="h-[56px] border-b border-[#333333] bg-[#000000] px-6 flex items-center justify-between shrink-0 select-none relative z-50" role="banner">
+    <header className="h-[56px] border-b border-[var(--gs-border)] bg-[var(--gs-bg)] px-6 flex items-center justify-between shrink-0 select-none relative z-50" role="banner">
       
       {/* Left Section: Breadcrumbs */}
       <div className="flex items-center gap-2">
@@ -278,9 +278,9 @@ export function Topbar({ currentView = "overview", breadcrumbs }: TopbarProps) {
           breadcrumbs
         ) : (
           <>
-            <span className="text-[13px] font-medium text-[#EDEDED]">Workspace</span>
-            <span className="text-[13px] text-[#666666]">/</span>
-            <span className="text-[13px] font-medium text-[#EDEDED] capitalize">{currentView}</span>
+            <span className="text-[13px] font-medium text-[var(--gs-fg)]">Workspace</span>
+            <span className="text-[13px] text-[var(--gs-muted-light)]">/</span>
+            <span className="text-[13px] font-medium text-[var(--gs-fg)] capitalize">{currentView?.replace(/-/g, ' ')}</span>
           </>
         )}
       </div>
@@ -290,7 +290,7 @@ export function Topbar({ currentView = "overview", breadcrumbs }: TopbarProps) {
         {/* Compact search bar */}
         <div className="relative w-48 sm:w-64" role="search" ref={searchRef}>
           <label htmlFor="global-search" className="sr-only">Search console</label>
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#666666]" aria-hidden="true" />
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[var(--gs-muted-light)]" aria-hidden="true" />
           <input
             id="global-search"
             type="search"
@@ -298,26 +298,26 @@ export function Topbar({ currentView = "overview", breadcrumbs }: TopbarProps) {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => { if (searchQuery.trim()) setSearchOpen(true); }}
-            className="w-full bg-[#111111] border border-[#333333] rounded-[6px] pl-8 pr-3 py-1.5 text-[13px] text-[#EDEDED] placeholder-[#666666] focus:outline-none focus:border-[#888888] transition-all h-[32px]"
+            className="w-full bg-[var(--gs-surface)] border border-[var(--gs-border)] rounded-[6px] pl-8 pr-3 py-1.5 text-[13px] text-[var(--gs-fg)] placeholder-[var(--gs-muted-light)] focus:outline-none focus:border-[var(--gs-muted)] transition-all h-[32px]"
           />
 
           {searchOpen && searchQuery.trim() && (isSearching || searchResults) && (
-            <div className="absolute right-0 sm:left-0 top-full mt-2 w-[340px] bg-[#000000] border border-[#333333] rounded-[8px] shadow-2xl py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200 overflow-hidden">
+            <div className="absolute right-0 sm:left-0 top-full mt-2 w-[340px] bg-[var(--gs-bg)] border border-[var(--gs-border)] rounded-[8px] shadow-2xl py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200 overflow-hidden">
               {isSearching ? (
                 <div className="px-4 py-6 text-center flex flex-col items-center justify-center gap-2">
-                  <div className="h-4 w-4 border-2 border-[#666666] border-t-[#EDEDED] rounded-full animate-spin"></div>
-                  <span className="text-[12px] text-[#888888]">Searching...</span>
+                  <div className="h-4 w-4 border-2 border-[var(--gs-muted-light)] border-t-[var(--gs-fg)] rounded-full animate-spin"></div>
+                  <span className="text-[12px] text-[var(--gs-muted)]">Searching...</span>
                 </div>
               ) : searchResults ? (
                 <div className="max-h-[400px] overflow-y-auto custom-scrollbar">
                   {/* Results for Leads */}
                   {searchResults.leads.length > 0 && (
                     <div className="mb-2">
-                      <div className="px-3 py-1 text-[10px] font-bold text-[#888888] uppercase tracking-wider">Leads</div>
+                      <div className="px-3 py-1 text-[10px] font-bold text-[var(--gs-muted)] uppercase tracking-wider">Leads</div>
                       {searchResults.leads.map((lead: any) => (
-                        <button key={lead.id} onMouseDown={() => { router.push(`/dashboard/crm?lead=${lead.id}`); setSearchOpen(false); }} className="w-full text-left px-4 py-2 hover:bg-[#111111] flex flex-col gap-0.5 outline-none">
-                          <span className="text-[13px] font-medium text-[#EDEDED]">{lead.contactName}</span>
-                          {lead.company && <span className="text-[11px] text-[#888888]">{lead.company}</span>}
+                        <button key={lead.id} onMouseDown={() => { router.push(`/dashboard/crm?lead=${lead.id}`); setSearchOpen(false); }} className="w-full text-left px-4 py-2 hover:bg-[var(--gs-surface)] flex flex-col gap-0.5 outline-none">
+                          <span className="text-[13px] font-medium text-[var(--gs-fg)]">{lead.contactName}</span>
+                          {lead.company && <span className="text-[11px] text-[var(--gs-muted)]">{lead.company}</span>}
                         </button>
                       ))}
                     </div>
@@ -326,11 +326,11 @@ export function Topbar({ currentView = "overview", breadcrumbs }: TopbarProps) {
                   {/* Results for Deals */}
                   {searchResults.deals.length > 0 && (
                     <div className="mb-2">
-                      <div className="px-3 py-1 text-[10px] font-bold text-[#888888] uppercase tracking-wider">Deals</div>
+                      <div className="px-3 py-1 text-[10px] font-bold text-[var(--gs-muted)] uppercase tracking-wider">Deals</div>
                       {searchResults.deals.map((deal: any) => (
-                        <button key={deal.id} onMouseDown={() => { router.push(`/dashboard/crm`); setSearchOpen(false); }} className="w-full text-left px-4 py-2 hover:bg-[#111111] flex flex-col gap-0.5 outline-none">
-                          <span className="text-[13px] font-medium text-[#EDEDED]">{deal.title}</span>
-                          {deal.company && <span className="text-[11px] text-[#888888]">{deal.company}</span>}
+                        <button key={deal.id} onMouseDown={() => { router.push(`/dashboard/crm`); setSearchOpen(false); }} className="w-full text-left px-4 py-2 hover:bg-[var(--gs-surface)] flex flex-col gap-0.5 outline-none">
+                          <span className="text-[13px] font-medium text-[var(--gs-fg)]">{deal.title}</span>
+                          {deal.company && <span className="text-[11px] text-[var(--gs-muted)]">{deal.company}</span>}
                         </button>
                       ))}
                     </div>
@@ -339,11 +339,11 @@ export function Topbar({ currentView = "overview", breadcrumbs }: TopbarProps) {
                   {/* Results for Clients */}
                   {searchResults.clients.length > 0 && (
                     <div className="mb-2">
-                      <div className="px-3 py-1 text-[10px] font-bold text-[#888888] uppercase tracking-wider">Clients</div>
+                      <div className="px-3 py-1 text-[10px] font-bold text-[var(--gs-muted)] uppercase tracking-wider">Clients</div>
                       {searchResults.clients.map((client: any) => (
-                        <button key={client.id} onMouseDown={() => { router.push(`/dashboard/clients/${client.id}`); setSearchOpen(false); }} className="w-full text-left px-4 py-2 hover:bg-[#111111] flex flex-col gap-0.5 outline-none">
-                          <span className="text-[13px] font-medium text-[#EDEDED]">{client.name}</span>
-                          {client.company && <span className="text-[11px] text-[#888888]">{client.company}</span>}
+                        <button key={client.id} onMouseDown={() => { router.push(`/dashboard/clients/${client.id}`); setSearchOpen(false); }} className="w-full text-left px-4 py-2 hover:bg-[var(--gs-surface)] flex flex-col gap-0.5 outline-none">
+                          <span className="text-[13px] font-medium text-[var(--gs-fg)]">{client.name}</span>
+                          {client.company && <span className="text-[11px] text-[var(--gs-muted)]">{client.company}</span>}
                         </button>
                       ))}
                     </div>
@@ -352,11 +352,11 @@ export function Topbar({ currentView = "overview", breadcrumbs }: TopbarProps) {
                   {/* Results for Projects */}
                   {searchResults.projects.length > 0 && (
                     <div className="mb-2">
-                      <div className="px-3 py-1 text-[10px] font-bold text-[#888888] uppercase tracking-wider">Projects</div>
+                      <div className="px-3 py-1 text-[10px] font-bold text-[var(--gs-muted)] uppercase tracking-wider">Projects</div>
                       {searchResults.projects.map((project: any) => (
-                        <button key={project.id} onMouseDown={() => { router.push(`/dashboard/projects/${project.id}`); setSearchOpen(false); }} className="w-full text-left px-4 py-2 hover:bg-[#111111] flex flex-col gap-0.5 outline-none">
-                          <span className="text-[13px] font-medium text-[#EDEDED]">{project.name}</span>
-                          <span className="text-[11px] text-[#888888]">{project.client?.name}</span>
+                        <button key={project.id} onMouseDown={() => { router.push(`/dashboard/projects/${project.id}`); setSearchOpen(false); }} className="w-full text-left px-4 py-2 hover:bg-[var(--gs-surface)] flex flex-col gap-0.5 outline-none">
+                          <span className="text-[13px] font-medium text-[var(--gs-fg)]">{project.name}</span>
+                          <span className="text-[11px] text-[var(--gs-muted)]">{project.client?.name}</span>
                         </button>
                       ))}
                     </div>
@@ -365,11 +365,11 @@ export function Topbar({ currentView = "overview", breadcrumbs }: TopbarProps) {
                   {/* Results for Tasks */}
                   {searchResults.tasks.length > 0 && (
                     <div className="mb-2">
-                      <div className="px-3 py-1 text-[10px] font-bold text-[#888888] uppercase tracking-wider">Tasks</div>
+                      <div className="px-3 py-1 text-[10px] font-bold text-[var(--gs-muted)] uppercase tracking-wider">Tasks</div>
                       {searchResults.tasks.map((task: any) => (
-                        <button key={task.id} onMouseDown={() => { router.push(`/dashboard/projects/${task.projectId}?tab=tasks`); setSearchOpen(false); }} className="w-full text-left px-4 py-2 hover:bg-[#111111] flex flex-col gap-0.5 outline-none">
-                          <span className="text-[13px] font-medium text-[#EDEDED]">{task.title}</span>
-                          <span className="text-[11px] text-[#888888]">{task.project?.name}</span>
+                        <button key={task.id} onMouseDown={() => { router.push(`/dashboard/projects/${task.projectId}?tab=tasks`); setSearchOpen(false); }} className="w-full text-left px-4 py-2 hover:bg-[var(--gs-surface)] flex flex-col gap-0.5 outline-none">
+                          <span className="text-[13px] font-medium text-[var(--gs-fg)]">{task.title}</span>
+                          <span className="text-[11px] text-[var(--gs-muted)]">{task.project?.name}</span>
                         </button>
                       ))}
                     </div>
@@ -377,8 +377,8 @@ export function Topbar({ currentView = "overview", breadcrumbs }: TopbarProps) {
 
                   {(!searchResults.leads.length && !searchResults.clients.length && !searchResults.deals.length && !searchResults.projects.length && !searchResults.tasks.length) && (
                     <div className="px-4 py-6 text-center flex flex-col gap-1">
-                      <span className="text-[13px] font-medium text-[#EDEDED]">No results found</span>
-                      <span className="text-[12px] text-[#888888]">Try a different search term</span>
+                      <span className="text-[13px] font-medium text-[var(--gs-fg)]">No results found</span>
+                      <span className="text-[12px] text-[var(--gs-muted)]">Try a different search term</span>
                     </div>
                   )}
                 </div>
@@ -392,22 +392,22 @@ export function Topbar({ currentView = "overview", breadcrumbs }: TopbarProps) {
           <button 
             onClick={() => setNotificationsOpen(!notificationsOpen)}
             aria-label="Notifications"
-            className="relative h-8 w-8 hover:bg-[#111111] rounded-[6px] flex items-center justify-center text-[#888888] hover:text-[#EDEDED] transition-colors cursor-pointer outline-none"
+            className="relative h-8 w-8 hover:bg-[var(--gs-surface)] rounded-[6px] flex items-center justify-center text-[var(--gs-muted)] hover:text-[var(--gs-fg)] transition-colors cursor-pointer outline-none"
           >
             <Bell className="h-4 w-4" aria-hidden="true" />
             {unreadCount > 0 && (
-              <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-red-500 ring-2 ring-[#000000]" />
+              <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-red-500 ring-2 ring-[var(--gs-bg)]" />
             )}
           </button>
 
           {notificationsOpen && (
-            <div className="absolute right-0 top-full mt-2 w-[340px] bg-[#000000] border border-[#333333] rounded-[8px] shadow-2xl py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-              <div className="px-4 py-2 border-b border-[#222222] flex justify-between items-center">
-                <h3 className="text-[13px] font-bold text-[#EDEDED]">Notifications</h3>
+            <div className="absolute right-0 top-full mt-2 w-[340px] bg-[var(--gs-bg)] border border-[var(--gs-border)] rounded-[8px] shadow-2xl py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+              <div className="px-4 py-2 border-b border-[var(--gs-border)] flex justify-between items-center">
+                <h3 className="text-[13px] font-bold text-[var(--gs-fg)]">Notifications</h3>
                 {unreadCount > 0 && (
                   <button 
                     onClick={handleMarkAllRead}
-                    className="text-[11px] font-medium text-[#888888] hover:text-[#EDEDED] transition-colors flex items-center gap-1"
+                    className="text-[11px] font-medium text-[var(--gs-muted)] hover:text-[var(--gs-fg)] transition-colors flex items-center gap-1"
                   >
                     <Check className="h-3 w-3" /> Mark all read
                   </button>
@@ -416,30 +416,30 @@ export function Topbar({ currentView = "overview", breadcrumbs }: TopbarProps) {
               <div className="max-h-[400px] overflow-y-auto">
                 {notifications.length === 0 ? (
                   <div className="px-4 py-8 text-center flex flex-col gap-1 text-[13px]">
-                    <span className="text-[#EDEDED] font-medium">No notifications yet</span>
-                    <span className="text-[#888888] text-[12px]">Important workspace updates will appear here.</span>
+                    <span className="text-[var(--gs-fg)] font-medium">No notifications yet</span>
+                    <span className="text-[var(--gs-muted)] text-[12px]">Important workspace updates will appear here.</span>
                   </div>
                 ) : (
                   notifications.map((notif) => (
                     <div 
                       key={notif.id}
                       onClick={() => handleMarkAsRead(notif.id, notif.link)}
-                      className={`px-4 py-3 border-b border-[#111111] last:border-0 hover:bg-[#0A0A0A] cursor-pointer transition-colors ${!notif.isRead ? 'bg-[#111111]/30' : ''}`}
+                      className={`px-4 py-3 border-b border-[var(--gs-surface)] last:border-0 hover:bg-[var(--gs-bg-alt)] cursor-pointer transition-colors ${!notif.isRead ? 'bg-[var(--gs-surface)]/30' : ''}`}
                     >
                       <div className="flex gap-3">
                         <div className="mt-1 flex-shrink-0">
                           {getNotificationIcon(notif.type, notif.isRead)}
                         </div>
                         <div className="flex flex-col flex-1 min-w-0">
-                          <span className={`text-[13px] truncate ${!notif.isRead ? 'text-[#EDEDED] font-semibold' : 'text-[#AAAAAA]'}`}>
+                          <span className={`text-[13px] truncate ${!notif.isRead ? 'text-[var(--gs-fg)] font-semibold' : 'text-[var(--gs-fg-secondary)]'}`}>
                             {notif.title}
                           </span>
                           {notif.body && (
-                            <span className="text-[12px] text-[#888888] line-clamp-2 mt-0.5 leading-snug">
+                            <span className="text-[12px] text-[var(--gs-muted)] line-clamp-2 mt-0.5 leading-snug">
                               {notif.body}
                             </span>
                           )}
-                          <span className="text-[10px] text-[#666666] mt-1 font-medium tracking-wide">
+                          <span className="text-[10px] text-[var(--gs-muted-light)] mt-1 font-medium tracking-wide">
                             {timeAgo(notif.createdAt)}
                           </span>
                         </div>
@@ -456,7 +456,7 @@ export function Topbar({ currentView = "overview", breadcrumbs }: TopbarProps) {
         <div className="relative" ref={dropdownRef}>
           <button 
             onClick={() => setDropdownOpen(!dropdownOpen)}
-            className="h-7 w-7 rounded-full bg-[var(--gs-fg)] flex items-center justify-center overflow-hidden border border-[#333333] hover:ring-2 hover:ring-[#333333] hover:ring-offset-2 hover:ring-offset-[#000000] transition-all cursor-pointer outline-none shrink-0"
+            className="h-7 w-7 rounded-full bg-[var(--gs-fg)] flex items-center justify-center overflow-hidden border border-[var(--gs-border)] hover:ring-2 hover:ring-[var(--gs-border)] hover:ring-offset-2 hover:ring-offset-[var(--gs-bg)] transition-all cursor-pointer outline-none shrink-0"
             aria-expanded={dropdownOpen}
             aria-haspopup="menu"
           >
@@ -469,22 +469,22 @@ export function Topbar({ currentView = "overview", breadcrumbs }: TopbarProps) {
 
           {dropdownOpen && (
             <div 
-              className="absolute right-0 mt-2 w-48 bg-[#0A0A0A] border border-[#333333] rounded-[8px] shadow-2xl py-1 animate-in fade-in slide-in-from-top-2 duration-150"
+              className="absolute right-0 mt-2 w-48 bg-[var(--gs-bg-alt)] border border-[var(--gs-border)] rounded-[8px] shadow-2xl py-1 animate-in fade-in slide-in-from-top-2 duration-150"
               role="menu"
             >
-              <div className="px-3 py-2 border-b border-[#222222] mb-1">
-                <p className="text-[12px] font-medium text-[#EDEDED] truncate">My Account</p>
+              <div className="px-3 py-2 border-b border-[var(--gs-border)] mb-1">
+                <p className="text-[12px] font-medium text-[var(--gs-fg)] truncate">My Account</p>
               </div>
               
-              <button onClick={() => { router.push("/dashboard/profile"); setDropdownOpen(false); }} className="w-full text-left px-3 py-1.5 text-[12px] text-[#888888] hover:text-[#EDEDED] hover:bg-[#111111] transition-colors flex items-center gap-2" role="menuitem">
+              <button onClick={() => { router.push("/dashboard/profile"); setDropdownOpen(false); }} className="w-full text-left px-3 py-1.5 text-[12px] text-[var(--gs-muted)] hover:text-[var(--gs-fg)] hover:bg-[var(--gs-surface)] transition-colors flex items-center gap-2" role="menuitem">
                 <User className="h-3.5 w-3.5" /> Profile
               </button>
               
-              <button onClick={() => { router.push("/dashboard/settings"); setDropdownOpen(false); }} className="w-full text-left px-3 py-1.5 text-[12px] text-[#888888] hover:text-[#EDEDED] hover:bg-[#111111] transition-colors flex items-center gap-2" role="menuitem">
+              <button onClick={() => { router.push("/dashboard/settings"); setDropdownOpen(false); }} className="w-full text-left px-3 py-1.5 text-[12px] text-[var(--gs-muted)] hover:text-[var(--gs-fg)] hover:bg-[var(--gs-surface)] transition-colors flex items-center gap-2" role="menuitem">
                 <Settings className="h-3.5 w-3.5" /> Settings
               </button>
 
-              <div className="h-px bg-[#222222] my-1"></div>
+              <div className="h-px bg-[var(--gs-border)] my-1"></div>
               
               <button 
                 onClick={handleLogout}

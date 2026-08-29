@@ -122,7 +122,7 @@ export function DealDrawer({ token, workspaceId, dealId, onClose, onSuccess }: a
 
   if (loading || !deal) {
     return (
-      <div className="fixed inset-0 bg-[#000000]/60 backdrop-blur-sm z-[100] flex justify-end">
+      <div className="fixed inset-0 bg-[var(--gs-bg)]/60 backdrop-blur-sm z-[100] flex justify-end">
         <div className="w-[500px] h-full bg-[var(--gs-bg)] border-l border-[var(--gs-border)] flex items-center justify-center">
           <div className="animate-spin h-6 w-6 border-2 border-[var(--gs-fg)] border-t-transparent rounded-full" />
         </div>
@@ -136,7 +136,7 @@ export function DealDrawer({ token, workspaceId, dealId, onClose, onSuccess }: a
   ].sort((a, b) => b.date.getTime() - a.date.getTime());
 
   return (
-    <div className="fixed inset-0 bg-[#000000]/60 backdrop-blur-sm z-[100] flex justify-end">
+    <div className="fixed inset-0 bg-[var(--gs-bg)]/60 backdrop-blur-sm z-[100] flex justify-end">
       <div className="w-full max-w-[500px] h-full bg-[var(--gs-bg)] border-l border-[var(--gs-border)] shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
         
         {/* Header */}
@@ -259,7 +259,7 @@ export function DealDrawer({ token, workspaceId, dealId, onClose, onSuccess }: a
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="bg-[var(--gs-fg)] hover:bg-[#FFFFFF] text-[#000000] px-4 py-2 rounded-[6px] text-[13px] font-semibold transition-colors disabled:opacity-50"
+                  className="bg-[var(--gs-fg)] hover:bg-[var(--gs-fg)] text-[var(--gs-bg)] px-4 py-2 rounded-[6px] text-[13px] font-semibold transition-colors disabled:opacity-50"
                 >
                   {isSubmitting ? "Saving..." : "Save Changes"}
                 </button>
@@ -318,7 +318,7 @@ export function DealDrawer({ token, workspaceId, dealId, onClose, onSuccess }: a
                   <button
                     type="submit"
                     disabled={isSubmittingNote || !newNote.trim()}
-                    className="bg-[var(--gs-fg)] hover:bg-[#FFFFFF] text-[#000000] h-[38px] w-[38px] flex items-center justify-center rounded-[6px] transition-colors disabled:opacity-50 shrink-0"
+                    className="bg-[var(--gs-fg)] hover:bg-[var(--gs-fg)] text-[var(--gs-bg)] h-[38px] w-[38px] flex items-center justify-center rounded-[6px] transition-colors disabled:opacity-50 shrink-0"
                   >
                     <Send className="h-4 w-4" />
                   </button>

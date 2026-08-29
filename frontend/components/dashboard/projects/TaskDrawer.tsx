@@ -99,10 +99,10 @@ export function TaskDrawer({ isOpen, onClose, task, onUpdate }: TaskDrawerProps)
                 value={task.status}
                 onChange={(val) => onUpdate(task.id, { status: val as Task["status"] })}
                 options={[
-                  { label: "Todo", value: "TODO", icon: <Circle className="h-3.5 w-3.5" /> },
+                  { label: "Todo", value: "TODO", icon: <Circle className="h-3.5 w-3.5 text-[var(--gs-muted)]" /> },
                   { label: "In Progress", value: "IN_PROGRESS", icon: <PlayCircle className="h-3.5 w-3.5 text-[#F5A623]" /> },
                   { label: "Review", value: "REVIEW", icon: <Clock className="h-3.5 w-3.5 text-[#007CF0]" /> },
-                  { label: "Done", value: "DONE", icon: <CheckCircle2 className="h-3.5 w-3.5 text-[#7928CA]" /> },
+                  { label: "Done", value: "DONE", icon: <CheckCircle2 className="h-3.5 w-3.5 text-[#28CA41]" /> },
                 ]}
               />
             </div>
@@ -129,7 +129,7 @@ export function TaskDrawer({ isOpen, onClose, task, onUpdate }: TaskDrawerProps)
                 onChange={(val) => onUpdate(task.id, { assigneeId: val ? parseInt(val, 10) : null })}
                 placeholder="Unassigned"
                 options={[
-                  { label: "Unassigned", value: "", icon: <User className="h-3.5 w-3.5 opacity-50" /> },
+                  { label: "Unassigned", value: "", icon: <div className="h-4 w-4 rounded-full border border-dashed border-[var(--gs-border-strong)] bg-transparent shrink-0" /> },
                   ...members.map(m => ({
                     label: m.user.name || m.user.email.split('@')[0],
                     value: m.id.toString(),
@@ -160,6 +160,35 @@ export function TaskDrawer({ isOpen, onClose, task, onUpdate }: TaskDrawerProps)
               </div>
             </div>
 
+          </div>
+
+          <div className="h-px bg-[var(--gs-border)] w-full" />
+
+          {/* Time Tracking */}
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center gap-2 text-[var(--gs-fg)] font-semibold text-[13px]">
+              <Clock className="h-4 w-4 text-[var(--gs-muted)]" />
+              Time Tracking
+            </div>
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={async () => {
+                  const token = localStorage.getItem("growsuite_token");
+                  const workspaceId = localStorage.getItem("growsuite_workspace_id");
+                  if (!token || !workspaceId) return;
+                  await fetch(`${API_URL}/api/workspaces/${workspaceId}/time-entries`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+                    body: JSON.stringify({ isTimer: true, description: task.title, taskId: task.id, projectId: task.projectId, billable: true })
+                  });
+                  window.location.reload(); // Refresh to ensure GlobalTimer picks it up immediately
+                }}
+                className="bg-[var(--gs-bg-alt)] border border-[var(--gs-border)] hover:border-[var(--gs-fg)] hover:text-[var(--gs-fg)] text-[var(--gs-muted)] text-[12px] font-medium px-3 py-1.5 rounded-md flex items-center gap-1.5 transition-colors outline-none"
+              >
+                <PlayCircle className="h-3.5 w-3.5" />
+                Start Timer
+              </button>
+            </div>
           </div>
 
           <div className="h-px bg-[var(--gs-border)] w-full" />

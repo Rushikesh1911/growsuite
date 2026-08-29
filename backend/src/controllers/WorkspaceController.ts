@@ -1,3 +1,4 @@
+import { PlanService } from '../services/PlanService';
 import { Response } from 'express';
 import { AuthRequest } from '../middleware/auth';
 import { EmailService } from '../services/EmailService';
@@ -81,7 +82,7 @@ export class WorkspaceController {
     try {
       const workspaceId = req.workspaceId!;
       const userId = req.user!.userId;
-      const { name, razorpayKeyId, razorpayKeySecret } = req.body;
+      const { name, razorpayKeyId, razorpayKeySecret, brandColor } = req.body;
 
       // Ensure user is OWNER or ADMIN
       const membership = await prisma.workspaceMember.findUnique({
@@ -104,6 +105,7 @@ export class WorkspaceController {
           name: name !== undefined ? name : undefined,
           razorpayKeyId: razorpayKeyId !== undefined ? razorpayKeyId : undefined,
           razorpayKeySecret: razorpayKeySecret !== undefined ? razorpayKeySecret : undefined,
+          brandColor: brandColor !== undefined ? brandColor : undefined,
         }
       });
 
@@ -146,7 +148,6 @@ export class WorkspaceController {
       res.status(500).json({ error: 'Failed to delete workspace' });
     }
   }
-
   // Invite a member to the workspace
   static async inviteMember(req: AuthRequest, res: Response) {
     try {
@@ -168,6 +169,16 @@ export class WorkspaceController {
       if (!inviterMembership || (inviterMembership.role !== 'OWNER' && inviterMembership.role !== 'ADMIN')) {
         res.status(403).json({ error: 'You do not have permission to invite members' });
         return;
+      }
+
+      try {
+        await PlanService.enforceLimit(workspaceId, 'teamMembers');
+      } catch (err: any) {
+        if (err.message.startsWith('PLAN_LIMIT_REACHED')) {
+           res.status(403).json({ error: err.message, code: 'PLAN_LIMIT_REACHED' });
+           return;
+        }
+        throw err;
       }
 
       // Check if user is already a member

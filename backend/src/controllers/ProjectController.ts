@@ -1,3 +1,4 @@
+import { PlanService } from '../services/PlanService';
 import { Response } from 'express';
 import { AuthRequest } from '../middleware/auth';
 import { ActivityService } from '../services/ActivityService';
@@ -65,17 +66,26 @@ export class ProjectController {
       res.status(500).json({ error: 'Failed to fetch project' });
     }
   }
-
   // Create a new project
   static async createProject(req: AuthRequest, res: Response) {
     try {
       const workspaceId = req.workspaceId!;
-      const { name, title, description, clientId, status, deadline } = req.body;
+      const { name, title, description, clientId, status, deadline, hourlyRate } = req.body;
       const projectName = name || title;
 
       if (!projectName || !clientId) {
         res.status(400).json({ error: 'Project name and clientId are required' });
         return;
+      }
+
+      try {
+        await PlanService.enforceLimit(workspaceId, 'projects');
+      } catch (err: any) {
+        if (err.message.startsWith('PLAN_LIMIT_REACHED')) {
+           res.status(403).json({ error: err.message, code: 'PLAN_LIMIT_REACHED' });
+           return;
+        }
+        throw err;
       }
 
       // Validate Client exists
@@ -96,6 +106,7 @@ export class ProjectController {
             status: status || 'PLANNING',
             deadline: deadline ? new Date(deadline) : null,
             clientId: parseInt(clientId, 10),
+            hourlyRate: hourlyRate !== undefined ? parseInt(hourlyRate, 10) : null,
             workspaceId,
           },
           include: {
@@ -187,7 +198,7 @@ export class ProjectController {
     try {
       const workspaceId = req.workspaceId!;
       const projectId = parseInt(req.params.id as string, 10);
-      const { name, description, status, deadline, clientId } = req.body;
+      const { name, description, status, deadline, clientId, hourlyRate } = req.body;
 
       if (isNaN(projectId)) {
         res.status(400).json({ error: 'Invalid project ID' });
@@ -221,7 +232,8 @@ export class ProjectController {
           ...(description !== undefined && { description }),
           ...(status && { status }),
           ...(deadline !== undefined && { deadline: deadline ? new Date(deadline) : null }),
-          ...(clientId && { clientId: parseInt(clientId, 10) })
+          ...(clientId && { clientId: parseInt(clientId, 10) }),
+          ...(hourlyRate !== undefined && { hourlyRate: hourlyRate === null ? null : parseInt(hourlyRate, 10) })
         },
         include: {
           client: true,

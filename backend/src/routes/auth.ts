@@ -23,6 +23,11 @@ router.get('/me', requireAuth, async (req: AuthRequest, res: Response): Promise<
         jobTitle: true,
         emailSignature: true,
         avatarUrl: true,
+        themePreference: true,
+        timezone: true,
+        dateFormat: true,
+        notificationPreferences: true,
+        phone: true,
         googleAccessToken: true,
         hasCompletedOnboarding: true,
         hideOnboardingChecklist: true,
@@ -50,18 +55,25 @@ router.get('/me', requireAuth, async (req: AuthRequest, res: Response): Promise<
 
 // Update current user profile
 router.patch('/me', requireAuth, async (req: AuthRequest, res: Response): Promise<void> => {
-  const { name, jobTitle, emailSignature } = req.body;
+  const { name, jobTitle, emailSignature, themePreference, timezone, dateFormat, notificationPreferences, phone, hourlyRate } = req.body;
   try {
     const user = await prisma.user.update({
       where: { id: req.user!.userId },
-      data: { name, jobTitle, emailSignature },
+      data: { name, jobTitle, emailSignature, themePreference, timezone, dateFormat, notificationPreferences, phone, hourlyRate },
       select: {
         id: true,
         email: true,
         name: true,
         jobTitle: true,
         emailSignature: true,
-        avatarUrl: true
+        avatarUrl: true,
+        themePreference: true,
+        timezone: true,
+        dateFormat: true,
+        notificationPreferences: true,
+        notificationPreferences: true,
+        phone: true,
+        hourlyRate: true
       }
     });
     res.json(user);
@@ -254,6 +266,45 @@ router.get('/verify', async (req: Request, res: Response): Promise<void> => {
   } catch (error) {
     console.error('Verify error:', error);
     res.status(500).json({ error: 'Failed to verify email' });
+  }
+});
+
+// Change password
+router.patch('/password', requireAuth, async (req: AuthRequest, res: Response): Promise<void> => {
+  const { currentPassword, newPassword } = req.body;
+
+  if (!currentPassword || !newPassword) {
+    res.status(400).json({ error: 'Current and new password are required' });
+    return;
+  }
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: req.user!.userId }
+    });
+
+    if (!user) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+
+    const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+    if (!isPasswordValid) {
+      res.status(401).json({ error: 'Incorrect current password' });
+      return;
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { password: hashedPassword }
+    });
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Password change error:', error);
+    res.status(500).json({ error: 'Failed to change password' });
   }
 });
 

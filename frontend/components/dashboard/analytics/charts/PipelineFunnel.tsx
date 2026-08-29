@@ -45,7 +45,7 @@ export function PipelineFunnel({ distribution }: PipelineFunnelProps) {
               <span className="w-24 text-[12px] font-medium text-[var(--gs-muted)] group-hover:text-[var(--gs-fg)] transition-colors">{formatStage(stage)}</span>
               <div className="flex-1 flex items-center">
                 <div 
-                  className={`h-5 transition-all duration-500 rounded-r-[4px] flex items-center bg-[var(--gs-border-strong)]`}
+                  className={`h-5 transition-all duration-500 rounded-r-[4px] flex items-center bg-[var(--gs-border)]`}
                   style={{ width: `${pct}%`, minWidth: pct > 0 ? '4px' : '0' }}
                 />
               </div>

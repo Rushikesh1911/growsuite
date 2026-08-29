@@ -188,14 +188,14 @@ export default function LeadProfilePage() {
               {lead.convertedDealId ? (
                 <button 
                   onClick={() => router.push('/dashboard/pipeline')}
-                  className="h-[32px] px-3 flex items-center justify-center rounded-[6px] text-xs font-semibold bg-[var(--gs-fg)] text-[var(--gs-bg)] hover:bg-[#FFFFFF] transition-colors"
+                  className="h-[32px] px-3 flex items-center justify-center rounded-[6px] text-xs font-semibold bg-[var(--gs-fg)] text-[var(--gs-bg)] hover:bg-[var(--gs-fg)] transition-colors"
                 >
                   View Deal
                 </button>
               ) : lead.status === 'QUALIFIED' && (
                 <button 
                   onClick={() => setIsConvertModalOpen(true)}
-                  className="h-[32px] px-3 flex items-center justify-center rounded-[6px] text-xs font-semibold bg-[var(--gs-fg)] text-[var(--gs-bg)] hover:bg-[#FFFFFF] transition-colors"
+                  className="h-[32px] px-3 flex items-center justify-center rounded-[6px] text-xs font-semibold bg-[var(--gs-fg)] text-[var(--gs-bg)] hover:bg-[var(--gs-fg)] transition-colors"
                 >
                   Create Deal
                 </button>
@@ -284,7 +284,7 @@ export default function LeadProfilePage() {
                           <span className="text-[13px] text-[var(--gs-muted)] line-clamp-2">
                             {activity.description}
                           </span>
-                          <span className="text-[11px] text-[#666666] mt-2 font-medium tracking-wide flex items-center gap-2">
+                          <span className="text-[11px] text-[var(--gs-muted-light)] mt-2 font-medium tracking-wide flex items-center gap-2">
                             {new Date(activity.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
                           </span>
                         </div>
@@ -324,7 +324,7 @@ export default function LeadProfilePage() {
 
       {/* Send Email Modal */}
       {isEmailModalOpen && (
-        <div className="fixed inset-0 bg-[#000000]/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-in fade-in duration-200">
+        <div className="fixed inset-0 bg-[var(--gs-bg)]/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-in fade-in duration-200">
           <div className="bg-[var(--gs-bg)] border border-[var(--gs-border)] rounded-[12px] w-full max-w-lg shadow-2xl overflow-hidden">
             <div className="px-6 py-4 border-b border-[var(--gs-border)] flex items-center justify-between bg-[var(--gs-surface)]">
               <h2 className="text-[15px] font-semibold text-[var(--gs-fg)]">Send Email to {lead.contactName}</h2>
@@ -379,7 +379,7 @@ export default function LeadProfilePage() {
                 <button
                   type="submit"
                   disabled={sendingEmail}
-                  className="bg-[var(--gs-fg)] hover:bg-[#FFFFFF] text-[#000000] px-4 py-2 rounded-[6px] text-[13px] font-semibold transition-colors flex items-center gap-2 disabled:opacity-50"
+                  className="bg-[var(--gs-fg)] hover:bg-[var(--gs-fg)] text-[var(--gs-bg)] px-4 py-2 rounded-[6px] text-[13px] font-semibold transition-colors flex items-center gap-2 disabled:opacity-50"
                 >
                   <Mail className="h-3.5 w-3.5" />
                   {sendingEmail ? "Sending..." : "Send Email"}

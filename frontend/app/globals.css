@@ -3,16 +3,16 @@
 /* ─── Design Tokens ──────────────────────────────────────── */
 :root {
   /* Base palette */
-  --gs-bg: #FAFAF8;
-  --gs-bg-alt: #F5F5F0;
-  --gs-surface: #FFFFFF;
-  --gs-surface-raised: #F9F9F6;
-  --gs-border: rgba(0, 0, 0, 0.08);
-  --gs-border-strong: rgba(0, 0, 0, 0.14);
-  --gs-fg: #0F0F0F;
-  --gs-fg-secondary: #3D3D3D;
-  --gs-muted: #8A8A8A;
-  --gs-muted-light: #AFAFAF;
+  --gs-bg: #0E0E0F;
+  --gs-bg-alt: #161618;
+  --gs-surface: #111112;
+  --gs-surface-raised: #1C1C1E;
+  --gs-border: #2C2C2E;
+  --gs-border-strong: #444444;
+  --gs-fg: #EDEDED;
+  --gs-fg-secondary: #C4C4C4;
+  --gs-muted: #8A8A93;
+  --gs-muted-light: #555555;
 
   /* ── GrowSuite brand identity ── */
   --gs-accent: #0F0F0F;          /* primary action */
@@ -297,3 +297,4 @@ body {
   height: 1px;
   background: linear-gradient(to right, transparent, rgba(0,0,0,0.07) 20%, rgba(0,0,0,0.07) 80%, transparent);
 }
+

@@ -38,7 +38,7 @@ export function Dialog({ isOpen, onClose, title, description, children }: Dialog
             exit={{ opacity: 0 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
             onClick={onClose}
-            className="fixed inset-0 bg-[#111111]/40"
+            className="fixed inset-0 bg-[var(--gs-surface)]/40"
           />
 
           {/* Modal box */}
@@ -47,19 +47,19 @@ export function Dialog({ isOpen, onClose, title, description, children }: Dialog
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.98 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className="w-full max-w-[560px] bg-white border border-[#E5E7EB] rounded-[8px] shadow-sm relative z-10 overflow-hidden flex flex-col p-8 text-[#111111]"
+            className="w-full max-w-[560px] bg-white border border-[#E5E7EB] rounded-[8px] shadow-sm relative z-10 overflow-hidden flex flex-col p-8 text-[var(--gs-surface)]"
           >
             {/* Close Button */}
             <button
               onClick={onClose}
-              className="absolute top-6 right-6 h-8 w-8 rounded-[6px] hover:bg-[#F5F5F5] flex items-center justify-center text-[#6B7280] hover:text-[#111111] transition-colors active:bg-[#EFEFEF] cursor-pointer"
+              className="absolute top-6 right-6 h-8 w-8 rounded-[6px] hover:bg-[#F5F5F5] flex items-center justify-center text-[#6B7280] hover:text-[var(--gs-surface)] transition-colors active:bg-[#EFEFEF] cursor-pointer"
             >
               <X className="h-[18px] w-[18px] stroke-[1.75]" />
             </button>
 
             {/* Header */}
             <div className="flex flex-col gap-1 mb-6 pr-8">
-              <h2 className="text-lg font-bold tracking-tight text-[#111111]">{title}</h2>
+              <h2 className="text-lg font-bold tracking-tight text-[var(--gs-surface)]">{title}</h2>
               {description && <p className="text-sm text-[#6B7280]">{description}</p>}
             </div>
 

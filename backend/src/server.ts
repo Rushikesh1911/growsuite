@@ -18,17 +18,27 @@ import uploadsRoutes from './routes/uploads';
 import searchRoutes from './routes/search';
 import googleRoutes from './routes/google';
 import onboardingRoutes from './routes/onboarding';
+import timeEntryRoutes from './routes/timeEntry.routes';
 import path from 'path';
 import { PrismaClient } from '../generated/prisma';
 import { SocketService } from './socket';
+
+import billingRoutes from './routes/billing';
+import billingWebhookRoutes from './routes/billingWebhook';
 
 const prisma = new PrismaClient();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());
+
+// Webhook must be parsed as raw body, so mount it before express.json()
+app.use('/api/billing/webhook', billingWebhookRoutes);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use('/api/billing', billingRoutes);
 
 // Serve static files from the uploads directory
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
@@ -51,6 +61,7 @@ app.use('/api/uploads', uploadsRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/google', googleRoutes);
 app.use('/api/onboarding', onboardingRoutes);
+app.use('/api/workspaces/:workspaceId/time-entries', timeEntryRoutes);
 
 // Health check endpoint
 app.get('/health', async (req: Request, res: Response) => {

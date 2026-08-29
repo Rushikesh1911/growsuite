@@ -14,7 +14,7 @@ interface OutcomesDonutProps {
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-[var(--gs-surface)] border border-[var(--gs-border-strong)] p-3 shadow-xl rounded-[6px]">
+      <div className="bg-[var(--gs-surface)] border border-[var(--gs-border)] p-3 shadow-xl rounded-[6px]">
         <div className="flex items-center gap-3">
           <div className="w-2 h-2 rounded-full" style={{ backgroundColor: payload[0].payload.color }} />
           <span className="text-[12px] font-semibold text-[var(--gs-muted)]">{payload[0].name}</span>
@@ -31,7 +31,7 @@ export function OutcomesDonut({ data }: OutcomesDonutProps) {
 
   const chartData = [
     { name: "Won", value: data.wonDeals, color: "var(--gs-fg)" },
-    { name: "Open", value: data.openDeals, color: "var(--gs-border-strong)" },
+    { name: "Open", value: data.openDeals, color: "var(--gs-border)" },
     { name: "Lost", value: lostDeals, color: "#EF4444" },
   ];
 

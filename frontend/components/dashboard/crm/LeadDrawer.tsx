@@ -257,7 +257,7 @@ export function LeadDrawer({ token, workspaceId, leadId, onClose, onSuccess }: a
                     placeholder="Unassigned"
                     className="w-full justify-between"
                     options={[
-                      { label: "Unassigned", value: "", icon: <User className="h-3.5 w-3.5 opacity-50" /> },
+                      { label: "Unassigned", value: "", icon: <div className="h-4 w-4 rounded-full border border-dashed border-[var(--gs-border-strong)] bg-transparent shrink-0" /> },
                       ...members.map(m => ({
                         label: m.user.name || m.user.email.split('@')[0],
                         value: m.id.toString(),

@@ -1,3 +1,4 @@
+import { PlanService } from '../services/PlanService';
 import { Response } from 'express';
 import { AuthRequest } from '../middleware/auth';
 import { PrismaClient } from '../../generated/prisma';
@@ -60,7 +61,7 @@ export class ClientController {
               estimatedValue: true
             }
           },
-          notes: {
+          clientNotes: {
             orderBy: { createdAt: 'desc' },
             include: { author: { include: { user: { select: { name: true, email: true } } } } }
           }
@@ -78,7 +79,6 @@ export class ClientController {
       res.status(500).json({ error: 'Failed to fetch client' });
     }
   }
-
   // Create a direct client (not converted from lead)
   static async createClient(req: AuthRequest, res: Response) {
     try {
@@ -88,6 +88,16 @@ export class ClientController {
       if (!name || !company) {
         res.status(400).json({ error: 'Name and company are required' });
         return;
+      }
+
+      try {
+        await PlanService.enforceLimit(workspaceId, 'clients');
+      } catch (err: any) {
+        if (err.message.startsWith('PLAN_LIMIT_REACHED')) {
+           res.status(403).json({ error: err.message, code: 'PLAN_LIMIT_REACHED' });
+           return;
+        }
+        throw err;
       }
 
       const client = await prisma.client.create({

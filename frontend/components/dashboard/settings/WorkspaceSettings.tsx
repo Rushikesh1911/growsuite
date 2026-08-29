@@ -184,28 +184,28 @@ export function WorkspaceSettings({ token, workspaceId }: WorkspaceSettingsProps
     <div className="w-full max-w-4xl mx-auto flex flex-col gap-8 animate-fade">
       
       {/* Header */}
-      <div className="flex flex-col gap-1 border-b border-[#222222] pb-6">
-        <h1 className="text-2xl font-bold text-[#EDEDED] tracking-tight">Workspace Settings</h1>
-        <p className="text-[14px] text-[#888888]">Manage your organization's profile, members, and billing.</p>
+      <div className="flex flex-col gap-1 border-b border-[var(--gs-border)] pb-6">
+        <h1 className="text-2xl font-bold text-[var(--gs-fg)] tracking-tight">Workspace Settings</h1>
+        <p className="text-[14px] text-[var(--gs-muted)]">Manage your organization's profile, members, and billing.</p>
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-6 border-b border-[#222222]">
+      <div className="flex items-center gap-6 border-b border-[var(--gs-border)]">
         <button
           onClick={() => setActiveTab("general")}
           className={`pb-3 text-[14px] font-medium transition-colors relative ${
-            activeTab === "general" ? "text-[#EDEDED]" : "text-[#888888] hover:text-[#EDEDED]"
+            activeTab === "general" ? "text-[var(--gs-fg)]" : "text-[var(--gs-muted)] hover:text-[var(--gs-fg)]"
           }`}
         >
           General
           {activeTab === "general" && (
-            <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#EDEDED] rounded-t-full" />
+            <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[var(--gs-fg)] rounded-t-full" />
           )}
         </button>
         <button
           onClick={() => setActiveTab("payments")}
           className={`pb-3 text-[14px] font-medium transition-colors relative flex items-center gap-2 ${
-            activeTab === "payments" ? "text-[#EDEDED]" : "text-[#888888] hover:text-[#EDEDED]"
+            activeTab === "payments" ? "text-[var(--gs-fg)]" : "text-[var(--gs-muted)] hover:text-[var(--gs-fg)]"
           }`}
         >
           Payments (Razorpay)
@@ -213,27 +213,27 @@ export function WorkspaceSettings({ token, workspaceId }: WorkspaceSettingsProps
             <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
           )}
           {activeTab === "payments" && (
-            <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#EDEDED] rounded-t-full" />
+            <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[var(--gs-fg)] rounded-t-full" />
           )}
         </button>
         <button
           onClick={() => setActiveTab("members")}
           className={`pb-3 text-[14px] font-medium transition-colors relative flex items-center gap-2 ${
-            activeTab === "members" ? "text-[#EDEDED]" : "text-[#888888] hover:text-[#EDEDED]"
+            activeTab === "members" ? "text-[var(--gs-fg)]" : "text-[var(--gs-muted)] hover:text-[var(--gs-fg)]"
           }`}
         >
           Team Members
-          <span className="bg-[#222222] text-[#EDEDED] px-1.5 py-0.5 rounded-[4px] text-[10px] font-bold">
+          <span className="bg-[var(--gs-border)] text-[var(--gs-fg)] px-1.5 py-0.5 rounded-[4px] text-[10px] font-bold">
             {workspace.members.length}
           </span>
           {activeTab === "members" && (
-            <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#EDEDED] rounded-t-full" />
+            <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[var(--gs-fg)] rounded-t-full" />
           )}
         </button>
         <button
           onClick={() => setActiveTab("danger")}
           className={`pb-3 text-[14px] font-medium transition-colors relative ${
-            activeTab === "danger" ? "text-red-500" : "text-[#888888] hover:text-red-500"
+            activeTab === "danger" ? "text-red-500" : "text-[var(--gs-muted)] hover:text-red-500"
           }`}
         >
           Danger Zone
@@ -248,9 +248,9 @@ export function WorkspaceSettings({ token, workspaceId }: WorkspaceSettingsProps
         
         {activeTab === "general" && (
           <div className="flex flex-col gap-6">
-            <Card className="bg-[#000000] border-[#333333] overflow-hidden flex flex-col p-6">
-              <h3 className="text-[16px] font-semibold text-[#EDEDED] mb-1">Workspace Logo</h3>
-              <p className="text-[13px] text-[#888888] mb-6">Upload a logo to brand your workspace and client-facing pages.</p>
+            <Card className="bg-[var(--gs-bg)] border-[var(--gs-border)] overflow-hidden flex flex-col p-6">
+              <h3 className="text-[16px] font-semibold text-[var(--gs-fg)] mb-1">Workspace Logo</h3>
+              <p className="text-[13px] text-[var(--gs-muted)] mb-6">Upload a logo to brand your workspace and client-facing pages.</p>
               <ImageUpload 
                 token={token} 
                 workspaceId={workspaceId} 
@@ -264,24 +264,24 @@ export function WorkspaceSettings({ token, workspaceId }: WorkspaceSettingsProps
               />
             </Card>
 
-            <Card className="bg-[#000000] border-[#333333] overflow-hidden flex flex-col">
-              <div className="p-6 border-b border-[#222222]">
-                <h3 className="text-[16px] font-semibold text-[#EDEDED] mb-1">Workspace Name</h3>
-                <p className="text-[13px] text-[#888888] mb-4">This is your organization's visible name within GrowSuite.</p>
+            <Card className="bg-[var(--gs-bg)] border-[var(--gs-border)] overflow-hidden flex flex-col">
+              <div className="p-6 border-b border-[var(--gs-border)]">
+                <h3 className="text-[16px] font-semibold text-[var(--gs-fg)] mb-1">Workspace Name</h3>
+                <p className="text-[13px] text-[var(--gs-muted)] mb-4">This is your organization's visible name within GrowSuite.</p>
                 
                 <input
                   type="text"
                   value={workspaceName}
                   onChange={(e) => setWorkspaceName(e.target.value)}
-                  className="w-full max-w-md bg-[#0A0A0A] border border-[#333333] rounded-[6px] px-3 py-2 text-[14px] text-[#EDEDED] focus:outline-none focus:border-[#666666] transition-colors"
+                  className="w-full max-w-md bg-[var(--gs-bg-alt)] border border-[var(--gs-border)] rounded-[6px] px-3 py-2 text-[14px] text-[var(--gs-fg)] focus:outline-none focus:border-[var(--gs-muted-light)] transition-colors"
                 />
               </div>
-              <div className="bg-[#0A0A0A] px-6 py-3 flex items-center justify-between">
-                <span className="text-[12px] text-[#888888]">Please use 32 characters at maximum.</span>
+              <div className="bg-[var(--gs-bg-alt)] px-6 py-3 flex items-center justify-between">
+                <span className="text-[12px] text-[var(--gs-muted)]">Please use 32 characters at maximum.</span>
                 <button 
                   onClick={() => handleUpdateWorkspace()}
                   disabled={isSaving}
-                  className="bg-[#EDEDED] hover:bg-[#FFFFFF] disabled:opacity-50 text-[#000000] px-4 py-1.5 rounded-[6px] text-[13px] font-semibold transition-colors"
+                  className="bg-[var(--gs-fg)] hover:bg-[var(--gs-fg)] disabled:opacity-50 text-[var(--gs-bg)] px-4 py-1.5 rounded-[6px] text-[13px] font-semibold transition-colors"
                 >
                   {isSaving ? "Saving..." : "Save"}
                 </button>
@@ -291,41 +291,41 @@ export function WorkspaceSettings({ token, workspaceId }: WorkspaceSettingsProps
         )}
 
         {activeTab === "payments" && (
-          <Card className="bg-[#000000] border-[#333333] overflow-hidden flex flex-col">
-            <div className="p-6 border-b border-[#222222] flex flex-col gap-6">
+          <Card className="bg-[var(--gs-bg)] border-[var(--gs-border)] overflow-hidden flex flex-col">
+            <div className="p-6 border-b border-[var(--gs-border)] flex flex-col gap-6">
               <div>
-                <h3 className="text-[16px] font-semibold text-[#EDEDED] mb-1">Razorpay Integration</h3>
-                <p className="text-[13px] text-[#888888] max-w-2xl">
+                <h3 className="text-[16px] font-semibold text-[var(--gs-fg)] mb-1">Razorpay Integration</h3>
+                <p className="text-[13px] text-[var(--gs-muted)] max-w-2xl">
                   Connect your Razorpay account to seamlessly collect payments from your clients. When clients pay an invoice, the funds will go directly into your linked bank account.
                 </p>
               </div>
 
               <div className="flex flex-col gap-4 max-w-md">
                 <div className="flex flex-col gap-2">
-                  <label className="text-[12px] font-medium text-[#888888]">Razorpay Key ID</label>
+                  <label className="text-[12px] font-medium text-[var(--gs-muted)]">Razorpay Key ID</label>
                   <input
                     type="text"
                     value={razorpayKeyId}
                     onChange={(e) => setRazorpayKeyId(e.target.value)}
                     placeholder="rzp_live_..."
-                    className="w-full bg-[#0A0A0A] border border-[#333333] rounded-[6px] px-3 py-2 text-[14px] text-[#EDEDED] focus:outline-none focus:border-[#666666] transition-colors"
+                    className="w-full bg-[var(--gs-bg-alt)] border border-[var(--gs-border)] rounded-[6px] px-3 py-2 text-[14px] text-[var(--gs-fg)] focus:outline-none focus:border-[var(--gs-muted-light)] transition-colors"
                   />
                 </div>
                 
                 <div className="flex flex-col gap-2">
-                  <label className="text-[12px] font-medium text-[#888888]">Razorpay Key Secret</label>
+                  <label className="text-[12px] font-medium text-[var(--gs-muted)]">Razorpay Key Secret</label>
                   <input
                     type="password"
                     value={razorpayKeySecret}
                     onChange={(e) => setRazorpayKeySecret(e.target.value)}
                     placeholder="Enter your secret key"
-                    className="w-full bg-[#0A0A0A] border border-[#333333] rounded-[6px] px-3 py-2 text-[14px] text-[#EDEDED] focus:outline-none focus:border-[#666666] transition-colors"
+                    className="w-full bg-[var(--gs-bg-alt)] border border-[var(--gs-border)] rounded-[6px] px-3 py-2 text-[14px] text-[var(--gs-fg)] focus:outline-none focus:border-[var(--gs-muted-light)] transition-colors"
                   />
                 </div>
               </div>
             </div>
-            <div className="bg-[#0A0A0A] px-6 py-3 flex items-center justify-between">
-              <span className="text-[12px] text-[#888888]">Your keys are stored securely.</span>
+            <div className="bg-[var(--gs-bg-alt)] px-6 py-3 flex items-center justify-between">
+              <span className="text-[12px] text-[var(--gs-muted)]">Your keys are stored securely.</span>
               <button 
                 onClick={() => handleUpdateWorkspace()}
                 disabled={isSaving}
@@ -340,15 +340,15 @@ export function WorkspaceSettings({ token, workspaceId }: WorkspaceSettingsProps
         )}
 
         {activeTab === "members" && (
-          <Card className="bg-[#000000] border-[#333333] overflow-hidden">
-            <div className="p-6 border-b border-[#222222] flex items-center justify-between">
+          <Card className="bg-[var(--gs-bg)] border-[var(--gs-border)] overflow-hidden">
+            <div className="p-6 border-b border-[var(--gs-border)] flex items-center justify-between">
               <div>
-                <h3 className="text-[16px] font-semibold text-[#EDEDED] mb-1">Team Members</h3>
-                <p className="text-[13px] text-[#888888]">Manage who has access to this workspace and their roles.</p>
+                <h3 className="text-[16px] font-semibold text-[var(--gs-fg)] mb-1">Team Members</h3>
+                <p className="text-[13px] text-[var(--gs-muted)]">Manage who has access to this workspace and their roles.</p>
               </div>
               <button 
                 onClick={() => setIsInviteModalOpen(true)}
-                className="flex items-center gap-2 bg-[#EDEDED] hover:bg-[#FFFFFF] text-[#000000] px-4 py-2 rounded-[6px] text-[13px] font-semibold transition-colors"
+                className="flex items-center gap-2 bg-[var(--gs-fg)] hover:bg-[var(--gs-fg)] text-[var(--gs-bg)] px-4 py-2 rounded-[6px] text-[13px] font-semibold transition-colors"
               >
                 <UserPlus className="h-4 w-4" />
                 Invite Member
@@ -357,21 +357,21 @@ export function WorkspaceSettings({ token, workspaceId }: WorkspaceSettingsProps
             
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
-                <tbody className="divide-y divide-[#222222]">
+                <tbody className="divide-y divide-[var(--gs-border)]">
                   {workspace.members.map((member) => (
-                    <tr key={member.id} className="hover:bg-[#0A0A0A] transition-colors">
+                    <tr key={member.id} className="hover:bg-[var(--gs-bg-alt)] transition-colors">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                           <div className="h-10 w-10 rounded-full bg-[var(--gs-surface)] border border-[var(--gs-border)] flex items-center justify-center shrink-0">
-                            <span className="text-[14px] font-bold text-[#FFFFFF]">
+                            <span className="text-[14px] font-bold text-[var(--gs-fg)]">
                               {member.user.name ? member.user.name.charAt(0).toUpperCase() : member.user.email.charAt(0).toUpperCase()}
                             </span>
                           </div>
                           <div className="flex flex-col">
-                            <span className="text-[14px] font-semibold text-[#EDEDED]">
+                            <span className="text-[14px] font-semibold text-[var(--gs-fg)]">
                               {member.user.name || "Unknown User"}
                             </span>
-                            <span className="text-[12px] text-[#888888]">{member.user.email}</span>
+                            <span className="text-[12px] text-[var(--gs-muted)]">{member.user.email}</span>
                           </div>
                         </div>
                       </td>
@@ -381,7 +381,7 @@ export function WorkspaceSettings({ token, workspaceId }: WorkspaceSettingsProps
                             ? "bg-[#7928CA]/20 text-[#7928CA]" 
                             : member.role === "ADMIN" 
                               ? "bg-[#F5A623]/20 text-[#F5A623]" 
-                              : "bg-[#333333] text-[#EDEDED]"
+                              : "bg-[var(--gs-border)] text-[var(--gs-fg)]"
                         }`}>
                           {member.role}
                         </span>
@@ -404,15 +404,15 @@ export function WorkspaceSettings({ token, workspaceId }: WorkspaceSettingsProps
               Permanently delete this workspace and all associated leads, clients, projects, invoices, payments, and activities. This action cannot be undone.
             </p>
             
-            <div className="bg-[#0A0A0A] border border-[#222222] p-4 rounded-[8px] mb-4">
-              <label className="block text-[12px] font-medium text-[#888888] mb-2">
-                Type <strong className="text-[#EDEDED] font-mono">"{workspace.name}"</strong> to confirm:
+            <div className="bg-[var(--gs-bg-alt)] border border-[var(--gs-border)] p-4 rounded-[8px] mb-4">
+              <label className="block text-[12px] font-medium text-[var(--gs-muted)] mb-2">
+                Type <strong className="text-[var(--gs-fg)] font-mono">"{workspace.name}"</strong> to confirm:
               </label>
               <input
                 type="text"
                 value={deleteConfirmText}
                 onChange={(e) => setDeleteConfirmText(e.target.value)}
-                className="w-full max-w-md bg-[#000000] border border-[#333333] rounded-[6px] px-3 py-2 text-[14px] text-[#EDEDED] focus:outline-none focus:border-red-500/50 transition-colors"
+                className="w-full max-w-md bg-[var(--gs-bg)] border border-[var(--gs-border)] rounded-[6px] px-3 py-2 text-[14px] text-[var(--gs-fg)] focus:outline-none focus:border-red-500/50 transition-colors"
                 placeholder={workspace.name}
               />
             </div>
@@ -430,26 +430,26 @@ export function WorkspaceSettings({ token, workspaceId }: WorkspaceSettingsProps
 
       {/* Invite Member Modal */}
       {isInviteModalOpen && (
-        <div className="fixed inset-0 bg-[#000000]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <Card className="bg-[#000000] border-[#333333] w-full max-w-md p-6 shadow-2xl animate-in zoom-in-95 duration-200">
-            <h3 className="text-xl font-bold text-[#EDEDED] mb-2">Invite Team Member</h3>
-            <p className="text-[13px] text-[#888888] mb-6">Send an email invitation to collaborate in this workspace.</p>
+        <div className="fixed inset-0 bg-[var(--gs-bg)]/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <Card className="bg-[var(--gs-bg)] border-[var(--gs-border)] w-full max-w-md p-6 shadow-2xl animate-in zoom-in-95 duration-200">
+            <h3 className="text-xl font-bold text-[var(--gs-fg)] mb-2">Invite Team Member</h3>
+            <p className="text-[13px] text-[var(--gs-muted)] mb-6">Send an email invitation to collaborate in this workspace.</p>
             
             <form onSubmit={handleInviteMember} className="flex flex-col gap-4">
               <div className="flex flex-col gap-2">
-                <label className="text-[12px] font-medium text-[#888888]">Email Address</label>
+                <label className="text-[12px] font-medium text-[var(--gs-muted)]">Email Address</label>
                 <input
                   type="email"
                   required
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
                   placeholder="colleague@company.com"
-                  className="w-full bg-[#111111] border border-[#333333] rounded-[6px] px-3 py-2 text-[14px] text-[#EDEDED] focus:outline-none focus:border-[#888888] transition-colors"
+                  className="w-full bg-[var(--gs-surface)] border border-[var(--gs-border)] rounded-[6px] px-3 py-2 text-[14px] text-[var(--gs-fg)] focus:outline-none focus:border-[var(--gs-muted)] transition-colors"
                 />
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="text-[12px] font-medium text-[#888888]">Role</label>
+                <label className="text-[12px] font-medium text-[var(--gs-muted)]">Role</label>
                 <PopoverSelect
                   value={inviteRole}
                   onChange={(val) => setInviteRole(val as "MEMBER" | "ADMIN")}
@@ -457,7 +457,7 @@ export function WorkspaceSettings({ token, workspaceId }: WorkspaceSettingsProps
                     { value: "MEMBER", label: "Member (Can view and edit items)" },
                     { value: "ADMIN", label: "Admin (Can manage settings and billing)" },
                   ]}
-                  className="w-full bg-[#111111] border border-[#333333] rounded-[6px] py-2 px-3 !ml-0 text-[14px] text-[#EDEDED] font-normal justify-between hover:bg-[#1a1a1a]"
+                  className="w-full bg-[var(--gs-surface)] border border-[var(--gs-border)] rounded-[6px] py-2 px-3 !ml-0 text-[14px] text-[var(--gs-fg)] font-normal justify-between hover:bg-[#1a1a1a]"
                 />
               </div>
 
@@ -465,17 +465,17 @@ export function WorkspaceSettings({ token, workspaceId }: WorkspaceSettingsProps
                 <button
                   type="button"
                   onClick={() => setIsInviteModalOpen(false)}
-                  className="px-4 py-2 text-[13px] font-medium text-[#888888] hover:text-[#EDEDED] transition-colors"
+                  className="px-4 py-2 text-[13px] font-medium text-[var(--gs-muted)] hover:text-[var(--gs-fg)] transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isInviting || !inviteEmail}
-                  className="bg-[#EDEDED] hover:bg-[#FFFFFF] disabled:opacity-50 disabled:hover:bg-[#EDEDED] text-[#000000] px-6 py-2 rounded-[6px] text-[13px] font-semibold transition-colors flex items-center justify-center min-w-[120px]"
+                  className="bg-[var(--gs-fg)] hover:bg-[var(--gs-fg)] disabled:opacity-50 disabled:hover:bg-[var(--gs-fg)] text-[var(--gs-bg)] px-6 py-2 rounded-[6px] text-[13px] font-semibold transition-colors flex items-center justify-center min-w-[120px]"
                 >
                   {isInviting ? (
-                    <div className="h-4 w-4 border-2 border-[#000000]/20 border-t-[#000000] rounded-full animate-spin" />
+                    <div className="h-4 w-4 border-2 border-[var(--gs-bg)]/20 border-t-[var(--gs-bg)] rounded-full animate-spin" />
                   ) : (
                     "Send Invite"
                   )}

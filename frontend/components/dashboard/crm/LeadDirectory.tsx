@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Search, Plus, Building2, MoreHorizontal, X, User, UserPlus, Filter, Mail, Phone, ExternalLink, Globe, Code } from "lucide-react";
+import { User, Search, Plus, MoreHorizontal, Edit2, Trash2, X, ExternalLink, RefreshCw, Building2, LayoutGrid, List as ListIcon, Code, CheckCircle2, Circle, Mail, Phone, Filter, UserPlus, ArrowRight, DollarSign, Globe } from "lucide-react";
 import { downloadCSV } from "@/lib/csv";
 import { PopoverSelect } from "@/components/ui/popover-select";
 import { Card } from "@/components/ui/card";
@@ -10,7 +10,8 @@ import { ConvertDealModal } from "./ConvertDealModal";
 import { LeadDrawer } from "./LeadDrawer";
 import { ImportCsvModal } from "../shared/ImportCsvModal";
 import { WebToLeadModal } from "./WebToLeadModal";
-import { TableSkeleton } from "@/components/ui/skeleton";
+import { TableSkeleton, BoardSkeleton } from "@/components/ui/skeleton";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 import { useSocket } from "@/components/providers/SocketProvider";
 
 interface Lead {
@@ -322,14 +323,15 @@ export function LeadDirectory({ token, workspaceId }: LeadDirectoryProps) {
     return matchesSearch && matchesFilter;
   });
 
-  const getStatusColor = (status: string) => {
-    const colors: Record<string, string> = {
-      NEW: "bg-[var(--gs-bg-alt)] text-[var(--gs-fg)]",
-      CONTACTED: "bg-[#007CF0]/20 text-[#007CF0]",
-      QUALIFIED: "bg-[#F5A623]/20 text-[#F5A623]",
-      DISQUALIFIED: "bg-red-500/20 text-red-500",
-    };
-    return colors[status] || colors.NEW;
+  const getSemanticStatus = (status: string): "neutral" | "positive" | "pending" | "info" | "overdue" => {
+    switch (status) {
+      case "NEW": return "neutral";
+      case "CONTACTED": return "info";
+      case "QUALIFIED": return "pending";
+      case "DISQUALIFIED": return "overdue";
+      case "CONVERTED": return "positive";
+      default: return "neutral";
+    }
   };
 
   const getTimeAgo = (dateStr: string) => {
@@ -365,7 +367,7 @@ export function LeadDirectory({ token, workspaceId }: LeadDirectoryProps) {
           </button>
           <button 
             onClick={() => setIsCreateModalOpen(true)}
-            className="flex items-center justify-center gap-2 bg-[var(--gs-fg)] hover:bg-[#FFFFFF] text-[var(--gs-bg)] px-4 py-2 rounded-[6px] text-[13px] font-semibold transition-colors"
+            className="flex items-center justify-center gap-2 bg-[var(--gs-fg)] hover:bg-[var(--gs-fg)] text-[var(--gs-bg)] px-4 py-2 rounded-[6px] text-[13px] font-semibold transition-colors"
           >
             <Plus className="h-4 w-4" />
             Add Lead
@@ -390,7 +392,7 @@ export function LeadDirectory({ token, workspaceId }: LeadDirectoryProps) {
             onClick={(e) => { e.stopPropagation(); setIsFilterOpen(!isFilterOpen); setActionMenuOpenId(null); }}
             className={`h-[38px] px-4 rounded-[6px] border border-[var(--gs-border)] text-[13px] font-medium transition-colors ${filterStatus ? 'bg-[var(--gs-fg)] text-[var(--gs-bg)]' : 'bg-[var(--gs-bg-alt)] text-[var(--gs-fg)] hover:bg-[var(--gs-border)]'}`}
           >
-            {filterStatus ? `Status: ${filterStatus}` : 'Filter'}
+            {filterStatus ? `Status: ${filterStatus}` : 'Filters'}
           </button>
           
           {isFilterOpen && (
@@ -464,12 +466,16 @@ export function LeadDirectory({ token, workspaceId }: LeadDirectoryProps) {
               <thead>
                 <tr className="border-b border-[var(--gs-border)] bg-[var(--gs-bg-alt)]">
                   <th className="w-[40px] px-4 py-3 text-left">
-                    <input 
-                      type="checkbox" 
-                      className="h-3.5 w-3.5 rounded-[3px] border-[var(--gs-border-strong)] bg-transparent text-[var(--gs-fg)] focus:ring-0 focus:ring-offset-0 cursor-pointer"
-                      checked={filteredLeads.length > 0 && selectedIds.length === filteredLeads.length}
-                      onChange={toggleSelectAll}
-                    />
+                    <div 
+                      onClick={toggleSelectAll}
+                      className="cursor-pointer inline-flex items-center justify-center w-4 h-4"
+                    >
+                      {filteredLeads.length > 0 && selectedIds.length === filteredLeads.length ? (
+                        <CheckCircle2 className="h-4 w-4 text-[var(--gs-fg)]" />
+                      ) : (
+                        <Circle className="h-4 w-4 text-[var(--gs-muted)]" />
+                      )}
+                    </div>
                   </th>
                   <th className="px-4 py-3 text-left text-[11px] font-bold text-[var(--gs-muted)] uppercase tracking-wider whitespace-nowrap">Contact</th>
                   <th className="px-5 py-3 text-[11px] font-semibold text-[var(--gs-muted)] uppercase tracking-wider">Company</th>
@@ -483,12 +489,16 @@ export function LeadDirectory({ token, workspaceId }: LeadDirectoryProps) {
                 {filteredLeads.map((lead, index) => (
                   <tr key={lead.id} className={`border-b border-[var(--gs-border)] last:border-b-0 hover:bg-[var(--gs-bg-alt)] transition-colors ${selectedIds.includes(lead.id) ? 'bg-[var(--gs-bg-alt)]' : ''}`}>
                     <td className="px-4 py-4 whitespace-nowrap">
-                      <input 
-                        type="checkbox" 
-                        className="h-3.5 w-3.5 rounded-[3px] border-[var(--gs-border-strong)] bg-transparent text-[var(--gs-fg)] focus:ring-0 focus:ring-offset-0 cursor-pointer"
-                        checked={selectedIds.includes(lead.id)}
-                        onChange={() => toggleSelect(lead.id)}
-                      />
+                      <div 
+                        onClick={(e) => { e.stopPropagation(); toggleSelect(lead.id); }}
+                        className="cursor-pointer inline-flex items-center justify-center w-4 h-4"
+                      >
+                        {selectedIds.includes(lead.id) ? (
+                          <CheckCircle2 className="h-4 w-4 text-[var(--gs-fg)]" />
+                        ) : (
+                          <Circle className="h-4 w-4 text-[var(--gs-muted)]" />
+                        )}
+                      </div>
                     </td>
                     <td className="px-4 py-4 whitespace-nowrap">
                       <div className="flex flex-col">
@@ -503,9 +513,7 @@ export function LeadDirectory({ token, workspaceId }: LeadDirectoryProps) {
                       </div>
                     </td>
                     <td className="px-5 py-3">
-                      <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold tracking-wide uppercase ${getStatusColor(lead.status)}`}>
-                        {lead.status}
-                      </span>
+                      <StatusBadge label={lead.status} status={getSemanticStatus(lead.status)} />
                     </td>
                     <td className="px-5 py-3">
                       <span className="text-[13px] text-[var(--gs-muted)]">{lead.source || "—"}</span>
@@ -522,48 +530,70 @@ export function LeadDirectory({ token, workspaceId }: LeadDirectoryProps) {
                       </button>
                       
                       {actionMenuOpenId === lead.id && (
-                        <div className="absolute right-8 top-8 w-40 bg-[var(--gs-surface)] border border-[var(--gs-border)] rounded-[6px] shadow-xl z-50 py-1 overflow-hidden" onClick={(e) => e.stopPropagation()}>
+                        <div className="absolute right-8 top-8 w-44 bg-[var(--gs-surface)] border border-[var(--gs-border)] rounded-[6px] shadow-xl z-50 py-1 overflow-hidden" onClick={(e) => e.stopPropagation()}>
                           {lead.convertedDealId ? (
-                            <button onClick={() => window.dispatchEvent(new CustomEvent('changeTab', { detail: 'pipeline' }))} className="w-full text-left px-3 py-1.5 text-[12px] font-medium text-[var(--gs-fg)] hover:bg-[var(--gs-bg-alt)] transition-colors flex items-center justify-between">
-                              View Deal <span>→</span>
+                            <button onClick={() => window.dispatchEvent(new CustomEvent('changeTab', { detail: 'pipeline' }))} className="w-full text-left px-3 py-1.5 text-[12px] font-medium text-[var(--gs-fg)] hover:bg-[var(--gs-bg-alt)] transition-colors flex items-center gap-2">
+                              <ExternalLink className="h-4 w-4 text-[var(--gs-muted)]" />
+                              View Deal
                             </button>
                           ) : (
                             <>
-                              <button onClick={() => router.push(`/dashboard/leads/${lead.id}`)} className="w-full text-left px-3 py-1.5 text-[12px] font-medium text-[var(--gs-fg)] hover:bg-[var(--gs-bg-alt)] transition-colors flex items-center justify-between">
-                                View details <span>→</span>
+                              <button onClick={() => router.push(`/dashboard/leads/${lead.id}`)} className="w-full text-left px-3 py-1.5 text-[12px] font-medium text-[var(--gs-fg)] hover:bg-[var(--gs-bg-alt)] transition-colors flex items-center gap-2">
+                                <ArrowRight className="h-4 w-4 text-[var(--gs-muted)]" />
+                                View details
                               </button>
-                              <button onClick={() => { setEditModalLead(lead); setActionMenuOpenId(null); }} className="w-full text-left px-3 py-1.5 text-[12px] text-[var(--gs-fg)] hover:bg-[var(--gs-bg-alt)] transition-colors">Edit lead</button>
+                              <button onClick={() => { setEditModalLead(lead); setActionMenuOpenId(null); }} className="w-full text-left px-3 py-1.5 text-[12px] text-[var(--gs-fg)] hover:bg-[var(--gs-bg-alt)] transition-colors flex items-center gap-2">
+                                <Edit2 className="h-4 w-4 text-[var(--gs-muted)]" />
+                                Edit lead
+                              </button>
                               <div className="h-px w-full bg-[var(--gs-border)] my-1" />
                               
                               {lead.status === 'DISQUALIFIED' ? (
                                 <>
-                                  <button onClick={() => handleUpdateStatus(lead.id, 'NEW')} className="w-full text-left px-3 py-1.5 text-[12px] text-[var(--gs-fg)] hover:bg-[var(--gs-bg-alt)] transition-colors">Reopen lead</button>
+                                  <button onClick={() => handleUpdateStatus(lead.id, 'NEW')} className="w-full text-left px-3 py-1.5 text-[12px] text-[var(--gs-fg)] hover:bg-[var(--gs-bg-alt)] transition-colors flex items-center gap-2">
+                                    <RefreshCw className="h-4 w-4 text-[var(--gs-muted)]" />
+                                    Reopen lead
+                                  </button>
                                   <div className="h-px w-full bg-[var(--gs-border)] my-1" />
-                                  <button onClick={() => handleDeleteLead(lead.id)} className="w-full text-left px-3 py-1.5 text-[12px] text-red-400 hover:bg-[var(--gs-bg-alt)] transition-colors">Delete lead</button>
+                                  <button onClick={() => handleDeleteLead(lead.id)} className="w-full text-left px-3 py-1.5 text-[12px] text-[#EF4444] hover:bg-[var(--gs-bg-alt)] transition-colors flex items-center gap-2">
+                                    <Trash2 className="h-4 w-4 text-[#EF4444]" />
+                                    Delete lead
+                                  </button>
                                 </>
                               ) : (
                                 <>
                                   {lead.status === 'NEW' && (
-                                    <button onClick={() => handleUpdateStatus(lead.id, 'CONTACTED')} className="w-full text-left px-3 py-1.5 text-[12px] text-[var(--gs-fg)] hover:bg-[var(--gs-bg-alt)] transition-colors">Mark Contacted</button>
+                                    <button onClick={() => handleUpdateStatus(lead.id, 'CONTACTED')} className="w-full text-left px-3 py-1.5 text-[12px] text-[var(--gs-fg)] hover:bg-[var(--gs-bg-alt)] transition-colors flex items-center gap-2">
+                                      <Phone className="h-4 w-4 text-[var(--gs-muted)]" />
+                                      Mark Contacted
+                                    </button>
                                   )}
                                   
                                   {lead.email && (
-                                    <button onClick={() => { setEmailModalLead(lead); setActionMenuOpenId(null); }} className="w-full text-left px-3 py-1.5 text-[12px] text-[var(--gs-fg)] hover:bg-[var(--gs-bg-alt)] transition-colors flex items-center justify-between">
-                                      Send Email <Mail className="h-3 w-3" />
+                                    <button onClick={() => { setEmailModalLead(lead); setActionMenuOpenId(null); }} className="w-full text-left px-3 py-1.5 text-[12px] text-[var(--gs-fg)] hover:bg-[var(--gs-bg-alt)] transition-colors flex items-center gap-2">
+                                      <Mail className="h-4 w-4 text-[var(--gs-muted)]" />
+                                      Send Email
                                     </button>
                                   )}
 
                                   {(lead.status === 'NEW' || lead.status === 'CONTACTED') && (
-                                    <button onClick={() => handleUpdateStatus(lead.id, 'QUALIFIED')} className="w-full text-left px-3 py-1.5 text-[12px] text-[var(--gs-fg)] hover:bg-[var(--gs-bg-alt)] transition-colors">Qualify</button>
+                                    <button onClick={() => handleUpdateStatus(lead.id, 'QUALIFIED')} className="w-full text-left px-3 py-1.5 text-[12px] text-[var(--gs-fg)] hover:bg-[var(--gs-bg-alt)] transition-colors flex items-center gap-2">
+                                      <CheckCircle2 className="h-4 w-4 text-[var(--gs-muted)]" />
+                                      Qualify
+                                    </button>
                                   )}
                                   {lead.status === 'QUALIFIED' && (
-                                    <button onClick={() => { setConvertingLead(lead); setActionMenuOpenId(null); }} className="w-full text-left px-3 py-1.5 text-[12px] font-medium text-[var(--gs-fg)] hover:bg-[var(--gs-bg-alt)] transition-colors flex items-center justify-between">
-                                      Create Deal <span>→</span>
+                                    <button onClick={() => { setConvertingLead(lead); setActionMenuOpenId(null); }} className="w-full text-left px-3 py-1.5 text-[12px] font-medium text-[var(--gs-fg)] hover:bg-[var(--gs-bg-alt)] transition-colors flex items-center gap-2">
+                                      <DollarSign className="h-4 w-4 text-[var(--gs-muted)]" />
+                                      Create Deal
                                     </button>
                                   )}
                                   
-                                  <div className="h-px w-full bg-[var(--gs-border)] my-1" />
-                                  <button onClick={() => handleUpdateStatus(lead.id, 'DISQUALIFIED')} className="w-full text-left px-3 py-1.5 text-[12px] text-red-400 hover:bg-[var(--gs-bg-alt)] transition-colors">Disqualify</button>
+                                  <div className="h-px w-full bg-[#262626] my-1" />
+                                  <button onClick={() => handleUpdateStatus(lead.id, 'DISQUALIFIED')} className="w-full text-left px-3 py-1.5 text-[12px] text-[#EF4444] hover:bg-[var(--gs-bg-alt)] transition-colors flex items-center gap-2">
+                                    <X className="h-4 w-4 text-[#EF4444]" />
+                                    Disqualify
+                                  </button>
                                 </>
                               )}
                             </>
@@ -590,7 +620,7 @@ export function LeadDirectory({ token, workspaceId }: LeadDirectoryProps) {
 
       {/* Create Lead Modal */}
       {isCreateModalOpen && (
-        <div className="fixed inset-0 bg-[#000000]/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-in fade-in duration-200">
+        <div className="fixed inset-0 bg-[var(--gs-bg)]/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-in fade-in duration-200">
           <div className="bg-[var(--gs-bg)] border border-[var(--gs-border)] rounded-[12px] w-full max-w-md shadow-2xl overflow-hidden">
             <div className="px-6 py-4 border-b border-[var(--gs-border)] flex items-center justify-between bg-[var(--gs-surface)]">
               <h2 className="text-[15px] font-semibold text-[var(--gs-fg)]">Add New Lead</h2>
@@ -688,7 +718,7 @@ export function LeadDirectory({ token, workspaceId }: LeadDirectoryProps) {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="bg-[var(--gs-fg)] hover:bg-[#FFFFFF] text-[#000000] px-4 py-2 rounded-[6px] text-[13px] font-semibold transition-colors disabled:opacity-50"
+                  className="bg-[var(--gs-fg)] hover:bg-[var(--gs-fg)] text-[var(--gs-bg)] px-4 py-2 rounded-[6px] text-[13px] font-semibold transition-colors disabled:opacity-50"
                 >
                   {isSubmitting ? "Saving..." : "Create Lead"}
                 </button>
@@ -700,7 +730,7 @@ export function LeadDirectory({ token, workspaceId }: LeadDirectoryProps) {
 
       {/* Send Email Modal */}
       {emailModalLead && (
-        <div className="fixed inset-0 bg-[#000000]/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-in fade-in duration-200">
+        <div className="fixed inset-0 bg-[var(--gs-bg)]/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-in fade-in duration-200">
           <div className="bg-[var(--gs-bg)] border border-[var(--gs-border)] rounded-[12px] w-full max-w-lg shadow-2xl overflow-hidden">
             <div className="px-6 py-4 border-b border-[var(--gs-border)] flex items-center justify-between bg-[var(--gs-surface)]">
               <h2 className="text-[15px] font-semibold text-[var(--gs-fg)]">Send Email to {emailModalLead.contactName}</h2>
@@ -754,7 +784,7 @@ export function LeadDirectory({ token, workspaceId }: LeadDirectoryProps) {
                 <button
                   type="submit"
                   disabled={sendingEmail || !emailSubject || !emailBody}
-                  className="bg-[var(--gs-fg)] hover:bg-[#FFFFFF] text-[#000000] px-4 py-2 rounded-[6px] text-[13px] font-semibold transition-colors disabled:opacity-50 flex items-center gap-2"
+                  className="bg-[var(--gs-fg)] hover:bg-[var(--gs-fg)] text-[var(--gs-bg)] px-4 py-2 rounded-[6px] text-[13px] font-semibold transition-colors disabled:opacity-50 flex items-center gap-2"
                 >
                   {sendingEmail ? "Sending..." : "Send Email"}
                 </button>

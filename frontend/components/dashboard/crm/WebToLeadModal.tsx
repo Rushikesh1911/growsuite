@@ -43,7 +43,7 @@ export function WebToLeadModal({ isOpen, onClose, workspaceId }: WebToLeadModalP
     <input type="text" name="company" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" />
   </div>
 
-  <button type="submit" style="background: #000; color: #fff; padding: 10px 16px; border: none; border-radius: 4px; cursor: pointer;">
+  <button type="submit" style="background: var(--gs-bg); color: var(--gs-fg); padding: 10px 16px; border: none; border-radius: 4px; cursor: pointer;">
     Submit
   </button>
 </form>`;
@@ -55,7 +55,7 @@ export function WebToLeadModal({ isOpen, onClose, workspaceId }: WebToLeadModalP
   };
 
   return (
-    <div className="fixed inset-0 bg-[#000000]/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-[var(--gs-bg)]/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
       <div className="w-full max-w-2xl max-h-[90vh] flex flex-col bg-[var(--gs-bg)] border border-[var(--gs-border)] rounded-[12px] shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         
         {/* Header */}
@@ -80,7 +80,7 @@ export function WebToLeadModal({ isOpen, onClose, workspaceId }: WebToLeadModalP
             >
               {copied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
             </button>
-            <pre className="bg-[#111111] p-4 rounded-[8px] border border-[#333333] text-[12px] text-[#EDEDED] overflow-x-auto custom-scrollbar font-mono">
+            <pre className="bg-[var(--gs-surface)] p-4 rounded-[8px] border border-[var(--gs-border)] text-[12px] text-[var(--gs-fg)] overflow-x-auto custom-scrollbar font-mono">
               <code>{htmlSnippet}</code>
             </pre>
           </div>

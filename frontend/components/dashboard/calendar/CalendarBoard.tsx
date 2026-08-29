@@ -36,13 +36,13 @@ function DroppableColumn({ id, title, iconColor, count, children }: any) {
   return (
     <div 
       ref={setNodeRef} 
-      className={`w-[340px] flex flex-col gap-3 rounded-[6px] bg-[#0E0E0F] transition-colors ${isOver ? 'bg-[#1C1C1E]' : ''}`}
+      className={`w-[340px] flex flex-col gap-3 rounded-[6px] bg-[var(--gs-bg)] transition-colors ${isOver ? 'bg-[var(--gs-bg-alt)]' : ''}`}
     >
       <div className="flex items-center justify-between px-1 mb-1">
         <div className="flex items-center gap-2">
           <Circle className={`h-3.5 w-3.5 ${iconColor}`} strokeWidth={2.5} />
-          <h3 className="text-[13px] font-medium text-[#EDEDED]">{title}</h3>
-          <span className="text-[13px] text-[#8A8A93] ml-1">{count}</span>
+          <h3 className="text-[13px] font-medium text-[var(--gs-fg)]">{title}</h3>
+          <span className="text-[13px] text-[var(--gs-muted)] ml-1">{count}</span>
         </div>
       </div>
       <div className="flex flex-col gap-2 overflow-y-auto max-h-full pb-4 min-h-[200px]">
@@ -77,28 +77,28 @@ function DraggableEventCard({ event, dateColor }: { event: CalendarEvent, dateCo
       style={style}
       {...listeners}
       {...attributes}
-      className="bg-[#1C1C1E] border border-[#2C2C2E] rounded-[6px] p-3 flex flex-col gap-2.5 hover:border-[#444444] transition-colors cursor-grab active:cursor-grabbing group shadow-sm"
+      className="bg-[var(--gs-bg-alt)] border border-[var(--gs-border)] rounded-[6px] p-3 flex flex-col gap-2.5 hover:border-[var(--gs-border-strong)] transition-colors cursor-grab active:cursor-grabbing group shadow-sm"
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-2 flex-1 min-w-0">
           {event.type === 'TASK' && <CheckSquare className="h-[14px] w-[14px] text-[#F5A623] mt-[2px] shrink-0" strokeWidth={2} />}
           {event.type === 'INVOICE' && <Receipt className="h-[14px] w-[14px] text-[var(--gs-fg)] mt-[2px] shrink-0" strokeWidth={2} />}
           {event.type === 'PROJECT' && <FolderGit2 className="h-[14px] w-[14px] text-[#7928CA] mt-[2px] shrink-0" strokeWidth={2} />}
-          <span className="text-[13px] font-medium text-[#EDEDED] leading-snug truncate">
+          <span className="text-[13px] font-medium text-[var(--gs-fg)] leading-snug truncate">
             {event.title}
           </span>
         </div>
         
         <div className="flex items-center gap-2 shrink-0">
-          <Signal className="h-3 w-3 text-[#555555]" />
+          <Signal className="h-3 w-3 text-[var(--gs-muted-light)]" />
           {event.type === 'TASK' && event.metadata?.assignee && (
             <div className="h-[18px] w-[18px] rounded-full bg-[#F5A623] flex items-center justify-center shadow-sm" title={event.metadata.assignee}>
-              <span className="text-[9px] font-bold text-[#000000]">{event.metadata.assignee.charAt(0)}</span>
+              <span className="text-[9px] font-bold text-[var(--gs-bg)]">{event.metadata.assignee.charAt(0)}</span>
             </div>
           )}
           {event.type === 'INVOICE' && (
             <div className="h-[18px] w-[18px] rounded-full bg-[#007CF0] flex items-center justify-center shadow-sm">
-              <span className="text-[9px] font-bold text-[#FFFFFF]">₹</span>
+              <span className="text-[9px] font-bold text-[var(--gs-fg)]">₹</span>
             </div>
           )}
         </div>
@@ -107,8 +107,8 @@ function DraggableEventCard({ event, dateColor }: { event: CalendarEvent, dateCo
       {event.description && (
         <div className="flex flex-col gap-2 pl-5 mt-0.5">
           <div className="flex items-start gap-2">
-            <AlignLeft className="h-3 w-3 text-[#555555] shrink-0 mt-0.5" />
-            <span className="text-[12px] text-[#8A8A93] line-clamp-2 leading-tight">
+            <AlignLeft className="h-3 w-3 text-[var(--gs-muted-light)] shrink-0 mt-0.5" />
+            <span className="text-[12px] text-[var(--gs-muted)] line-clamp-2 leading-tight">
               {event.description}
             </span>
           </div>
@@ -118,7 +118,7 @@ function DraggableEventCard({ event, dateColor }: { event: CalendarEvent, dateCo
               target="_blank" 
               rel="noreferrer"
               onPointerDown={(e) => e.stopPropagation()} 
-              className="inline-flex items-center gap-1.5 bg-[#2C2C2E] hover:bg-[#3C3C3E] text-[#EDEDED] px-2 py-1 rounded text-[11px] font-medium transition-colors w-fit pointer-events-auto cursor-pointer"
+              className="inline-flex items-center gap-1.5 bg-[var(--gs-border)] hover:bg-[#3C3C3E] text-[var(--gs-fg)] px-2 py-1 rounded text-[11px] font-medium transition-colors w-fit pointer-events-auto cursor-pointer"
             >
               <Video className="h-3 w-3 text-[#007CF0]" />
               Join Call
@@ -134,7 +134,7 @@ function DraggableEventCard({ event, dateColor }: { event: CalendarEvent, dateCo
         </div>
         
         {event.type === 'INVOICE' && event.metadata?.amount && (
-          <span className="text-[11px] font-medium text-[#8A8A93]">
+          <span className="text-[11px] font-medium text-[var(--gs-muted)]">
             {formatCurrency(event.metadata.amount)}
           </span>
         )}
@@ -298,9 +298,9 @@ export function CalendarBoard({ token, workspaceId }: CalendarBoardProps) {
   const columns: { id: Timeframe; title: string; iconColor: string; dateColor: string }[] = [
     { id: "OVERDUE", title: "Overdue", iconColor: "text-red-500", dateColor: "text-red-400" },
     { id: "TODAY", title: "Today", iconColor: "text-yellow-500", dateColor: "text-yellow-400" },
-    { id: "TOMORROW", title: "Tomorrow", iconColor: "text-blue-500", dateColor: "text-[#8A8A93]" },
-    { id: "THIS_WEEK", title: "This Week", iconColor: "text-purple-500", dateColor: "text-[#8A8A93]" },
-    { id: "LATER", title: "Later", iconColor: "text-[#888888]", dateColor: "text-[#8A8A93]" },
+    { id: "TOMORROW", title: "Tomorrow", iconColor: "text-blue-500", dateColor: "text-[var(--gs-muted)]" },
+    { id: "THIS_WEEK", title: "This Week", iconColor: "text-purple-500", dateColor: "text-[var(--gs-muted)]" },
+    { id: "LATER", title: "Later", iconColor: "text-[var(--gs-muted)]", dateColor: "text-[var(--gs-muted)]" },
   ];
 
   // Grid Navigation Methods
@@ -331,43 +331,43 @@ export function CalendarBoard({ token, workspaceId }: CalendarBoardProps) {
   const invoicesForDay = selectedDateEvents.filter(e => e.type === 'INVOICE');
 
   return (
-    <div className="w-full h-full flex flex-col animate-fade bg-[#0E0E0F]">
+    <div className="w-full h-full flex flex-col animate-fade bg-[var(--gs-bg)]">
       
       {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between px-6 py-4 shrink-0 border-b border-[#1E1E1E] gap-4 sm:gap-0">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between px-6 py-4 shrink-0 border-b border-[var(--gs-surface-raised)] gap-4 sm:gap-0">
         
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-3">
-            <CalendarDays className="h-5 w-5 text-[#8A8A93]" />
-            <h1 className="text-[16px] font-semibold text-[#EDEDED] hidden sm:block">Calendar</h1>
+            <CalendarDays className="h-5 w-5 text-[var(--gs-muted)]" />
+            <h1 className="text-[16px] font-semibold text-[var(--gs-fg)] hidden sm:block">Calendar</h1>
           </div>
           
           {/* Month Navigation */}
           {viewMode === 'GRID' && (
-            <div className="flex items-center gap-1.5 pl-2 sm:pl-4 sm:border-l border-[#1E1E1E] animate-fade-in">
-              <button onClick={handleToday} className="px-2.5 py-1 text-[12px] font-medium text-[#EDEDED] bg-[#1C1C1E] border border-[#2C2C2E] rounded-[4px] hover:bg-[#252528] transition-colors">Today</button>
-              <div className="flex items-center bg-[#1C1C1E] border border-[#2C2C2E] rounded-[4px] ml-1">
-                <button onClick={handlePrevMonth} className="p-1 text-[#8A8A93] hover:text-[#EDEDED] transition-colors border-r border-[#2C2C2E]"><ChevronLeft className="h-4 w-4" /></button>
-                <button onClick={handleNextMonth} className="p-1 text-[#8A8A93] hover:text-[#EDEDED] transition-colors"><ChevronRight className="h-4 w-4" /></button>
+            <div className="flex items-center gap-1.5 pl-2 sm:pl-4 sm:border-l border-[var(--gs-surface-raised)] animate-fade-in">
+              <button onClick={handleToday} className="px-2.5 py-1 text-[12px] font-medium text-[var(--gs-fg)] bg-[var(--gs-bg-alt)] border border-[var(--gs-border)] rounded-[4px] hover:bg-[#252528] transition-colors">Today</button>
+              <div className="flex items-center bg-[var(--gs-bg-alt)] border border-[var(--gs-border)] rounded-[4px] ml-1">
+                <button onClick={handlePrevMonth} className="p-1 text-[var(--gs-muted)] hover:text-[var(--gs-fg)] transition-colors border-r border-[var(--gs-border)]"><ChevronLeft className="h-4 w-4" /></button>
+                <button onClick={handleNextMonth} className="p-1 text-[var(--gs-muted)] hover:text-[var(--gs-fg)] transition-colors"><ChevronRight className="h-4 w-4" /></button>
               </div>
-              <span className="text-[20px] font-semibold text-[#EDEDED] ml-3 min-w-[140px] tracking-tight">
+              <span className="text-[20px] font-semibold text-[var(--gs-fg)] ml-3 min-w-[140px] tracking-tight">
                 {currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
               </span>
             </div>
           )}
         </div>
 
-        <div className="flex items-center gap-1 bg-[#1C1C1E] p-1 rounded-[6px] border border-[#2C2C2E]">
+        <div className="flex items-center gap-1 bg-[var(--gs-bg-alt)] p-1 rounded-[6px] border border-[var(--gs-border)]">
           <button 
             onClick={() => setViewMode('BOARD')}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[4px] text-[12px] font-medium transition-colors ${viewMode === 'BOARD' ? 'bg-[#2C2C2E] text-[#EDEDED]' : 'text-[#8A8A93] hover:text-[#EDEDED]'}`}
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[4px] text-[12px] font-medium transition-colors ${viewMode === 'BOARD' ? 'bg-[var(--gs-border)] text-[var(--gs-fg)]' : 'text-[var(--gs-muted)] hover:text-[var(--gs-fg)]'}`}
           >
             <KanbanSquare className="h-3.5 w-3.5" />
             Board
           </button>
           <button 
             onClick={() => setViewMode('GRID')}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[4px] text-[12px] font-medium transition-colors ${viewMode === 'GRID' ? 'bg-[#2C2C2E] text-[#EDEDED]' : 'text-[#8A8A93] hover:text-[#EDEDED]'}`}
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[4px] text-[12px] font-medium transition-colors ${viewMode === 'GRID' ? 'bg-[var(--gs-border)] text-[var(--gs-fg)]' : 'text-[var(--gs-muted)] hover:text-[var(--gs-fg)]'}`}
           >
             <LayoutGrid className="h-3.5 w-3.5" />
             Grid
@@ -386,7 +386,7 @@ export function CalendarBoard({ token, workspaceId }: CalendarBoardProps) {
                 {canScrollLeft && (
                   <button 
                     onClick={() => scrollBoard('left')}
-                    className="absolute left-2 top-1/2 -translate-y-1/2 z-10 h-8 w-8 rounded-full bg-[#1C1C1E] border border-[#2C2C2E] flex items-center justify-center shadow-lg text-[#EDEDED] hover:bg-[#252528] transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100 hidden sm:flex"
+                    className="absolute left-2 top-1/2 -translate-y-1/2 z-10 h-8 w-8 rounded-full bg-[var(--gs-bg-alt)] border border-[var(--gs-border)] flex items-center justify-center shadow-lg text-[var(--gs-fg)] hover:bg-[#252528] transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100 hidden sm:flex"
                     aria-label="Scroll left"
                   >
                     <ChevronLeft className="h-4 w-4" />
@@ -395,7 +395,7 @@ export function CalendarBoard({ token, workspaceId }: CalendarBoardProps) {
                 {canScrollRight && (
                   <button 
                     onClick={() => scrollBoard('right')}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 z-10 h-8 w-8 rounded-full bg-[#1C1C1E] border border-[#2C2C2E] flex items-center justify-center shadow-lg text-[#EDEDED] hover:bg-[#252528] transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100 hidden sm:flex"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 z-10 h-8 w-8 rounded-full bg-[var(--gs-bg-alt)] border border-[var(--gs-border)] flex items-center justify-center shadow-lg text-[var(--gs-fg)] hover:bg-[#252528] transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100 hidden sm:flex"
                     aria-label="Scroll right"
                   >
                     <ChevronRight className="h-4 w-4" />
@@ -414,7 +414,7 @@ export function CalendarBoard({ token, workspaceId }: CalendarBoardProps) {
                         ))}
                         {groupedEvents[col.id].length === 0 && (
                           <div className="w-full py-3 px-1">
-                            <span className="text-[12px] text-[#333333] font-medium select-none">No issues</span>
+                            <span className="text-[12px] text-[var(--gs-border)] font-medium select-none">No issues</span>
                           </div>
                         )}
                       </DroppableColumn>
@@ -423,21 +423,21 @@ export function CalendarBoard({ token, workspaceId }: CalendarBoardProps) {
                 </div>
               </div>
               <DragOverlay>
-                {activeEvent ? <DraggableEventCard event={activeEvent} dateColor="text-[#EDEDED]" /> : null}
+                {activeEvent ? <DraggableEventCard event={activeEvent} dateColor="text-[var(--gs-fg)]" /> : null}
               </DragOverlay>
             </DndContext>
           ) : (
-            <div className="bg-[#1C1C1E] border border-[#2C2C2E] rounded-[8px] overflow-hidden flex flex-col flex-1 h-full min-h-[calc(100vh-180px)] shadow-sm min-w-[700px]">
+            <div className="bg-[var(--gs-bg-alt)] border border-[var(--gs-border)] rounded-[8px] overflow-hidden flex flex-col flex-1 h-full min-h-[calc(100vh-180px)] shadow-sm min-w-[700px]">
               {/* Grid Header */}
-              <div className="grid grid-cols-7 border-b border-[#2C2C2E] bg-[#0E0E0F] shrink-0">
+              <div className="grid grid-cols-7 border-b border-[var(--gs-border)] bg-[var(--gs-bg)] shrink-0">
                 {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                  <div key={day} className="py-2 text-center text-[11px] font-bold tracking-wider text-[#8A8A93] uppercase border-r border-[#2C2C2E] last:border-0">{day}</div>
+                  <div key={day} className="py-2 text-center text-[11px] font-bold tracking-wider text-[var(--gs-muted)] uppercase border-r border-[var(--gs-border)] last:border-0">{day}</div>
                 ))}
               </div>
               
               {/* Grid Body */}
               <div 
-                className="grid grid-cols-7 flex-1 bg-[#1C1C1E]"
+                className="grid grid-cols-7 flex-1 bg-[var(--gs-bg-alt)]"
                 style={{ gridTemplateRows: `repeat(${numberOfWeeks}, minmax(0, 1fr))` }}
               >
                 {Array.from({ length: numberOfWeeks * 7 }).map((_, i) => {
@@ -463,16 +463,16 @@ export function CalendarBoard({ token, workspaceId }: CalendarBoardProps) {
                     <div 
                       key={i} 
                       onClick={() => setSelectedDate(dateObj)}
-                      className={`group border-r border-b border-[#2C2C2E] p-1.5 sm:p-2 flex flex-col gap-1 overflow-hidden transition-colors duration-150 cursor-pointer ${
+                      className={`group border-r border-b border-[var(--gs-border)] p-1.5 sm:p-2 flex flex-col gap-1 overflow-hidden transition-colors duration-150 cursor-pointer ${
                         !isCurrentMonth 
                           ? 'bg-[#121212] opacity-50 hover:bg-[#1A1A1C]' 
                           : isToday
-                            ? 'bg-[#1E1E1E] hover:bg-[#242424]'
+                            ? 'bg-[var(--gs-surface-raised)] hover:bg-[#242424]'
                             : 'bg-[#191919] hover:bg-[#242424]'
                       }`}
                     >
                       <div className="flex justify-between items-start mb-0.5">
-                         <div className={`text-[12px] font-bold w-6 h-6 flex items-center justify-center rounded-full ${isToday ? 'bg-[#EDEDED] text-[#000000]' : !isCurrentMonth ? 'text-[#555555]' : 'text-[#8A8A93]'}`}>
+                         <div className={`text-[12px] font-bold w-6 h-6 flex items-center justify-center rounded-full ${isToday ? 'bg-[var(--gs-fg)] text-[var(--gs-bg)]' : !isCurrentMonth ? 'text-[var(--gs-muted-light)]' : 'text-[var(--gs-muted)]'}`}>
                            {cellDayNum}
                          </div>
                       </div>
@@ -482,11 +482,7 @@ export function CalendarBoard({ token, workspaceId }: CalendarBoardProps) {
                         {dayEvents.map(e => (
                           <div 
                             key={e.id} 
-                            className={`text-[10px] font-medium px-1.5 py-0.5 sm:py-1 rounded-[4px] truncate leading-tight flex items-center gap-1 shadow-sm border border-transparent transition-colors duration-150 ${
-                              e.type === 'TASK' ? 'bg-[#F5A623]/10 text-[#F5A623] group-hover:bg-[#F5A623]/20 hover:border-[#F5A623]/40' : 
-                              e.type === 'INVOICE' ? 'bg-[#007CF0]/10 text-[#007CF0] group-hover:bg-[#007CF0]/20 hover:border-[#007CF0]/40' : 
-                              'bg-[#7928CA]/10 text-[#7928CA] group-hover:bg-[#7928CA]/20 hover:border-[#7928CA]/40'
-                            }`} 
+                            className={`text-[10px] font-medium px-1.5 py-0.5 sm:py-1 rounded-[4px] truncate leading-tight flex items-center gap-1 shadow-sm border transition-colors duration-150 bg-[var(--gs-surface-raised)] text-[var(--gs-fg)] border-[var(--gs-border)] group-hover:border-[var(--gs-border-strong)] group-hover:bg-[var(--gs-bg-alt)]`} 
                             title={e.title}
                           >
                             {e.type === 'PROJECT' && <FolderGit2 className="h-2.5 w-2.5 shrink-0 hidden sm:block" />}
@@ -512,21 +508,21 @@ export function CalendarBoard({ token, workspaceId }: CalendarBoardProps) {
             onClick={() => setSelectedDate(null)} 
           />
           {/* Drawer */}
-          <div className="relative w-full max-w-[420px] bg-[#111112] h-full border-l border-[#2C2C2E] shadow-2xl flex flex-col animate-slide-in-right">
+          <div className="relative w-full max-w-[420px] bg-[var(--gs-surface)] h-full border-l border-[var(--gs-border)] shadow-2xl flex flex-col animate-slide-in-right">
             
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-[#2C2C2E] shrink-0">
+            <div className="flex items-center justify-between p-6 border-b border-[var(--gs-border)] shrink-0">
               <div>
-                <h2 className="text-[18px] font-bold text-[#EDEDED] tracking-tight">
+                <h2 className="text-[18px] font-bold text-[var(--gs-fg)] tracking-tight">
                   {selectedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
                 </h2>
-                <p className="text-[13px] text-[#8A8A93] mt-1 font-medium">
+                <p className="text-[13px] text-[var(--gs-muted)] mt-1 font-medium">
                   {selectedDateEvents.length} {selectedDateEvents.length === 1 ? 'event' : 'events'} scheduled
                 </p>
               </div>
               <button 
                 onClick={() => setSelectedDate(null)} 
-                className="h-8 w-8 flex items-center justify-center rounded-full hover:bg-[#2C2C2E] text-[#8A8A93] transition-colors"
+                className="h-8 w-8 flex items-center justify-center rounded-full hover:bg-[var(--gs-border)] text-[var(--gs-muted)] transition-colors"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -536,10 +532,10 @@ export function CalendarBoard({ token, workspaceId }: CalendarBoardProps) {
             <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-8 custom-scrollbar">
               
               {selectedDateEvents.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-[200px] text-center border border-dashed border-[#2C2C2E] rounded-[8px] p-6 bg-[#161618]">
-                  <CalendarDays className="h-8 w-8 text-[#555555] mb-3" />
-                  <p className="text-[#EDEDED] font-medium text-[14px]">No events</p>
-                  <p className="text-[#8A8A93] text-[13px] mt-1">Nothing scheduled for this date.</p>
+                <div className="flex flex-col items-center justify-center h-[200px] text-center border border-dashed border-[var(--gs-border)] rounded-[8px] p-6 bg-[#161618]">
+                  <CalendarDays className="h-8 w-8 text-[var(--gs-muted-light)] mb-3" />
+                  <p className="text-[var(--gs-fg)] font-medium text-[14px]">No events</p>
+                  <p className="text-[var(--gs-muted)] text-[13px] mt-1">Nothing scheduled for this date.</p>
                 </div>
               ) : (
                 <>
@@ -547,14 +543,14 @@ export function CalendarBoard({ token, workspaceId }: CalendarBoardProps) {
                   {projectsForDay.length > 0 && (
                     <div className="flex flex-col gap-3">
                       <div className="flex items-center gap-2">
-                        <FolderGit2 className="h-4 w-4 text-[#7928CA]" />
-                        <h3 className="text-[12px] font-bold tracking-wider text-[#8A8A93] uppercase">Projects Due</h3>
+                        <FolderGit2 className="h-4 w-4 text-[var(--gs-muted)]" />
+                        <h3 className="text-[12px] font-bold tracking-wider text-[var(--gs-muted)] uppercase">Projects Due</h3>
                       </div>
                       <div className="flex flex-col gap-2">
                         {projectsForDay.map(p => (
-                          <a href={`/dashboard/projects/${p.id.split('_')[1]}`} key={p.id} className="bg-[#1C1C1E] border border-[#2C2C2E] rounded-[6px] p-3 shadow-sm hover:border-[#444444] hover:bg-[#252528] transition-colors cursor-pointer group">
-                            <span className="text-[13px] font-medium text-[#EDEDED] group-hover:text-[#FFFFFF] block">{p.title}</span>
-                            {p.description && <span className="text-[12px] text-[#8A8A93] mt-1 block">{p.description} &middot; {selectedDate.toDateString() === new Date().toDateString() ? 'Due today' : 'Scheduled'}</span>}
+                          <a href={`/dashboard/projects/${p.id.split('_')[1]}`} key={p.id} className="bg-[var(--gs-bg-alt)] border border-[var(--gs-border)] rounded-[6px] p-3 shadow-sm hover:border-[var(--gs-border-strong)] hover:bg-[#252528] transition-colors cursor-pointer group">
+                            <span className="text-[13px] font-medium text-[var(--gs-fg)] group-hover:text-[var(--gs-fg)] block">{p.title}</span>
+                            {p.description && <span className="text-[12px] text-[var(--gs-muted)] mt-1 block">{p.description} &middot; {selectedDate.toDateString() === new Date().toDateString() ? 'Due today' : 'Scheduled'}</span>}
                           </a>
                         ))}
                       </div>
@@ -565,21 +561,21 @@ export function CalendarBoard({ token, workspaceId }: CalendarBoardProps) {
                   {tasksForDay.length > 0 && (
                     <div className="flex flex-col gap-3">
                       <div className="flex items-center gap-2">
-                        <CheckSquare className="h-4 w-4 text-[#F5A623]" />
-                        <h3 className="text-[12px] font-bold tracking-wider text-[#8A8A93] uppercase">Tasks Due</h3>
+                        <CheckSquare className="h-4 w-4 text-[var(--gs-muted)]" />
+                        <h3 className="text-[12px] font-bold tracking-wider text-[var(--gs-muted)] uppercase">Tasks Due</h3>
                       </div>
                       <div className="flex flex-col gap-2">
                         {tasksForDay.map(t => (
-                          <div key={t.id} className="bg-[#1C1C1E] border border-[#2C2C2E] rounded-[6px] p-3 shadow-sm flex flex-col gap-2 hover:border-[#444444] transition-colors">
+                          <div key={t.id} className="bg-[var(--gs-bg-alt)] border border-[var(--gs-border)] rounded-[6px] p-3 shadow-sm flex flex-col gap-2 hover:border-[var(--gs-border-strong)] transition-colors">
                             <div className="flex justify-between items-start gap-2">
-                              <span className="text-[13px] font-medium text-[#EDEDED]">{t.title}</span>
+                              <span className="text-[13px] font-medium text-[var(--gs-fg)]">{t.title}</span>
                               {t.metadata?.assignee && (
                                 <div className="h-5 w-5 rounded-full bg-[#F5A623] flex items-center justify-center shrink-0" title={t.metadata.assignee}>
-                                  <span className="text-[10px] font-bold text-[#000000]">{t.metadata.assignee.charAt(0)}</span>
+                                  <span className="text-[10px] font-bold text-[var(--gs-bg)]">{t.metadata.assignee.charAt(0)}</span>
                                 </div>
                               )}
                             </div>
-                            {t.description && <span className="text-[12px] text-[#8A8A93] leading-tight line-clamp-2">{t.description} &middot; {selectedDate.toDateString() === new Date().toDateString() ? 'Due today' : 'Scheduled'}</span>}
+                            {t.description && <span className="text-[12px] text-[var(--gs-muted)] leading-tight line-clamp-2">{t.description} &middot; {selectedDate.toDateString() === new Date().toDateString() ? 'Due today' : 'Scheduled'}</span>}
                           </div>
                         ))}
                       </div>
@@ -590,18 +586,18 @@ export function CalendarBoard({ token, workspaceId }: CalendarBoardProps) {
                   {invoicesForDay.length > 0 && (
                     <div className="flex flex-col gap-3">
                       <div className="flex items-center gap-2">
-                        <Receipt className="h-4 w-4 text-[#007CF0]" />
-                        <h3 className="text-[12px] font-bold tracking-wider text-[#8A8A93] uppercase">Invoices Due</h3>
+                        <Receipt className="h-4 w-4 text-[var(--gs-muted)]" />
+                        <h3 className="text-[12px] font-bold tracking-wider text-[var(--gs-muted)] uppercase">Invoices Due</h3>
                       </div>
                       <div className="flex flex-col gap-2">
                         {invoicesForDay.map(i => (
-                          <a href={`/dashboard/invoices/${i.id.split('_')[1]}`} key={i.id} className="bg-[#1C1C1E] border border-[#2C2C2E] rounded-[6px] p-3 shadow-sm flex justify-between items-center gap-4 hover:border-[#444444] hover:bg-[#252528] transition-colors cursor-pointer group">
+                          <a href={`/dashboard/invoices/${i.id.split('_')[1]}`} key={i.id} className="bg-[var(--gs-bg-alt)] border border-[var(--gs-border)] rounded-[6px] p-3 shadow-sm flex justify-between items-center gap-4 hover:border-[var(--gs-border-strong)] hover:bg-[#252528] transition-colors cursor-pointer group">
                             <div className="flex flex-col min-w-0">
-                              <span className="text-[13px] font-medium text-[#EDEDED] group-hover:text-[#FFFFFF] truncate">{i.title}</span>
-                              <span className="text-[12px] text-[#8A8A93] mt-0.5 truncate">{i.description} &middot; {selectedDate.toDateString() === new Date().toDateString() ? 'Due today' : 'Scheduled'}</span>
+                              <span className="text-[13px] font-medium text-[var(--gs-fg)] group-hover:text-[var(--gs-fg)] truncate">{i.title}</span>
+                              <span className="text-[12px] text-[var(--gs-muted)] mt-0.5 truncate">{i.description} &middot; {selectedDate.toDateString() === new Date().toDateString() ? 'Due today' : 'Scheduled'}</span>
                             </div>
                             {i.metadata?.amount && (
-                              <span className="text-[13px] font-bold text-[#EDEDED] shrink-0">{formatCurrency(i.metadata.amount)}</span>
+                              <span className="text-[13px] font-bold text-[var(--gs-fg)] shrink-0">{formatCurrency(i.metadata.amount)}</span>
                             )}
                           </a>
                         ))}

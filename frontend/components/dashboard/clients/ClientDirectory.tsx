@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
-import { Search, Plus, Filter, ChevronRight, ChevronLeft } from "lucide-react";
+import { Search, Plus, Filter, ChevronRight, ChevronLeft, CheckCircle2 } from "lucide-react";
 import { downloadCSV } from "@/lib/csv";
 import { useSocket } from "@/components/providers/SocketProvider";
 import { Button } from "@/components/ui/button";
@@ -292,7 +292,7 @@ export function ClientDirectory({ token, workspaceId }: ClientDirectoryProps) {
           <p className="text-xs text-[var(--gs-muted)] mt-0.5">Manage customers, projects, billing, and relationships.</p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="secondary" size="sm" className="h-[32px] rounded-[6px] gap-1.5 font-semibold text-xs border-[var(--gs-border)] text-[var(--gs-fg)] hover:bg-[var(--gs-bg-alt)]" onClick={() => setIsImportModalOpen(true)}>
+          <Button variant="secondary" size="sm" className="h-[32px] rounded-[6px] gap-1.5 font-semibold text-xs border border-[var(--gs-border)] text-[var(--gs-fg)] hover:bg-[var(--gs-bg-alt)] bg-[var(--gs-surface)]" onClick={() => setIsImportModalOpen(true)}>
             Import CSV
           </Button>
           <Button variant="default" size="sm" className="h-[32px] rounded-[6px] gap-1.5 font-semibold text-xs bg-[var(--gs-fg)] text-[var(--gs-bg)] hover:bg-[var(--gs-fg-secondary)]" onClick={() => setIsModalOpen(true)}>
@@ -327,7 +327,7 @@ export function ClientDirectory({ token, workspaceId }: ClientDirectoryProps) {
             }`}
           >
             <Filter className="h-3.5 w-3.5" aria-hidden="true" />
-            Filter {activeFilterCount > 0 && <span className="ml-1 bg-[var(--gs-fg)] text-[var(--gs-bg)] rounded-[4px] h-[18px] w-[18px] flex items-center justify-center text-[10px] font-bold">{activeFilterCount}</span>}
+            Filters {activeFilterCount > 0 && <span className="ml-1 bg-[var(--gs-fg)] text-[var(--gs-bg)] rounded-[4px] h-[18px] w-[18px] flex items-center justify-center text-[10px] font-bold">{activeFilterCount}</span>}
           </button>
 
           {isFilterOpen && (
@@ -335,22 +335,28 @@ export function ClientDirectory({ token, workspaceId }: ClientDirectoryProps) {
               <div className="text-[10px] font-bold text-[var(--gs-muted)] uppercase tracking-wider mb-2">Refine view</div>
               
               <label className="flex items-center gap-2.5 py-1.5 cursor-pointer group">
-                <input 
-                  type="checkbox" 
-                  checked={filterHasProjects}
-                  onChange={(e) => setFilterHasProjects(e.target.checked)}
-                  className="h-3.5 w-3.5 rounded-[3px] border-[var(--gs-border-strong)] bg-transparent text-[var(--gs-fg)] focus:ring-0 focus:ring-offset-0 cursor-pointer"
-                />
+                <div 
+                  role="checkbox"
+                  aria-checked={filterHasProjects}
+                  tabIndex={0}
+                  onClick={() => setFilterHasProjects(!filterHasProjects)}
+                  className={`w-4 h-4 rounded-[4px] border cursor-pointer flex items-center justify-center transition-colors ${filterHasProjects ? 'bg-[var(--gs-fg)] border-[var(--gs-fg)]' : 'border-[var(--gs-border-strong)] group-hover:border-[var(--gs-muted)]'}`}
+                >
+                  {filterHasProjects && <CheckCircle2 className="h-3 w-3 text-[var(--gs-bg)]" strokeWidth={3} />}
+                </div>
                 <span className="text-[13px] text-[var(--gs-fg)] group-hover:text-[var(--gs-fg-hover)] font-medium">Has active projects</span>
               </label>
               
               <label className="flex items-center gap-2.5 py-1.5 cursor-pointer group">
-                <input 
-                  type="checkbox" 
-                  checked={filterHasBalance}
-                  onChange={(e) => setFilterHasBalance(e.target.checked)}
-                  className="h-3.5 w-3.5 rounded-[3px] border-[var(--gs-border-strong)] bg-transparent text-[var(--gs-fg)] focus:ring-0 focus:ring-offset-0 cursor-pointer"
-                />
+                <div 
+                  role="checkbox"
+                  aria-checked={filterHasBalance}
+                  tabIndex={0}
+                  onClick={() => setFilterHasBalance(!filterHasBalance)}
+                  className={`w-4 h-4 rounded-[4px] border cursor-pointer flex items-center justify-center transition-colors ${filterHasBalance ? 'bg-[var(--gs-fg)] border-[var(--gs-fg)]' : 'border-[var(--gs-border-strong)] group-hover:border-[var(--gs-muted)]'}`}
+                >
+                  {filterHasBalance && <CheckCircle2 className="h-3 w-3 text-[var(--gs-bg)]" strokeWidth={3} />}
+                </div>
                 <span className="text-[13px] text-[var(--gs-fg)] group-hover:text-[var(--gs-fg-hover)] font-medium">Outstanding balance</span>
               </label>
               

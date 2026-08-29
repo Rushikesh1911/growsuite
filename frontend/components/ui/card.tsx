@@ -9,8 +9,8 @@ export function Card({ className, secondaryBg = false, ...props }: CardProps) {
   return (
     <div
       className={cn(
-        "rounded-[8px] border border-[#E5E7EB] text-[#111111] transition-colors duration-150 ease-out",
-        secondaryBg ? "bg-[#FAFAFA]" : "bg-white",
+        "rounded-[8px] border border-[#E5E7EB] text-[var(--gs-surface)] transition-colors duration-150 ease-out",
+        secondaryBg ? "bg-[var(--gs-fg)]" : "bg-white",
         className
       )}
       {...props}
@@ -25,7 +25,7 @@ export function CardHeader({ className, ...props }: React.HTMLAttributes<HTMLDiv
 export function CardTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
     <h3
-      className={cn("text-base font-bold tracking-tight text-[#111111]", className)}
+      className={cn("text-base font-bold tracking-tight text-[var(--gs-surface)]", className)}
       {...props}
     />
   );

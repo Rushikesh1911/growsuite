@@ -2,9 +2,11 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { LayoutDashboard, Target, Layers, Users, FolderKanban, CheckSquare, Calendar, Receipt, CreditCard, LineChart, Activity, ChevronsUpDown, Settings, Menu, LifeBuoy } from "lucide-react";
+import { Logo } from "@/components/ui/Logo";
+import { SidebarFooter } from "./SidebarFooter";
+import { LayoutDashboard, Target, Layers, Users, FolderKanban, CheckSquare, Calendar, Receipt, CreditCard, LineChart, Activity, ChevronsUpDown, Settings, Menu, LifeBuoy, Timer } from "lucide-react";
 
-export type DashboardView = "dashboard" | "leads" | "pipeline" | "clients" | "projects" | "tasks" | "calendar" | "invoices" | "payments" | "analytics" | "activity" | "settings" | "profile" | "help";
+export type DashboardView = "dashboard" | "leads" | "pipeline" | "clients" | "projects" | "tasks" | "time-tracking" | "calendar" | "invoices" | "payments" | "analytics" | "activity" | "settings" | "profile" | "help";
 
 interface SidebarProps {
   currentView: DashboardView;
@@ -63,11 +65,11 @@ export function Sidebar({ currentView, setView }: SidebarProps) {
       title={collapsed ? label : undefined}
       className={`w-full flex items-center ${collapsed ? "justify-center px-0 py-2" : "gap-2.5 px-3 py-1.5"} rounded-[6px] text-[13px] font-medium transition-colors cursor-pointer outline-none ${
         currentView === id
-          ? "bg-[#111111] text-[#EDEDED]"
-          : "text-[#888888] hover:bg-[#111111] hover:text-[#EDEDED]"
+          ? "bg-[var(--gs-surface)] text-[var(--gs-fg)]"
+          : "text-[var(--gs-muted)] hover:bg-[var(--gs-surface)] hover:text-[var(--gs-fg)]"
       }`}
     >
-      <Icon strokeWidth={1.5} className={`h-[18px] w-[18px] shrink-0 ${currentView === id ? "text-[#EDEDED]" : "text-[#888888]"}`} />
+      <Icon strokeWidth={1.5} className={`h-[18px] w-[18px] shrink-0 ${currentView === id ? "text-[var(--gs-fg)]" : "text-[var(--gs-muted)]"}`} />
       {!collapsed && <span>{label}</span>}
     </button>
   );
@@ -85,30 +87,35 @@ export function Sidebar({ currentView, setView }: SidebarProps) {
 
   return (
     <aside 
-      className={`${collapsed ? "w-[68px]" : "w-[260px]"} bg-[#000000] border-r border-[#222222] flex flex-col h-screen shrink-0 text-[#EDEDED] transition-all duration-300 ease-[var(--gs-ease)] relative z-20`} 
+      className={`${collapsed ? "w-[68px]" : "w-[260px]"} bg-[var(--gs-bg)] border-r border-[var(--gs-border)] flex flex-col h-screen shrink-0 text-[var(--gs-fg)] transition-all duration-300 ease-[var(--gs-ease)] relative z-20`} 
       aria-label="Main Navigation"
     >
-      {/* Top Profile / Workspace Selector */}
-      <div className={`p-4 flex flex-col gap-4 relative group`} ref={switcherRef}>
+      {/* Top Brand Logo */}
+      <div className={`p-4 pb-2 flex items-center ${collapsed ? "justify-center" : "justify-start"} h-[64px]`}>
+        <Logo theme="dark" showWordmark={!collapsed} className={collapsed ? "justify-center w-full" : ""} />
+      </div>
+
+      {/* Workspace Selector & Hamburger */}
+      <div className={`px-4 pb-4 pt-2 flex flex-col gap-4 relative group`} ref={switcherRef}>
         
         {/* Header Block with Hamburger Menu */}
         <div className={`flex items-center ${collapsed ? "justify-center" : "justify-between"} relative`}>
           <div className="flex items-center gap-3 w-full">
             <button 
               onClick={() => setCollapsed(!collapsed)}
-              className="h-7 w-7 rounded-[6px] hover:bg-[#111111] flex items-center justify-center text-[#888888] hover:text-[#EDEDED] transition-colors outline-none shrink-0"
+              className="h-7 w-7 rounded-[6px] hover:bg-[var(--gs-surface)] flex items-center justify-center text-[var(--gs-muted)] hover:text-[var(--gs-fg)] transition-colors outline-none shrink-0"
               title="Toggle Sidebar"
             >
               <Menu className="h-4 w-4" strokeWidth={2} />
             </button>
             {!collapsed && (
               <div 
-                className="flex items-center justify-between flex-1 min-w-0 cursor-pointer hover:bg-[#111111] p-1.5 -ml-1.5 rounded-[6px] transition-colors"
+                className="flex items-center justify-between flex-1 min-w-0 cursor-pointer hover:bg-[var(--gs-surface)] p-1.5 -ml-1.5 rounded-[6px] transition-colors"
                 onClick={() => setSwitcherOpen(!switcherOpen)}
               >
-                <span className="text-[14px] font-semibold tracking-tight leading-tight truncate text-[#EDEDED] max-w-[130px]">{workspaceName}</span>
-                <div className="h-5 w-5 rounded-[4px] border border-[#333333] hover:border-[#666666] flex items-center justify-center transition-colors bg-[#0A0A0A] shrink-0">
-                  <ChevronsUpDown className="h-3 w-3 text-[#888888]" strokeWidth={2} />
+                <span className="text-[14px] font-semibold tracking-tight leading-tight truncate text-[var(--gs-fg)] max-w-[130px]">{workspaceName}</span>
+                <div className="h-5 w-5 rounded-[4px] border border-[var(--gs-border)] hover:border-[var(--gs-muted-light)] flex items-center justify-center transition-colors bg-[var(--gs-bg-alt)] shrink-0">
+                  <ChevronsUpDown className="h-3 w-3 text-[var(--gs-muted)]" strokeWidth={2} />
                 </div>
               </div>
             )}
@@ -117,9 +124,9 @@ export function Sidebar({ currentView, setView }: SidebarProps) {
 
         {/* Workspace Switcher Dropdown */}
         {!collapsed && switcherOpen && (
-          <div className="absolute top-[60px] left-4 w-[228px] bg-[#0A0A0A] border border-[#222222] rounded-[8px] shadow-lg py-1 z-50 animate-in fade-in zoom-in-95 duration-100">
+          <div className="absolute top-[60px] left-4 w-[228px] bg-[var(--gs-bg-alt)] border border-[var(--gs-border)] rounded-[8px] shadow-lg py-1 z-50 animate-in fade-in zoom-in-95 duration-100">
             <div className="px-3 py-1.5 mb-1">
-              <span className="text-[10px] font-bold text-[#666666] tracking-wider uppercase">Workspaces</span>
+              <span className="text-[10px] font-bold text-[var(--gs-muted-light)] tracking-wider uppercase">Workspaces</span>
             </div>
             
             <div className="max-h-[200px] overflow-y-auto">
@@ -127,7 +134,7 @@ export function Sidebar({ currentView, setView }: SidebarProps) {
                 <button
                   key={m.workspace.id}
                   onClick={() => handleSwitchWorkspace(m.workspace.id)}
-                  className="w-full flex items-center justify-between px-3 py-2 text-[13px] text-[#EDEDED] hover:bg-[#1A1A1A] transition-colors text-left"
+                  className="w-full flex items-center justify-between px-3 py-2 text-[13px] text-[var(--gs-fg)] hover:bg-[#1A1A1A] transition-colors text-left"
                 >
                   <span className="truncate">{m.workspace.name}</span>
                   {workspaceName === m.workspace.name && (
@@ -137,14 +144,14 @@ export function Sidebar({ currentView, setView }: SidebarProps) {
               ))}
             </div>
             
-            <div className="h-px bg-[#222222] my-1" />
+            <div className="h-px bg-[var(--gs-border)] my-1" />
             
             <button
               onClick={() => {
                 setSwitcherOpen(false);
                 router.push('/dashboard/workspaces/new');
               }}
-              className="w-full flex items-center gap-2 px-3 py-2 text-[13px] text-[#888888] hover:text-[#EDEDED] hover:bg-[#1A1A1A] transition-colors text-left"
+              className="w-full flex items-center gap-2 px-3 py-2 text-[13px] text-[var(--gs-muted)] hover:text-[var(--gs-fg)] hover:bg-[#1A1A1A] transition-colors text-left"
             >
               <span className="text-lg leading-none mb-0.5">+</span> Create workspace
             </button>
@@ -153,7 +160,7 @@ export function Sidebar({ currentView, setView }: SidebarProps) {
                 setSwitcherOpen(false);
                 setView('settings');
               }}
-              className="w-full flex items-center gap-2 px-3 py-2 text-[13px] text-[#888888] hover:text-[#EDEDED] hover:bg-[#1A1A1A] transition-colors text-left"
+              className="w-full flex items-center gap-2 px-3 py-2 text-[13px] text-[var(--gs-muted)] hover:text-[var(--gs-fg)] hover:bg-[#1A1A1A] transition-colors text-left"
             >
               <Settings className="h-3.5 w-3.5" />
               Manage workspace
@@ -175,6 +182,7 @@ export function Sidebar({ currentView, setView }: SidebarProps) {
 
         <NavItem id="projects" label="Projects" icon={FolderKanban} />
         <NavItem id="tasks" label="Tasks" icon={CheckSquare} />
+        <NavItem id="time-tracking" label="Time Tracking" icon={Timer} />
         <NavItem id="calendar" label="Calendar" icon={Calendar} />
         <Divider />
 
@@ -186,11 +194,8 @@ export function Sidebar({ currentView, setView }: SidebarProps) {
         <NavItem id="activity" label="Activity" icon={Activity} />
       </nav>
 
-      {/* Bottom Settings Group */}
-      <div className={`p-3 border-t border-[#222222] flex flex-col gap-1`}>
-        <NavItem id="settings" label="Settings" icon={Settings} />
-        <NavItem id="help" label="Support" icon={LifeBuoy} />
-      </div>
+      {/* Bottom Footer Area */}
+      <SidebarFooter collapsed={collapsed} />
 
     </aside>
   );

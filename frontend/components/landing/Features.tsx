@@ -6,15 +6,15 @@ import {
 
 export function Features() {
   return (
-    <section id="features" className="py-24 bg-[#FFFFFF]">
+    <section id="features" className="py-32 md:py-40 bg-white">
       <div className="max-w-6xl w-full mx-auto px-6">
         
         {/* Section header */}
         <div className="flex flex-col items-center text-center mb-16 gap-5">
-          <h2 className="text-[40px] sm:text-[56px] font-[800] tracking-[-0.04em] text-[#0A0A0A] leading-[1.05] max-w-2xl">
+          <h2 className="text-[40px] sm:text-[56px] font-[800] tracking-[-0.04em] text-[var(--gs-bg-alt)] leading-[1.05] max-w-2xl">
             Intelligence at every stage of your pipeline.
           </h2>
-          <p className="text-[18px] text-[#666666] max-w-xl leading-[1.6] font-[400] tracking-[-0.01em]">
+          <p className="text-[18px] text-[var(--gs-muted-light)] max-w-xl leading-[1.6] font-[400] tracking-[-0.01em]">
             A complete operations platform built for speed. GrowSuite brings intelligence to your revenue journey.
           </p>
         </div>
@@ -38,7 +38,7 @@ export function Features() {
             <div className="flex-1 relative min-h-[220px] bg-[var(--gs-surface)] rounded-[16px] border border-[var(--gs-border)] shadow-sm overflow-hidden transform group-hover:-translate-y-2 transition-all duration-500">
               <div className="p-3.5 border-b border-[var(--gs-border)] bg-[var(--gs-bg)] flex justify-between items-center">
                 <div className="text-[12px] font-[600] text-[var(--gs-fg)]">Clients</div>
-                <div className="bg-[var(--gs-surface)] border border-[var(--gs-border)] text-[var(--gs-fg)] text-[10px] px-2 py-1 rounded-[4px]">Filter</div>
+                <div className="bg-[var(--gs-surface)] border border-[var(--gs-border)] text-[var(--gs-fg)] text-[10px] px-2 py-1 rounded-[4px]">Filters</div>
               </div>
               <div className="flex flex-col">
                 <div className="grid grid-cols-[1fr_80px_70px] gap-2 px-4 py-2 border-b border-[var(--gs-border)] text-[10px] font-[600] text-[var(--gs-muted-light)] uppercase tracking-wider bg-[var(--gs-surface)]">

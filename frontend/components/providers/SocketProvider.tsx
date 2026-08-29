@@ -51,7 +51,8 @@ export function SocketProvider({ children }: SocketProviderProps) {
     });
 
     socketInstance.on("connect_error", (err) => {
-      console.error("Socket connect error:", err.message);
+      // Use warn instead of error to prevent Next.js from throwing a full-screen dev overlay during normal backend restarts
+      console.warn("Socket connect error:", err.message);
     });
 
     setSocket(socketInstance);

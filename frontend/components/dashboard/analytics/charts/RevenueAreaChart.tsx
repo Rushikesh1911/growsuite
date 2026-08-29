@@ -10,12 +10,12 @@ interface RevenueAreaChartProps {
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-[var(--gs-surface)] border border-[var(--gs-border-strong)] p-3 shadow-xl rounded-[6px]">
+      <div className="bg-[var(--gs-surface)] border border-[var(--gs-border)] p-3 shadow-xl rounded-[6px]">
         <p className="text-[12px] font-semibold text-[var(--gs-muted)] mb-2">{label}</p>
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between gap-4">
             <span className="text-[12px] font-medium text-[var(--gs-muted)] flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-[var(--gs-border-strong)]" /> Invoiced
+              <span className="w-2 h-2 rounded-full bg-[var(--gs-border)]" /> Invoiced
             </span>
             <span className="text-[13px] font-bold text-[var(--gs-fg)]">{formatCurrency(payload[0].value)}</span>
           </div>
@@ -67,8 +67,8 @@ export function RevenueAreaChart({ data }: RevenueAreaChartProps) {
               <stop offset="95%" stopColor="var(--gs-fg)" stopOpacity={0}/>
             </linearGradient>
             <linearGradient id="colorInvoiced" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="var(--gs-border-strong)" stopOpacity={0.1}/>
-              <stop offset="95%" stopColor="var(--gs-border-strong)" stopOpacity={0}/>
+              <stop offset="5%" stopColor="var(--gs-border)" stopOpacity={0.1}/>
+              <stop offset="95%" stopColor="var(--gs-border)" stopOpacity={0}/>
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--gs-border)" opacity={0.5} />
@@ -90,12 +90,12 @@ export function RevenueAreaChart({ data }: RevenueAreaChartProps) {
           <Area 
             type="monotone" 
             dataKey="invoiced" 
-            stroke="var(--gs-border-strong)" 
+            stroke="var(--gs-border)" 
             strokeDasharray="4 4"
             strokeWidth={2}
             fillOpacity={1} 
             fill="url(#colorInvoiced)" 
-            activeDot={{ r: 4, fill: 'var(--gs-surface)', stroke: 'var(--gs-border-strong)', strokeWidth: 2 }}
+            activeDot={{ r: 4, fill: 'var(--gs-surface)', stroke: 'var(--gs-border)', strokeWidth: 2 }}
           />
           <Area 
             type="monotone" 

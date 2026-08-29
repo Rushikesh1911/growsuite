@@ -7,6 +7,7 @@ import { Topbar } from "@/components/dashboard/Topbar";
 import { DashboardProvider } from "./DashboardContext";
 import { Toast } from "@/components/ui/toast";
 import { SocketProvider } from "@/components/providers/SocketProvider";
+import { GlobalTimer } from "@/components/dashboard/time/GlobalTimer";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
@@ -25,6 +26,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     "/dashboard/projects": "projects",
     "/dashboard/tasks": "tasks",
     "/dashboard/calendar": "calendar",
+    "/dashboard/time-tracking": "time-tracking",
     "/dashboard/invoices": "invoices",
     "/dashboard/payments": "payments",
     "/dashboard/analytics": "analytics",
@@ -143,6 +145,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
           {/* The child route handles its own Topbar and scrolling content area */}
           {children}
+          
+          <GlobalTimer />
 
           {/* Global Toast component */}
           <Toast

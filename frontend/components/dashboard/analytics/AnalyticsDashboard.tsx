@@ -147,13 +147,13 @@ export function AnalyticsDashboard({ token, workspaceId }: AnalyticsDashboardPro
         <div className="relative" ref={periodRef}>
           <button 
             onClick={() => setPeriodDropdownOpen(!periodDropdownOpen)}
-            className="flex items-center justify-between gap-3 bg-[var(--gs-surface)] border border-[var(--gs-border)] hover:border-[var(--gs-border-strong)] px-4 py-2 rounded-[8px] text-[14px] font-semibold text-[var(--gs-fg)] transition-all outline-none min-w-[160px] shadow-sm"
+            className="flex items-center justify-between gap-3 bg-[var(--gs-surface)] border border-[var(--gs-border)] hover:border-[var(--gs-border)] px-4 py-2 rounded-[8px] text-[14px] font-semibold text-[var(--gs-fg)] transition-all outline-none min-w-[160px] shadow-sm"
           >
             {PERIODS.find(p => p.value === period)?.label || "Select period"}
             <ChevronDown className="h-4 w-4 text-[var(--gs-muted)]" />
           </button>
           {periodDropdownOpen && (
-            <div className="absolute right-0 top-full mt-2 w-52 bg-[var(--gs-surface)] border border-[var(--gs-border-strong)] rounded-[8px] shadow-xl overflow-hidden z-50">
+            <div className="absolute right-0 top-full mt-2 w-52 bg-[var(--gs-surface)] border border-[var(--gs-border)] rounded-[8px] shadow-xl overflow-hidden z-50">
               <div className="flex flex-col p-1">
                 {PERIODS.map(p => (
                   <button
@@ -176,38 +176,38 @@ export function AnalyticsDashboard({ token, workspaceId }: AnalyticsDashboardPro
       {data && (
         <>
           {/* 2. KPI Metric Strip */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-0 bg-[var(--gs-surface)] border border-[var(--gs-border-strong)] rounded-[12px] shadow-sm overflow-hidden">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-0 bg-[var(--gs-surface)] border border-[var(--gs-border)] rounded-[12px] shadow-sm overflow-hidden">
             <div className="flex flex-col p-6 md:p-8 md:border-r border-[var(--gs-border)] relative">
               <span className="text-[13px] font-bold text-[var(--gs-muted)] uppercase tracking-wider mb-4">Revenue</span>
-              <span className="text-3xl lg:text-4xl font-bold text-[var(--gs-fg)] tracking-tight mb-1">{formatCurrency(data.kpis.revenue.current)}</span>
+              <span className="text-3xl lg:text-4xl font-bold text-[var(--gs-fg)] tracking-tight mb-1 truncate" title={formatCurrency(data.kpis.revenue.current)}>{formatCurrency(data.kpis.revenue.current)}</span>
               <span className="text-[14px] font-medium text-[var(--gs-muted)] mb-3">{data.performance.paymentsReceived.current} payments</span>
               {renderTrend(calculateChange(data.kpis.revenue.current, data.kpis.revenue.previous), false, data.kpis.revenue.current, data.kpis.revenue.previous)}
             </div>
             
             <div className="flex flex-col p-6 md:p-8 md:border-r border-[var(--gs-border)] relative">
               <span className="text-[13px] font-bold text-[var(--gs-muted)] uppercase tracking-wider mb-4">Pipeline</span>
-              <span className="text-3xl lg:text-4xl font-bold text-[var(--gs-fg)] tracking-tight mb-1">{formatCurrency(data.kpis.pipeline.current)}</span>
+              <span className="text-3xl lg:text-4xl font-bold text-[var(--gs-fg)] tracking-tight mb-1 truncate" title={formatCurrency(data.kpis.pipeline.current)}>{formatCurrency(data.kpis.pipeline.current)}</span>
               <span className="text-[14px] font-medium text-[var(--gs-muted)] mb-3">{data.pipeline.openDeals} open deals</span>
               {renderTrend(calculateChange(data.kpis.pipeline.current, data.kpis.pipeline.previous), false, data.kpis.pipeline.current, data.kpis.pipeline.previous)}
             </div>
 
             <div className="flex flex-col p-6 md:p-8 md:border-r border-[var(--gs-border)] relative">
               <span className="text-[13px] font-bold text-[var(--gs-muted)] uppercase tracking-wider mb-4">Active Projects</span>
-              <span className="text-3xl lg:text-4xl font-bold text-[var(--gs-fg)] tracking-tight mb-1">{data.kpis.projects?.current ?? 0}</span>
+              <span className="text-3xl lg:text-4xl font-bold text-[var(--gs-fg)] tracking-tight mb-1 truncate" title={String(data.kpis.projects?.current ?? 0)}>{data.kpis.projects?.current ?? 0}</span>
               <span className="text-[14px] font-medium text-[var(--gs-muted)] mb-3">Total active</span>
               {renderTrend(calculateChange(data.kpis.projects?.current ?? 0, data.kpis.projects?.previous ?? null), false, data.kpis.projects?.current ?? 0, data.kpis.projects?.previous ?? null)}
             </div>
 
             <div className="flex flex-col p-6 md:p-8 relative">
               <span className="text-[13px] font-bold text-[var(--gs-muted)] uppercase tracking-wider mb-4">Task completion</span>
-              <span className="text-3xl lg:text-4xl font-bold text-[var(--gs-fg)] tracking-tight mb-1">{data.kpis.taskCompletion.current}%</span>
+              <span className="text-3xl lg:text-4xl font-bold text-[var(--gs-fg)] tracking-tight mb-1 truncate" title={`${data.kpis.taskCompletion.current}%`}>{data.kpis.taskCompletion.current}%</span>
               <span className="text-[14px] font-medium text-[var(--gs-muted)] mb-3">{data.kpis.taskCompletion.done} of {data.kpis.taskCompletion.total} completed</span>
               {renderTrend(null)}
             </div>
           </div>
 
           {/* 3. Revenue Section */}
-          <section className="flex flex-col bg-[var(--gs-surface)] border border-[var(--gs-border-strong)] rounded-[12px] p-6 lg:p-8 shadow-sm mt-4">
+          <section className="flex flex-col bg-[var(--gs-surface)] border border-[var(--gs-border)] rounded-[12px] p-6 lg:p-8 shadow-sm mt-4">
             <div className="flex flex-col gap-1.5 mb-2">
               <h3 className="text-[18px] font-bold text-[var(--gs-fg)] tracking-tight">Revenue Performance</h3>
               <p className="text-[14px] text-[var(--gs-muted)]">Invoiced and collected revenue over time.</p>
@@ -219,7 +219,7 @@ export function AnalyticsDashboard({ token, workspaceId }: AnalyticsDashboardPro
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-4">
             
             {/* Pipeline Funnel */}
-            <section className="flex flex-col gap-8 bg-[var(--gs-surface)] border border-[var(--gs-border-strong)] shadow-sm rounded-[12px] p-6 lg:p-8">
+            <section className="flex flex-col gap-8 bg-[var(--gs-surface)] border border-[var(--gs-border)] shadow-sm rounded-[12px] p-6 lg:p-8">
               <h3 className="text-[16px] font-bold text-[var(--gs-fg)] tracking-tight">Sales Pipeline</h3>
               <div className="grid grid-cols-2 gap-8">
                 <div className="flex flex-col gap-2">
@@ -236,7 +236,7 @@ export function AnalyticsDashboard({ token, workspaceId }: AnalyticsDashboardPro
             </section>
 
             {/* Deal Outcomes Donut */}
-            <section className="flex flex-col gap-8 bg-[var(--gs-surface)] border border-[var(--gs-border-strong)] shadow-sm rounded-[12px] p-6 lg:p-8">
+            <section className="flex flex-col gap-8 bg-[var(--gs-surface)] border border-[var(--gs-border)] shadow-sm rounded-[12px] p-6 lg:p-8">
               <h3 className="text-[16px] font-bold text-[var(--gs-fg)] tracking-tight">Deal Outcomes</h3>
               <OutcomesDonut data={data.pipeline} />
             </section>
@@ -246,7 +246,7 @@ export function AnalyticsDashboard({ token, workspaceId }: AnalyticsDashboardPro
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-4">
             
             {/* Cash Flow */}
-            <section className="flex flex-col gap-8 bg-[var(--gs-surface)] border border-[var(--gs-border-strong)] shadow-sm rounded-[12px] p-6 lg:p-8">
+            <section className="flex flex-col gap-8 bg-[var(--gs-surface)] border border-[var(--gs-border)] shadow-sm rounded-[12px] p-6 lg:p-8">
               <div className="flex flex-col gap-1.5">
                 <h3 className="text-[16px] font-bold text-[var(--gs-fg)] tracking-tight">Cash Flow</h3>
                 <p className="text-[13px] text-[var(--gs-muted)]">Invoiced vs Collected.</p>
@@ -255,7 +255,7 @@ export function AnalyticsDashboard({ token, workspaceId }: AnalyticsDashboardPro
             </section>
 
             {/* Work Delivery */}
-            <section className="flex flex-col gap-8 bg-[var(--gs-surface)] border border-[var(--gs-border-strong)] shadow-sm rounded-[12px] p-6 lg:p-8">
+            <section className="flex flex-col gap-8 bg-[var(--gs-surface)] border border-[var(--gs-border)] shadow-sm rounded-[12px] p-6 lg:p-8">
               <div className="flex flex-col gap-1.5">
                 <h3 className="text-[16px] font-bold text-[var(--gs-fg)] tracking-tight">Work Delivery</h3>
                 <p className="text-[13px] text-[var(--gs-muted)]">Task distribution and execution.</p>
@@ -266,7 +266,7 @@ export function AnalyticsDashboard({ token, workspaceId }: AnalyticsDashboardPro
           </div>
 
           {/* 6. Period Comparison Table */}
-          <section className="flex flex-col mt-4 bg-[var(--gs-surface)] border border-[var(--gs-border-strong)] shadow-sm rounded-[12px] overflow-hidden">
+          <section className="flex flex-col mt-4 bg-[var(--gs-surface)] border border-[var(--gs-border)] shadow-sm rounded-[12px] overflow-hidden">
             <div className="p-6 lg:p-8 border-b border-[var(--gs-border)]">
               <h3 className="text-[16px] font-bold text-[var(--gs-fg)] tracking-tight">Period Comparison</h3>
               <p className="text-[14px] text-[var(--gs-muted)] mt-1">Changes vs previous period.</p>
@@ -274,7 +274,7 @@ export function AnalyticsDashboard({ token, workspaceId }: AnalyticsDashboardPro
             <div className="w-full overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-[var(--gs-bg-alt)] border-b border-[var(--gs-border-strong)]">
+                  <tr className="bg-[var(--gs-bg-alt)] border-b border-[var(--gs-border)]">
                     <th className="py-4 px-6 text-[12px] font-bold text-[var(--gs-muted)] uppercase tracking-wider">Metric</th>
                     <th className="py-4 px-6 text-[12px] font-bold text-[var(--gs-muted)] uppercase tracking-wider text-right">Current Period</th>
                     <th className="py-4 px-6 text-[12px] font-bold text-[var(--gs-muted)] uppercase tracking-wider text-right">Previous Period</th>

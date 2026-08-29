@@ -12,7 +12,7 @@ export function DeliverySegmentedBar({ distribution, completionRate, overdue }: 
   };
 
   const stages = [
-    { key: "TODO", color: "bg-[var(--gs-border-strong)]" },
+    { key: "TODO", color: "bg-[var(--gs-border)]" },
     { key: "IN_PROGRESS", color: "bg-[var(--gs-muted)]" },
     { key: "REVIEW", color: "bg-[var(--gs-fg-secondary)]" },
     { key: "DONE", color: "bg-[var(--gs-fg)]" },

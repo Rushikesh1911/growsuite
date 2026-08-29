@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
-import { Search, Filter, Plus, X } from "lucide-react";
+import { Search, Filter, Plus, X, Circle, CheckCircle2 } from "lucide-react";
 import { Deal } from "./types";
 import { DealForm } from "./DealForm";
 import { DealList } from "./DealList";
@@ -336,44 +336,35 @@ export function CrmPipeline({ token, workspaceId }: CrmPipelineProps) {
               }`}
             >
               <Filter className="h-3.5 w-3.5" aria-hidden="true" />
-              Filter {activeFilterCount > 0 && <span className="ml-1 bg-[var(--gs-fg)] text-[var(--gs-bg)] rounded-[4px] h-[18px] w-[18px] flex items-center justify-center text-[10px] font-bold">{activeFilterCount}</span>}
+              Filters {activeFilterCount > 0 && <span className="ml-1 bg-[var(--gs-fg)] text-[var(--gs-bg)] rounded-[4px] h-[18px] w-[18px] flex items-center justify-center text-[10px] font-bold">{activeFilterCount}</span>}
             </button>
 
             {isFilterOpen && (
               <div className="absolute left-0 mt-2 w-56 bg-[var(--gs-surface-raised)] border border-[var(--gs-border-strong)] rounded-[8px] shadow-2xl z-50 p-3 animate-in fade-in zoom-in-95 duration-100">
                 <div className="text-[10px] font-bold text-[var(--gs-muted)] uppercase tracking-wider mb-2">Refine view</div>
                 
-                <label className="flex items-center gap-2.5 py-1.5 cursor-pointer group">
-                  <input 
-                    type="checkbox" 
-                    checked={filterHighProb}
-                    onChange={(e) => setFilterHighProb(e.target.checked)}
-                    className="h-3.5 w-3.5 rounded-[3px] border-[var(--gs-border-strong)] bg-transparent text-[var(--gs-fg)] focus:ring-0 focus:ring-offset-0 cursor-pointer"
-                  />
+                <div className="flex items-center gap-2.5 py-1.5 cursor-pointer group" onClick={() => setFilterHighProb(!filterHighProb)}>
+                  <div className="inline-flex items-center justify-center w-4 h-4">
+                    {filterHighProb ? <CheckCircle2 className="h-4 w-4 text-[var(--gs-fg)]" /> : <Circle className="h-4 w-4 text-[var(--gs-muted)]" />}
+                  </div>
                   <span className="text-[13px] text-[var(--gs-fg)] group-hover:text-[var(--gs-fg-hover)] font-medium">High probability (&ge;75%)</span>
-                </label>
+                </div>
                 
-                <label className="flex items-center gap-2.5 py-1.5 cursor-pointer group">
-                  <input 
-                    type="checkbox" 
-                    checked={filterHighValue}
-                    onChange={(e) => setFilterHighValue(e.target.checked)}
-                    className="h-3.5 w-3.5 rounded-[3px] border-[var(--gs-border-strong)] bg-transparent text-[var(--gs-fg)] focus:ring-0 focus:ring-offset-0 cursor-pointer"
-                  />
+                <div className="flex items-center gap-2.5 py-1.5 cursor-pointer group" onClick={() => setFilterHighValue(!filterHighValue)}>
+                  <div className="inline-flex items-center justify-center w-4 h-4">
+                    {filterHighValue ? <CheckCircle2 className="h-4 w-4 text-[var(--gs-fg)]" /> : <Circle className="h-4 w-4 text-[var(--gs-muted)]" />}
+                  </div>
                   <span className="text-[13px] text-[var(--gs-fg)] group-hover:text-[var(--gs-fg-hover)] font-medium">Value &gt; ₹10k</span>
-                </label>
+                </div>
 
                 <div className="h-px w-full bg-[var(--gs-border)] my-2" />
 
-                <label className="flex items-center gap-2.5 py-1.5 cursor-pointer group">
-                  <input 
-                    type="checkbox" 
-                    checked={showArchived}
-                    onChange={(e) => setShowArchived(e.target.checked)}
-                    className="h-3.5 w-3.5 rounded-[3px] border-[var(--gs-border-strong)] bg-transparent text-[var(--gs-fg)] focus:ring-0 focus:ring-offset-0 cursor-pointer"
-                  />
+                <div className="flex items-center gap-2.5 py-1.5 cursor-pointer group" onClick={() => setShowArchived(!showArchived)}>
+                  <div className="inline-flex items-center justify-center w-4 h-4">
+                    {showArchived ? <CheckCircle2 className="h-4 w-4 text-[var(--gs-fg)]" /> : <Circle className="h-4 w-4 text-[var(--gs-muted)]" />}
+                  </div>
                   <span className="text-[13px] text-[var(--gs-fg)] group-hover:text-[var(--gs-fg-hover)] font-medium">Show Archived Deals</span>
-                </label>
+                </div>
 
                 {activeFilterCount > 0 && (
                   <button 

@@ -1,9 +1,9 @@
 import { Navbar } from "@/components/landing/Navbar";
 import { Hero } from "@/components/landing/Hero";
-import { ProductStory } from "@/components/landing/ProductStory";
-import { ConnectedJourney } from "@/components/landing/ConnectedJourney";
+import { IntegrationsMarquee } from "@/components/landing/IntegrationsMarquee";
 import { MessySimple } from "@/components/landing/MessySimple";
-import { DarkActivity } from "@/components/landing/DarkActivity";
+import { ConnectedJourney } from "@/components/landing/ConnectedJourney";
+import { ProductStory } from "@/components/landing/ProductStory";
 import { MadeFor } from "@/components/landing/MadeFor";
 import { Pricing } from "@/components/landing/Pricing";
 import { CTA } from "@/components/landing/CTA";
@@ -11,7 +11,7 @@ import { Footer } from "@/components/landing/Footer";
 
 export default function Home() {
   return (
-    <div className="relative min-h-screen text-[#0A0A0A] flex flex-col font-sans overflow-x-hidden bg-white">
+    <div className="relative min-h-screen text-[var(--gs-bg-alt)] flex flex-col font-sans overflow-x-clip bg-white">
       {/* Navbar */}
       <Navbar />
 
@@ -20,19 +20,19 @@ export default function Home() {
         {/* 1. Hero — product-led pipeline demo */}
         <Hero />
 
-        {/* 2. Product Story — 4-tab interactive demo with autoplay */}
-        <ProductStory />
+        {/* 2. Integrations */}
+        {/* <IntegrationsMarquee /> */}
 
-        {/* 3. Connected Journey — Lead → Deal → Client → Project → Tasks → Invoice → Payment */}
-        <ConnectedJourney />
-
-        {/* 4. Messy → Simple — too many tools, one workspace */}
+        {/* 3. The Problem: Messy → Simple */}
         <MessySimple />
 
-        {/* 5. Dark Activity — from first conversation to paid invoice */}
-        <DarkActivity />
+        {/* 4. The Core Solution: Scrollytelling Lead -> Payment */}
+        <ConnectedJourney />
 
-        {/* 6. Made For — Freelancers / Small teams / Growing businesses */}
+        {/* 5. Product Features - Bento Grid */}
+        <ProductStory />
+
+        {/* 6. Target Audience: Made For */}
         <MadeFor />
 
         {/* 7. Pricing */}

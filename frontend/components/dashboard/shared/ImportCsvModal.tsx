@@ -188,11 +188,11 @@ export function ImportCsvModal({ isOpen, onClose, onImport, type }: ImportCsvMod
           <button
             onClick={handleImport}
             disabled={!file || !!error || data.length === 0 || isUploading}
-            className="bg-[var(--gs-fg)] hover:bg-[#FFFFFF] text-[#000000] px-4 py-2 rounded-[6px] text-[13px] font-semibold transition-colors disabled:opacity-50 flex items-center gap-2"
+            className="bg-[var(--gs-fg)] hover:bg-[var(--gs-fg)] text-[var(--gs-bg)] px-4 py-2 rounded-[6px] text-[13px] font-semibold transition-colors disabled:opacity-50 flex items-center gap-2"
           >
             {isUploading ? (
               <>
-                <div className="h-3 w-3 border-2 border-[#000000]/20 border-t-[#000000] rounded-full animate-spin" />
+                <div className="h-3 w-3 border-2 border-[var(--gs-bg)]/20 border-t-[var(--gs-bg)] rounded-full animate-spin" />
                 Importing...
               </>
             ) : (

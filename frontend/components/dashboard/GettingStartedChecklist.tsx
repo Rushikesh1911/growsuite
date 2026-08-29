@@ -80,7 +80,7 @@ export function GettingStartedChecklist() {
         particleCount: 150,
         spread: 70,
         origin: { y: 0.6 },
-        colors: ['#10B981', '#000000', '#ffffff', '#eab308']
+        colors: ['#10B981', 'var(--gs-bg)', 'var(--gs-fg)', '#eab308']
       });
       // Optionally auto-dismiss after a few seconds
       setTimeout(() => {
@@ -109,7 +109,7 @@ export function GettingStartedChecklist() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, filter: "blur(4px)" }}
           transition={{ duration: 0.4, ease: "easeOut" }}
-          className="bg-[#111111] border border-[#222222] rounded-[12px] p-5 mb-6 shadow-md relative overflow-hidden"
+          className="bg-[var(--gs-surface)] border border-[var(--gs-border)] rounded-[12px] p-5 mb-6 shadow-md relative overflow-hidden"
         >
           
           {/* Background progress bar hint */}
@@ -141,7 +141,7 @@ export function GettingStartedChecklist() {
             
             <button 
               onClick={handleDismiss}
-              className="text-[#666666] hover:text-white transition-colors p-1"
+              className="text-[var(--gs-muted-light)] hover:text-white transition-colors p-1"
               aria-label="Dismiss checklist"
             >
               <X className="h-4 w-4" />
@@ -156,7 +156,7 @@ export function GettingStartedChecklist() {
                 className={`flex items-start gap-2.5 p-3 rounded-[8px] transition-colors ${
                   task.completed 
                     ? "bg-[#161616] pointer-events-none" 
-                    : "bg-[#111111] border border-[#222222] hover:border-[#333333] hover:bg-[#161616] group"
+                    : "bg-[var(--gs-surface)] border border-[var(--gs-border)] hover:border-[var(--gs-border)] hover:bg-[#161616] group"
                 }`}
               >
                 <div className="shrink-0 mt-0.5">
@@ -165,10 +165,10 @@ export function GettingStartedChecklist() {
                       <CheckCircle2 className="h-4 w-4 text-emerald-500" />
                     </motion.div>
                   ) : (
-                    <Circle className="h-4 w-4 text-[#333333] group-hover:text-[#666666] transition-colors" />
+                    <Circle className="h-4 w-4 text-[var(--gs-border)] group-hover:text-[var(--gs-muted-light)] transition-colors" />
                   )}
                 </div>
-                <span className={`text-[13px] font-[500] leading-tight ${task.completed ? "text-[#555555] line-through decoration-[#333333]" : "text-[#EDEDED]"}`}>
+                <span className={`text-[13px] font-[500] leading-tight ${task.completed ? "text-[var(--gs-muted-light)] line-through decoration-[var(--gs-border)]" : "text-[var(--gs-fg)]"}`}>
                   {task.label}
                 </span>
               </Link>

@@ -10,6 +10,8 @@ interface CreateInvoiceModalProps {
   onSuccess: () => void;
   initialClientId?: number;
   initialProjectId?: number;
+  initialItems?: LineItem[];
+  timeEntryIds?: number[];
 }
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
@@ -29,6 +31,8 @@ export function CreateInvoiceModal({
   onSuccess,
   initialClientId,
   initialProjectId,
+  initialItems,
+  timeEntryIds,
 }: CreateInvoiceModalProps) {
   const [clientId, setClientId] = useState(initialClientId ? initialClientId.toString() : "");
   const [projectId, setProjectId] = useState(initialProjectId ? initialProjectId.toString() : "");
@@ -37,7 +41,7 @@ export function CreateInvoiceModal({
   const [dueDate, setDueDate] = useState("");
   const [notes, setNotes] = useState("");
   
-  const [tax, setTax] = useState("0");
+  const [taxRate, setTaxRate] = useState("0");
   const [discount, setDiscount] = useState("0");
 
   const [items, setItems] = useState<LineItem[]>([
@@ -45,7 +49,7 @@ export function CreateInvoiceModal({
   ]);
 
   const [clients, setClients] = useState<{id: number, name: string}[]>([]);
-  const [projects, setProjects] = useState<{id: number, name: string}[]>([]);
+  const [projects, setProjects] = useState<{id: number, name: string, clientId: number}[]>([]);
   
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -80,12 +84,17 @@ export function CreateInvoiceModal({
       setDueDate(dDate.toISOString().split('T')[0]);
       
       setNotes("");
-      setTax("0");
+      setTaxRate("0");
       setDiscount("0");
-      setItems([{ id: Date.now().toString(), description: "Professional Services", quantity: 1, unitPrice: 0 }]);
+      
+      if (initialItems && initialItems.length > 0) {
+        setItems(initialItems);
+      } else {
+        setItems([{ id: Date.now().toString(), description: "Professional Services", quantity: 1, unitPrice: 0 }]);
+      }
       setErrorMsg("");
     }
-  }, [isOpen, token, workspaceId, initialClientId, initialProjectId]);
+  }, [isOpen, token, workspaceId, initialClientId, initialProjectId, initialItems]);
 
   const handleAddItem = () => {
     setItems([...items, { id: Date.now().toString(), description: "", quantity: 1, unitPrice: 0 }]);
@@ -102,7 +111,8 @@ export function CreateInvoiceModal({
   };
 
   const subtotal = items.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0);
-  const total = subtotal + parseFloat(tax || "0") - parseFloat(discount || "0");
+  const calculatedTax = subtotal * (parseFloat(taxRate || "0") / 100);
+  const total = subtotal + calculatedTax - parseFloat(discount || "0");
 
   const handleSubmit = async (status: 'DRAFT' | 'SENT') => {
     if (!clientId) {
@@ -125,10 +135,11 @@ export function CreateInvoiceModal({
         issueDate: new Date(issueDate).toISOString(),
         dueDate: dueDate ? new Date(dueDate).toISOString() : undefined,
         items: items.map(i => ({ description: i.description, quantity: i.quantity, unitPrice: i.unitPrice })),
-        tax: parseFloat(tax || "0"),
+        tax: calculatedTax,
         discount: parseFloat(discount || "0"),
         notes: notes || undefined,
-        status: status
+        status: status,
+        timeEntryIds: timeEntryIds && timeEntryIds.length > 0 ? timeEntryIds : undefined
       };
 
       const res = await fetch(`${API_URL}/api/invoices`, {
@@ -189,10 +200,10 @@ export function CreateInvoiceModal({
             <div className="flex flex-col gap-1.5">
               <label className="text-[12px] font-bold text-[var(--gs-fg)]">Project</label>
               <PopoverSelect
-                options={projects.filter(p => !clientId || p.id === parseInt(clientId)).map(p => ({ value: p.id.toString(), label: p.name }))}
+                options={clientId ? projects.filter(p => p.clientId === parseInt(clientId)).map(p => ({ value: p.id.toString(), label: p.name })) : []}
                 value={projectId}
                 onChange={setProjectId}
-                placeholder="Optional"
+                placeholder={clientId ? "Optional" : "Select a client first"}
               />
             </div>
           </div>
@@ -233,6 +244,16 @@ export function CreateInvoiceModal({
           {/* Line Items */}
           <div className="flex flex-col gap-3">
             <h3 className="text-[13px] font-bold text-[var(--gs-fg)] border-b border-[var(--gs-border)] pb-2">Line Items</h3>
+            
+            {/* Headers */}
+            <div className="flex gap-3 items-center px-1 text-[11px] font-semibold text-[var(--gs-muted)] uppercase tracking-wider mt-2">
+              <div className="flex-1">Description</div>
+              <div className="w-[70px]">Qty</div>
+              <div className="w-[100px]">Price</div>
+              <div className="w-[90px] text-right">Amount</div>
+              {items.length > 1 && <div className="w-8"></div>}
+            </div>
+
             <div className="flex flex-col gap-3">
               {items.map((item, idx) => (
                 <div key={item.id} className="flex gap-3 items-start">
@@ -245,7 +266,7 @@ export function CreateInvoiceModal({
                       className="w-full bg-[var(--gs-bg)] border border-[var(--gs-border)] rounded-[6px] px-3 py-2 text-[13px] text-[var(--gs-fg)] focus:border-[var(--gs-fg)] focus:outline-none transition-colors"
                     />
                   </div>
-                  <div className="w-[80px]">
+                  <div className="w-[70px]">
                     <input 
                       type="number" 
                       min="1"
@@ -254,7 +275,7 @@ export function CreateInvoiceModal({
                       className="w-full bg-[var(--gs-bg)] border border-[var(--gs-border)] rounded-[6px] px-3 py-2 text-[13px] text-[var(--gs-fg)] focus:border-[var(--gs-fg)] focus:outline-none transition-colors"
                     />
                   </div>
-                  <div className="w-[120px]">
+                  <div className="w-[100px]">
                     <input 
                       type="number" 
                       min="0"
@@ -265,14 +286,19 @@ export function CreateInvoiceModal({
                       className="w-full bg-[var(--gs-bg)] border border-[var(--gs-border)] rounded-[6px] px-3 py-2 text-[13px] text-[var(--gs-fg)] focus:border-[var(--gs-fg)] focus:outline-none transition-colors"
                     />
                   </div>
+                  <div className="w-[90px] flex items-center justify-end h-[38px] text-[13px] font-medium text-[var(--gs-fg)] pr-1">
+                    ₹{(item.quantity * item.unitPrice).toFixed(2)}
+                  </div>
                   {items.length > 1 && (
-                    <button 
-                      type="button" 
-                      onClick={() => handleRemoveItem(item.id)}
-                      className="mt-2 text-[var(--gs-muted)] hover:text-[#EF4444] transition-colors outline-none"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
+                    <div className="w-8 flex items-center justify-center h-[38px]">
+                      <button 
+                        type="button" 
+                        onClick={() => handleRemoveItem(item.id)}
+                        className="text-[var(--gs-muted)] hover:text-[#EF4444] transition-colors outline-none"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
                   )}
                 </div>
               ))}
@@ -300,19 +326,22 @@ export function CreateInvoiceModal({
           <div className="flex flex-col items-end gap-2 border-t border-[var(--gs-border)] pt-4 mt-auto">
             <div className="flex justify-between w-full max-w-[250px] text-[13px]">
               <span className="text-[var(--gs-muted)]">Subtotal</span>
-              <span className="font-medium text-[var(--gs-fg)]">{subtotal.toFixed(2)}</span>
+              <span className="font-medium text-[var(--gs-fg)]">₹{subtotal.toFixed(2)}</span>
             </div>
             <div className="flex justify-between w-full max-w-[250px] text-[13px] items-center gap-4">
-              <span className="text-[var(--gs-muted)]">Tax</span>
-              <input 
-                type="number" 
-                value={tax}
-                onChange={e => setTax(e.target.value)}
-                className="w-[100px] bg-[var(--gs-bg)] border border-[var(--gs-border)] rounded-[4px] px-2 py-1 text-[12px] text-[var(--gs-fg)] text-right focus:border-[var(--gs-fg)] focus:outline-none"
-              />
+              <span className="text-[var(--gs-muted)]">Tax (%)</span>
+              <div className="flex items-center gap-3">
+                <input 
+                  type="number" 
+                  value={taxRate}
+                  onChange={e => setTaxRate(e.target.value)}
+                  className="w-[60px] bg-[var(--gs-bg)] border border-[var(--gs-border)] rounded-[4px] px-2 py-1 text-[12px] text-[var(--gs-fg)] text-right focus:border-[var(--gs-fg)] focus:outline-none"
+                />
+                <span className="w-[40px] text-right text-[var(--gs-fg)] font-medium">₹{calculatedTax.toFixed(2)}</span>
+              </div>
             </div>
             <div className="flex justify-between w-full max-w-[250px] text-[13px] items-center gap-4">
-              <span className="text-[var(--gs-muted)]">Discount</span>
+              <span className="text-[var(--gs-muted)]">Discount (₹)</span>
               <input 
                 type="number" 
                 value={discount}
@@ -322,7 +351,7 @@ export function CreateInvoiceModal({
             </div>
             <div className="flex justify-between w-full max-w-[250px] text-[15px] font-bold mt-2">
               <span className="text-[var(--gs-fg)]">Total</span>
-              <span className="text-[var(--gs-fg)]">{total.toFixed(2)}</span>
+              <span className="text-[var(--gs-fg)]">₹{total.toFixed(2)}</span>
             </div>
           </div>
         </div>
@@ -347,7 +376,7 @@ export function CreateInvoiceModal({
             type="button"
             onClick={() => handleSubmit('SENT')}
             disabled={submitting}
-            className="px-4 py-2 bg-[#EDEDED] text-[#000000] rounded-[6px] text-[13px] font-bold hover:bg-[#FFFFFF] transition-colors disabled:opacity-50 outline-none"
+            className="px-4 py-2 bg-[var(--gs-fg)] text-[var(--gs-bg)] rounded-[6px] text-[13px] font-bold hover:bg-[var(--gs-fg)] transition-colors disabled:opacity-50 outline-none"
           >
             {submitting ? "Creating..." : "Create & Issue"}
           </button>

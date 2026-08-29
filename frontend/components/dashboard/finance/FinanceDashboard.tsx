@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { CreateInvoiceModal } from "./CreateInvoiceModal";
 import { formatCurrency } from "@/lib/currency";
 import { TableSkeleton } from "@/components/ui/skeleton";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 import { formatDate, formatEnum } from "@/lib/formatters";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSocket } from "@/components/providers/SocketProvider";
@@ -113,15 +114,15 @@ export function FinanceDashboard({ token, workspaceId }: FinanceDashboardProps) 
   const overdue = invoices.filter(i => i.status === 'OVERDUE').reduce((sum, inv) => sum + Number(inv.balanceDue), 0);
   const draftsCount = invoices.filter(i => i.status === 'DRAFT').length;
 
-  const getStatusColor = (status: string) => {
-    const colors: Record<string, string> = {
-      DRAFT: "bg-[var(--gs-surface)] text-[var(--gs-muted)] border-[var(--gs-border-strong)]",
-      SENT: "bg-[#007CF0]/10 text-[#007CF0] border-[#007CF0]/20",
-      PARTIALLY_PAID: "bg-[#F5A623]/10 text-[#F5A623] border-[#F5A623]/20",
-      PAID: "bg-[#10B981]/10 text-[#10B981] border-[#10B981]/20",
-      OVERDUE: "bg-[#EF4444]/10 text-[#EF4444] border-[#EF4444]/20",
-    };
-    return colors[status] || "bg-[var(--gs-surface)] text-[var(--gs-fg)] border-[var(--gs-border-strong)]";
+  const getSemanticStatus = (status: string): "neutral" | "positive" | "pending" | "info" | "overdue" => {
+    switch (status) {
+      case "DRAFT": return "neutral";
+      case "SENT": return "info";
+      case "PARTIALLY_PAID": return "pending";
+      case "PAID": return "positive";
+      case "OVERDUE": return "overdue";
+      default: return "neutral";
+    }
   };
 
   const filteredInvoices = invoices.filter((inv) => {
@@ -143,7 +144,7 @@ export function FinanceDashboard({ token, workspaceId }: FinanceDashboardProps) 
         </div>
         <button 
           onClick={() => setIsCreateModalOpen(true)}
-          className="flex items-center justify-center gap-2 bg-[#EDEDED] hover:bg-[#FFFFFF] text-[#000000] px-4 py-2 rounded-[6px] text-[13px] font-semibold transition-colors outline-none"
+          className="flex items-center justify-center gap-2 bg-[var(--gs-fg)] hover:bg-[var(--gs-fg)] text-[var(--gs-bg)] px-4 py-2 rounded-[6px] text-[13px] font-semibold transition-colors outline-none"
         >
           <Plus className="h-4 w-4" />
           New Invoice
@@ -267,9 +268,7 @@ export function FinanceDashboard({ token, workspaceId }: FinanceDashboardProps) 
                       {formatDate(inv.dueDate)}
                     </td>
                     <td className="py-3 px-5 whitespace-nowrap">
-                      <span className={`inline-flex items-center px-2 py-0.5 rounded-[4px] text-[10px] font-bold tracking-wide uppercase border ${getStatusColor(inv.status)}`}>
-                        {formatEnum(inv.status)}
-                      </span>
+                      <StatusBadge label={formatEnum(inv.status)} status={getSemanticStatus(inv.status)} />
                     </td>
                     <td className="py-3 px-5 text-[13px] font-bold text-[var(--gs-fg)] text-right whitespace-nowrap">
                       {formatCurrency(Number(inv.total))}

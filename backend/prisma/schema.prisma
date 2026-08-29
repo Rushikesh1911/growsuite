@@ -26,8 +26,18 @@ model User {
   createdAt      DateTime @default(now())
   updatedAt DateTime @updatedAt
   
+  // Preferences
+  themePreference String @default("system")
+  timezone        String @default("Asia/Kolkata")
+  dateFormat      String @default("DD/MM/YYYY")
+  notificationPreferences Json?
+  phone           String?
+
   hasCompletedOnboarding Boolean @default(false)
   hideOnboardingChecklist Boolean @default(false)
+
+  // Billing
+  hourlyRate Int?
 
   // Google OAuth
   googleAccessToken  String?
@@ -40,6 +50,7 @@ model User {
   sentInvitations      WorkspaceInvitation[] @relation("InvitationSender")
   sentEmails           EmailMessage[]
   attachments          Attachment[]
+  timeEntries          TimeEntry[]
 }
 
 enum WorkspaceRole {
@@ -58,9 +69,11 @@ model Workspace {
   razorpayKeyId String?
   razorpayKeySecret String?
   useCase    String?
+  brandColor String   @default("#EDEDED")
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
+  subscription Subscription?
   members      WorkspaceMember[]
   leads        Lead[]
   deals        Deal[]
@@ -77,6 +90,7 @@ model Workspace {
   leadNotes     LeadNote[]
   dealNotes     DealNote[]
   attachments   Attachment[]
+  timeEntries   TimeEntry[]
 }
 
 model WorkspaceMember {
@@ -98,6 +112,59 @@ model WorkspaceMember {
 
   @@unique([userId, workspaceId])
 }
+
+// ─── BILLING & SUBSCRIPTIONS ────────────────────────────────────────────────
+
+enum SubscriptionPlan {
+  FREE
+  PRO
+  ENTERPRISE
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  TRIALING
+  PAST_DUE
+  CANCELED
+  INCOMPLETE
+  PAUSED
+}
+
+enum BillingProvider {
+  RAZORPAY
+  STRIPE
+}
+
+enum BillingCycle {
+  MONTHLY
+  YEARLY
+}
+
+model Subscription {
+  id                     Int                @id @default(autoincrement())
+  
+  workspaceId            Int                @unique
+  workspace              Workspace          @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  
+  plan                   SubscriptionPlan   @default(FREE)
+  status                 SubscriptionStatus @default(ACTIVE)
+  provider               BillingProvider?
+  
+  providerCustomerId     String?
+  providerSubscriptionId String?            @unique
+  
+  billingCycle           BillingCycle?
+  currentPeriodStart     DateTime?
+  currentPeriodEnd       DateTime?
+  trialStart             DateTime?
+  trialEnd               DateTime?
+  canceledAt             DateTime?
+  cancelAtPeriodEnd      Boolean            @default(false)
+
+  createdAt              DateTime           @default(now())
+  updatedAt              DateTime           @updatedAt
+}
+
 
 // ─── CRM (LEADS, DEALS & CLIENTS) ───────────────────────────────────────────
 
@@ -279,10 +346,13 @@ model Project {
   workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   workspaceId Int
 
+  hourlyRate  Int?
+
   tasks       Task[]
   invoices    Invoice[]
   activities  ActivityLog[]
   attachments Attachment[]
+  timeEntries TimeEntry[]
 }
 
 enum TaskStatus {
@@ -329,6 +399,7 @@ model Task {
 
   activities  ActivityLog[]
   attachments Attachment[]
+  timeEntries TimeEntry[]
 }
 
 // ─── FINANCE (INVOICES & PAYMENTS) ──────────────────────────────────────────
@@ -378,6 +449,7 @@ model Invoice {
   items         InvoiceItem[]
   payments      Payment[]
   activities    ActivityLog[]
+  timeEntries   TimeEntry[]
 }
 
 model InvoiceItem {
@@ -553,4 +625,35 @@ model Attachment {
   workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   
   createdAt   DateTime @default(now())
+}
+
+// ─── TIME TRACKING ──────────────────────────────────────────────────────────
+
+model TimeEntry {
+  id          Int      @id @default(autoincrement())
+  description String?
+  duration    Int      @default(0) // Total duration in seconds, computed on stop
+  startTime   DateTime? // Set if a timer is currently running
+  endTime     DateTime?
+  billable    Boolean  @default(true)
+  
+  // Note: "billed" is derived from invoiceId != null.
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int
+  
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  workspaceId Int
+  
+  task        Task?    @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  taskId      Int?
+  
+  project     Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId   Int?
+  
+  invoice     Invoice? @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
+  invoiceId   Int?
 }

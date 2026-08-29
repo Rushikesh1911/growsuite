@@ -5,6 +5,8 @@ import { Plus, Target, CheckSquare, Users, CreditCard, ChevronRight, Activity, A
 import { useRouter } from "next/navigation";
 import { DashboardSkeleton } from "@/components/ui/skeleton";
 import { AreaChart, Area, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts";
+import { StatusBadge } from "@/components/ui/StatusBadge";
+import { formatCurrency } from "@/lib/currency";
 
 interface OverviewProps {
   token: string;
@@ -13,13 +15,7 @@ interface OverviewProps {
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
-const formatCurrency = (val: number) => {
-  return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-    maximumFractionDigits: 0,
-  }).format(val);
-};
+
 
 export function Overview({ token, workspaceId }: OverviewProps) {
   const router = useRouter();
@@ -118,7 +114,7 @@ export function Overview({ token, workspaceId }: OverviewProps) {
   const getIconForAction = (action: string) => {
     if (action.includes("LEAD")) return <Target className="h-3.5 w-3.5 text-[#007CF0]" />;
     if (action.includes("DEAL")) return <CircleDollarSign className="h-3.5 w-3.5 text-[#10B981]" />;
-    if (action.includes("CLIENT")) return <Users className="h-3.5 w-3.5 text-[#7928CA]" />;
+    if (action.includes("CLIENT")) return <Users className="h-3.5 w-3.5 text-[var(--gs-muted)]" />;
     if (action.includes("TASK")) return <CheckSquare className="h-3.5 w-3.5 text-[var(--gs-muted)]" />;
     if (action.includes("INVOICE")) return <CreditCard className="h-3.5 w-3.5 text-[#FF0080]" />;
     return <Activity className="h-3.5 w-3.5 text-[var(--gs-muted)]" />;
@@ -262,7 +258,14 @@ export function Overview({ token, workspaceId }: OverviewProps) {
                     <span className="text-[12px] text-[var(--gs-muted)] truncate mt-0.5">{t.project?.name || t.client?.name || "General"}</span>
                   </div>
                   <div className="flex flex-col items-end shrink-0 gap-1">
-                    <span className="text-[11px] font-bold px-2 py-0.5 rounded-[4px] bg-[var(--gs-border)] text-[var(--gs-fg)] uppercase tracking-wider">{t.status.replace("_", " ")}</span>
+                    <StatusBadge 
+                      label={t.status.replace("_", " ")} 
+                      status={
+                        t.status === 'DONE' ? 'positive' :
+                        t.status === 'IN_PROGRESS' ? 'pending' :
+                        t.status === 'REVIEW' ? 'info' : 'neutral'
+                      } 
+                    />
                     {t.dueDate && (
                       <span className={`text-[11px] font-medium ${new Date(t.dueDate) < new Date() ? "text-[#EF4444]" : "text-[var(--gs-muted)]"}`}>
                         {new Date(t.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}

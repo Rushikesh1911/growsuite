@@ -9,7 +9,7 @@ import { useRef } from "react";
 import { useSocket } from "@/components/providers/SocketProvider";
 
 // dnd-kit imports
-import { DndContext, DragOverlay, closestCorners, KeyboardSensor, PointerSensor, useSensor, useSensors, DragStartEvent, DragEndEvent } from '@dnd-kit/core';
+import { DndContext, DragOverlay, closestCorners, KeyboardSensor, PointerSensor, useSensor, useSensors, DragStartEvent, DragEndEvent, useDroppable } from '@dnd-kit/core';
 import { SortableContext, arrayMove, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -36,6 +36,19 @@ interface TaskManagementProps {
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 const STATUSES = ["TODO", "IN_PROGRESS", "REVIEW", "DONE"] as const;
+
+// --- DND Column Droppable ---
+function DroppableColumn({ id, children, className }: { id: string, children: React.ReactNode, className?: string }) {
+  const { setNodeRef, isOver } = useDroppable({ id });
+  return (
+    <div 
+      ref={setNodeRef} 
+      className={`${className || ''} ${isOver ? 'ring-2 ring-[var(--gs-border-strong)] rounded-[8px]' : ''}`}
+    >
+      {children}
+    </div>
+  );
+}
 
 // --- DND Sortable Item Component for Board ---
 function SortableTaskCard({ task, onClick, onToggleStatus }: { task: Task, onClick: () => void, onToggleStatus: (t: Task) => void }) {
@@ -496,7 +509,7 @@ export function TaskManagement({ projectId, token, workspaceId }: TaskManagement
                     <span className="text-[11px] text-[var(--gs-muted-light)]">{statusTasks.length}</span>
                   </div>
                   
-                  <div className="flex flex-col gap-2 min-h-[150px]">
+                  <DroppableColumn id={status} className="flex flex-col gap-2 min-h-[150px] p-1 -m-1">
                     <SortableContext items={statusTasks.map(t => t.id.toString())} strategy={verticalListSortingStrategy}>
                       {statusTasks.map(task => (
                         <SortableTaskCard 
@@ -531,7 +544,7 @@ export function TaskManagement({ projectId, token, workspaceId }: TaskManagement
                       <Plus className="h-3.5 w-3.5" />
                       Add task
                     </button>
-                  </div>
+                  </DroppableColumn>
                 </div>
               );
             })}

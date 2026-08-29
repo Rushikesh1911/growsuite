@@ -31,7 +31,7 @@ export function Toast({ isOpen, onClose, message, type = "success", action }: To
           exit={{ opacity: 0, y: 20, scale: 0.95 }}
           transition={{ duration: 0.15, ease: "easeOut" }}
           className={cn(
-            "fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-3 rounded-[10px] border shadow-sm bg-white text-[#111111] max-w-sm",
+            "fixed bottom-6 right-6 z-[9999] flex items-center gap-3 px-4 py-3 rounded-[10px] border shadow-sm bg-[var(--gs-surface)] text-[var(--gs-fg)] max-w-sm",
             {
               "border-[#C8E6C9]": type === "success",
               "border-[#FFCDD2]": type === "error",
@@ -49,7 +49,7 @@ export function Toast({ isOpen, onClose, message, type = "success", action }: To
                 action.onClick();
                 onClose();
               }}
-              className="text-xs font-bold text-[#111111] hover:underline px-2 py-1 bg-black/5 hover:bg-black/10 rounded-[4px] transition-colors ml-2"
+              className="text-xs font-bold text-[var(--gs-surface)] hover:underline px-2 py-1 bg-black/5 hover:bg-black/10 rounded-[4px] transition-colors ml-2"
             >
               {action.label}
             </button>
@@ -57,7 +57,7 @@ export function Toast({ isOpen, onClose, message, type = "success", action }: To
 
           <button
             onClick={onClose}
-            className="text-[#9CA3AF] hover:text-[#111111] shrink-0 active:scale-95 transition-transform"
+            className="text-[#9CA3AF] hover:text-[var(--gs-surface)] shrink-0 active:scale-95 transition-transform"
           >
             <X className="h-4 w-4" />
           </button>

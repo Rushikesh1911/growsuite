@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { CheckSquare, Circle, CheckCircle2, Clock, PlayCircle, Plus, Search, X, Filter, FolderKanban, Calendar } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { PopoverSelect } from "@/components/ui/popover-select";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 import { TableSkeleton } from "@/components/ui/skeleton";
 
 interface TaskAssignee {
@@ -138,13 +139,13 @@ export function TaskDirectory({ token, workspaceId }: TaskDirectoryProps) {
     return matchesSearch && matchesStatus;
   });
 
-  const getStatusIcon = (status: string) => {
+  const getSemanticStatus = (status: string): "neutral" | "positive" | "pending" | "info" | "overdue" => {
     switch (status) {
-      case "TODO": return <Circle className="h-4 w-4 text-[#888888]" strokeWidth={2} />;
-      case "IN_PROGRESS": return <PlayCircle className="h-4 w-4 text-[#F5A623]" strokeWidth={2} />;
-      case "REVIEW": return <Clock className="h-4 w-4 text-[#007CF0]" strokeWidth={2} />;
-      case "DONE": return <CheckCircle2 className="h-4 w-4 text-[#7928CA]" strokeWidth={2} />;
-      default: return <Circle className="h-4 w-4 text-[#888888]" />;
+      case "TODO": return "neutral";
+      case "IN_PROGRESS": return "pending";
+      case "REVIEW": return "info";
+      case "DONE": return "positive";
+      default: return "neutral";
     }
   };
 
@@ -220,7 +221,6 @@ export function TaskDirectory({ token, workspaceId }: TaskDirectoryProps) {
             return (
               <div key={status} className="flex flex-col gap-2">
                 <div className="flex items-center gap-2 px-1">
-                  {getStatusIcon(status)}
                   <h3 className="text-[13px] font-semibold text-[#EDEDED] tracking-wide uppercase">
                     {getStatusLabel(status)} <span className="text-[#666666] ml-1">{groupTasks.length}</span>
                   </h3>
@@ -231,7 +231,7 @@ export function TaskDirectory({ token, workspaceId }: TaskDirectoryProps) {
                     {groupTasks.map((task) => (
                       <div key={task.id} className="flex items-center justify-between p-3 hover:bg-[#0A0A0A] transition-colors group cursor-pointer">
                         <div className="flex items-center gap-3 min-w-0">
-                          {getStatusIcon(task.status)}
+                          <StatusBadge label={getStatusLabel(task.status)} status={getSemanticStatus(task.status)} />
                           <div className="flex flex-col min-w-0">
                             <span className="text-[13px] font-medium text-[#EDEDED] group-hover:text-[var(--gs-fg)] transition-colors truncate">
                               {task.title}
@@ -268,9 +268,7 @@ export function TaskDirectory({ token, workspaceId }: TaskDirectoryProps) {
                               </span>
                             </div>
                           ) : (
-                            <div className="h-6 w-6 rounded-full border border-dashed border-[#444444] flex items-center justify-center" title="Unassigned">
-                              <span className="text-[10px] text-[#666666]">?</span>
-                            </div>
+                            <div className="h-6 w-6 rounded-full border border-dashed border-[var(--gs-border-strong)] bg-transparent shrink-0" title="Unassigned" />
                           )}
                         </div>
                       </div>

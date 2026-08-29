@@ -15,9 +15,10 @@ import { FinanceDashboard } from "@/components/dashboard/finance/FinanceDashboar
 import { PaymentsDashboard } from "@/components/dashboard/finance/PaymentsDashboard";
 import { ActivityFeed } from "@/components/dashboard/activity/ActivityFeed";
 import { AnalyticsDashboard } from "@/components/dashboard/analytics/AnalyticsDashboard";
-import { WorkspaceSettings } from "@/components/dashboard/settings/WorkspaceSettings";
-import { ProfileSettings } from "@/components/dashboard/settings/ProfileSettings";
+import { SettingsLayout } from "@/components/dashboard/settings/SettingsLayout";
+import { SupportDashboard } from "@/components/dashboard/support/SupportDashboard";
 import { GettingStartedChecklist } from "@/components/dashboard/GettingStartedChecklist";
+import { TimeTracker } from "@/components/dashboard/time/TimeTracker";
 import { useDashboard } from "../DashboardContext";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
@@ -47,6 +48,7 @@ export default function DashboardSubRoute() {
       analytics: "Analytics",
       settings: "Workspace Settings",
       profile: "Profile Settings",
+      "time-tracking": "Time Tracking",
     };
     
     document.title = `${titles[currentView] || "Dashboard"} — GrowSuite`;
@@ -103,16 +105,16 @@ export default function DashboardSubRoute() {
             <FinanceDashboard token={token} workspaceId={workspaceId} />
           )}
 
+          {currentView === "time-tracking" && (
+            <TimeTracker />
+          )}
+
           {currentView === "activity" && (
             <ActivityFeed token={token} workspaceId={workspaceId} />
           )}
 
-          {currentView === "settings" && (
-            <WorkspaceSettings token={token} workspaceId={workspaceId} />
-          )}
-
-          {currentView === "profile" && (
-            <ProfileSettings token={token} />
+          {['settings', 'profile'].includes(currentView) && (
+            <SettingsLayout token={token} workspaceId={workspaceId} />
           )}
 
           {currentView === "analytics" && (
@@ -124,13 +126,7 @@ export default function DashboardSubRoute() {
           )}
 
           {["help"].includes(currentView) && (
-            <div className="flex flex-col items-center justify-center py-24 text-center animate-fade">
-              <div className="h-12 w-12 rounded-full bg-[var(--gs-surface)] flex items-center justify-center mb-4 border border-[var(--gs-border)]">
-                <span className="text-[var(--gs-muted)] text-lg font-bold">...</span>
-              </div>
-              <h2 className="text-lg font-semibold text-[var(--gs-fg)]">Coming Soon</h2>
-              <p className="text-sm text-[var(--gs-muted)] mt-1 max-w-sm">This module is part of our upcoming release schedule. Check back later!</p>
-            </div>
+            <SupportDashboard token={token} />
           )}
         </div>
       </main>

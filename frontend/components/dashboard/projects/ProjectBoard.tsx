@@ -4,12 +4,13 @@ import { useState, useEffect, useCallback } from "react";
 import { Filter } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSocket } from "@/components/providers/SocketProvider";
-import { FolderKanban, Plus, Search, MoreHorizontal, Building2, CheckSquare } from "lucide-react";
+import { FolderKanban, Plus, Search, MoreHorizontal, Building2, CheckSquare, Edit2, FileText, Archive, ArchiveRestore } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Project } from "./types";
 import { BoardSkeleton } from "@/components/ui/skeleton";
 import { PopoverSelect } from "@/components/ui/popover-select";
 import { CreateProjectModal } from "./CreateProjectModal";
+import { StatusBadge } from "@/components/ui/StatusBadge";
 
 interface ProjectBoardProps {
   token: string;
@@ -155,16 +156,7 @@ export function ProjectBoard({ token, workspaceId, initialClientId }: ProjectBoa
     }
   };
 
-  const getStatusColor = (status: string) => {
-    const colors: Record<string, string> = {
-      ACTIVE: "bg-[#007CF0]/10 text-[#007CF0] border-[#007CF0]/20",
-      COMPLETED: "bg-[var(--gs-fg)]/10 text-[var(--gs-fg)] border-[var(--gs-fg)]/20",
-      ON_HOLD: "bg-[#F5A623]/10 text-[#F5A623] border-[#F5A623]/20",
-      PLANNING: "bg-[#71717A]/10 text-[#71717A] border-[#71717A]/20",
-      CANCELLED: "bg-[#EF4444]/10 text-[#EF4444] border-[#EF4444]/20",
-    };
-    return colors[status] || "bg-[var(--gs-bg-alt)] text-[var(--gs-fg)] border-[var(--gs-border-strong)]";
-  };
+
 
   const getRelativeTime = (dateString: string) => {
     const date = new Date(dateString);
@@ -178,8 +170,8 @@ export function ProjectBoard({ token, workspaceId, initialClientId }: ProjectBoa
     return `${Math.floor(diffInSeconds / 86400)}d ago`;
   };
 
-  const formatDeadline = (dateString: string | null) => {
-    if (!dateString) return "No deadline";
+  const formatDeadline = (dateString: string | null, isComplete: boolean) => {
+    if (!dateString) return <span className="text-[var(--gs-muted-light)]">No deadline</span>;
     const date = new Date(dateString);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -188,11 +180,16 @@ export function ProjectBoard({ token, workspaceId, initialClientId }: ProjectBoa
     
     const diffDays = Math.round((deadlineDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
     
-    if (diffDays < 0) return <span className="text-red-500 font-medium">Overdue by {Math.abs(diffDays)} days</span>;
-    if (diffDays === 0) return <span className="text-[#F5A623] font-medium">Due today</span>;
-    if (diffDays === 1) return <span className="text-[var(--gs-fg)] font-medium">Due tomorrow</span>;
+    if (isComplete) {
+      if (diffDays < 0) return <StatusBadge label={`Completed ${Math.abs(diffDays)}d late`} status="positive" showDot={false} />;
+      return <StatusBadge label="Completed on time" status="positive" showDot={false} />;
+    }
     
-    return `Due ${date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}`;
+    if (diffDays < 0) return <StatusBadge label={`Overdue by ${Math.abs(diffDays)}d`} status="overdue" showDot={false} />;
+    if (diffDays === 0) return <StatusBadge label="Due today" status="pending" showDot={false} />;
+    if (diffDays === 1) return <StatusBadge label="Due tomorrow" status="neutral" showDot={false} />;
+    
+    return <span className="text-[var(--gs-muted-light)]">Due {date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>;
   };
 
   const [openActionMenuId, setOpenActionMenuId] = useState<number | null>(null);
@@ -309,14 +306,24 @@ export function ProjectBoard({ token, workspaceId, initialClientId }: ProjectBoa
                     
                     {openActionMenuId === project.id && (
                       <div className="absolute right-0 top-6 w-36 bg-[var(--gs-surface-raised)] border border-[var(--gs-border)] rounded-[8px] shadow-2xl py-1 z-50 animate-in fade-in zoom-in-95 duration-100">
-                        <button onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); setEditingProject(project); setOpenActionMenuId(null); }} className="w-full text-left px-3 py-1.5 text-[12px] text-[var(--gs-fg)] hover:bg-[var(--gs-bg-alt)] font-medium">Edit project</button>
-                        <button onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); router.push(`/dashboard/projects/${project.id}?tab=tasks`); setOpenActionMenuId(null); }} className="w-full text-left px-3 py-1.5 text-[12px] text-[var(--gs-fg)] hover:bg-[var(--gs-bg-alt)] font-medium">Add task</button>
-                        <button onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); router.push(`/dashboard/invoices/new?client=${project.client.id}`); setOpenActionMenuId(null); }} className="w-full text-left px-3 py-1.5 text-[12px] text-[var(--gs-fg)] hover:bg-[var(--gs-bg-alt)] font-medium">Create invoice</button>
+                        <button onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); setEditingProject(project); setOpenActionMenuId(null); }} className="w-full text-left px-3 py-1.5 text-[12px] text-[var(--gs-fg)] hover:bg-[var(--gs-bg-alt)] font-medium flex items-center gap-2">
+                          <Edit2 className="h-4 w-4 text-[var(--gs-muted)]" /> Edit project
+                        </button>
+                        <button onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); router.push(`/dashboard/projects/${project.id}?tab=tasks`); setOpenActionMenuId(null); }} className="w-full text-left px-3 py-1.5 text-[12px] text-[var(--gs-fg)] hover:bg-[var(--gs-bg-alt)] font-medium flex items-center gap-2">
+                          <CheckSquare className="h-4 w-4 text-[var(--gs-muted)]" /> Add task
+                        </button>
+                        <button onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); router.push(`/dashboard/invoices/new?client=${project.client.id}`); setOpenActionMenuId(null); }} className="w-full text-left px-3 py-1.5 text-[12px] text-[var(--gs-fg)] hover:bg-[var(--gs-bg-alt)] font-medium flex items-center gap-2">
+                          <FileText className="h-4 w-4 text-[var(--gs-muted)]" /> Create invoice
+                        </button>
                         <div className="h-px bg-[var(--gs-border)] my-1"></div>
                         {project.archivedAt ? (
-                          <button onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); handleUnarchive(project.id); }} className="w-full text-left px-3 py-1.5 text-[12px] text-[#007CF0] hover:bg-[#007CF0]/10 font-medium">Unarchive</button>
+                          <button onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); handleUnarchive(project.id); }} className="w-full text-left px-3 py-1.5 text-[12px] text-[#007CF0] hover:bg-[var(--gs-bg-alt)] font-medium flex items-center gap-2">
+                            <ArchiveRestore className="h-4 w-4 text-[#007CF0]" /> Unarchive
+                          </button>
                         ) : (
-                          <button onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); handleArchive(project.id); }} className="w-full text-left px-3 py-1.5 text-[12px] text-red-500 hover:bg-red-500/10 font-medium">Archive</button>
+                          <button onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); handleArchive(project.id); }} className="w-full text-left px-3 py-1.5 text-[12px] text-[#EF4444] hover:bg-[var(--gs-bg-alt)] font-medium flex items-center gap-2">
+                            <Archive className="h-4 w-4 text-[#EF4444]" /> Archive
+                          </button>
                         )}
                       </div>
                     )}
@@ -325,10 +332,14 @@ export function ProjectBoard({ token, workspaceId, initialClientId }: ProjectBoa
 
                 {/* Status */}
                 <div className="flex items-center mt-1">
-                  <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-[4px] bg-[var(--gs-bg)] border border-[var(--gs-border)] shrink-0">
-                    <div className={`h-1.5 w-1.5 rounded-full ${project.status === 'ACTIVE' ? 'bg-[#007CF0]' : project.status === 'COMPLETED' ? 'bg-[var(--gs-fg)]' : project.status === 'ON_HOLD' ? 'bg-[#F5A623]' : project.status === 'CANCELLED' ? 'bg-[#EF4444]' : 'bg-[#71717A]'}`}></div> 
-                    <span className="text-[10px] font-bold text-[var(--gs-fg)] tracking-wide">{project.status.replace("_", " ")}</span>
-                  </div>
+                  <StatusBadge 
+                    label={project.status.replace("_", " ")} 
+                    status={
+                      project.status === 'ACTIVE' || project.status === 'COMPLETED' ? 'positive' : 
+                      project.status === 'ON_HOLD' ? 'pending' : 
+                      project.status === 'CANCELLED' ? 'overdue' : 'neutral'
+                    } 
+                  />
                 </div>
 
                 {/* Progress */}
@@ -353,7 +364,7 @@ export function ProjectBoard({ token, workspaceId, initialClientId }: ProjectBoa
 
                 {/* Footer Metadata */}
                 <div className="flex items-center justify-between mt-auto pt-4 text-[11px] text-[var(--gs-muted-light)]">
-                  <span>{formatDeadline(project.deadline)}</span>
+                  <span>{formatDeadline(project.deadline, totalTasks > 0 && progress === 100)}</span>
                   <span>Updated {getRelativeTime(project.updatedAt || project.createdAt)}</span>
                 </div>
               </Card>

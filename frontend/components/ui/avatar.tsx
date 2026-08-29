@@ -18,7 +18,7 @@ export function Avatar({ className, name, size = "md", ...props }: AvatarProps) 
   return (
     <div
       className={cn(
-        "rounded-full bg-[#EFEFEF] border border-[#E5E7EB] text-[#111111] font-semibold flex items-center justify-center select-none uppercase tracking-wider shrink-0",
+        "rounded-full bg-[#EFEFEF] border border-[#E5E7EB] text-[var(--gs-surface)] font-semibold flex items-center justify-center select-none uppercase tracking-wider shrink-0",
         {
           "h-7 w-7 text-[10px]": size === "sm",
           "h-10 w-10 text-xs": size === "md",

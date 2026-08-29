@@ -176,10 +176,10 @@ export class InvoiceController {
   static async createInvoice(req: AuthRequest, res: Response) {
     try {
       const workspaceId = req.workspaceId!;
-      const { invoiceNumber, clientId, projectId, items, status, issueDate, dueDate, tax, discount, notes } = req.body;
+      const { invoiceNumber, clientId, projectId, items = [], timeEntryIds, status, issueDate, dueDate, tax, discount, notes } = req.body;
 
-      if (!clientId || !items || !Array.isArray(items) || items.length === 0) {
-        res.status(400).json({ error: 'Missing required invoice fields (clientId, items)' });
+      if (!clientId || (!items.length && (!timeEntryIds || !timeEntryIds.length))) {
+        res.status(400).json({ error: 'Missing required invoice fields (clientId, items or timeEntryIds)' });
         return;
       }
 
@@ -212,7 +212,13 @@ export class InvoiceController {
         finalInvoiceNum = `INV-${year}-${nextNumber.toString().padStart(4, '0')}`;
       }
 
-      const subtotalVal = items.reduce((sum: number, item: any) => sum + ((parseInt(item.quantity, 10) || 1) * (parseFloat(item.unitPrice) || 0)), 0);
+      let generatedItems = [...items];
+
+      // We no longer auto-generate items from timeEntryIds here.
+      // The frontend provides the finalized items array so the user can customize the rates/descriptions.
+      // We only use timeEntryIds to link the TimeEntry records below.
+
+      const subtotalVal = items.reduce((sum: number, item: any) => sum + ((parseFloat(item.quantity) || 1) * (parseFloat(item.unitPrice) || 0)), 0);
       const taxVal = tax ? parseFloat(tax) : 0;
       const discountVal = discount ? parseFloat(discount) : 0;
       const totalVal = subtotalVal + taxVal - discountVal;
@@ -245,16 +251,24 @@ export class InvoiceController {
 
         // Create items
         for (const item of items) {
-          const qty = parseInt(item.quantity, 10) || 1;
+          const qty = parseFloat(item.quantity) || 1;
           const price = parseFloat(item.unitPrice) || 0;
           await tx.invoiceItem.create({
             data: {
+              invoiceId: newInvoice.id,
               description: item.description,
               quantity: qty,
               unitPrice: price,
               total: qty * price,
-              invoiceId: newInvoice.id,
             },
+          });
+        }
+
+        // Link Time Entries if any
+        if (timeEntryIds && Array.isArray(timeEntryIds) && timeEntryIds.length > 0) {
+          await tx.timeEntry.updateMany({
+            where: { id: { in: timeEntryIds }, workspaceId },
+            data: { invoiceId: newInvoice.id },
           });
         }
 

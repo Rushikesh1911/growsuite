@@ -97,7 +97,7 @@ export function ActivityFeed({ token, workspaceId }: ActivityFeedProps) {
       } else if (date.toDateString() === yesterday.toDateString()) {
         key = "YESTERDAY";
       } else {
-        key = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }).toUpperCase();
+        key = date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
       }
       
       if (!groups[key]) groups[key] = [];
@@ -164,36 +164,34 @@ export function ActivityFeed({ token, workspaceId }: ActivityFeedProps) {
 
     // Custom overrides based on action
     if (log.action === 'LEAD_CONVERTED' && log.lead) {
-       return `${context} → Deal`;
+       return <><span className="text-[var(--gs-fg)] font-medium">{context}</span> → Deal</>;
     }
     if (log.action === 'DEAL_CREATED_FROM_LEAD' && log.lead) {
-       return `Generated from lead · ${context}`;
+       return <>Generated from lead &middot; <span className="text-[var(--gs-fg)] font-medium">{context}</span></>;
     }
     if (log.action === 'INVOICE_PAID' || log.action === 'PAYMENT_RECORDED') {
-       // Try to keep the amount if it's in the description
        if (desc.includes('₹') || desc.includes('$')) {
           const amtMatch = desc.match(/([₹$]\d+[,\d]*)/);
           const amt = amtMatch ? amtMatch[1] : '';
           if (amt) {
-             return `${context} · ${amt} received`;
+             return <><span className="text-[var(--gs-fg)] font-medium">{context}</span> &middot; {amt} received</>;
           }
        }
     }
 
     if (transition) {
-       if (context) return `${context} · ${transition}`;
+       if (context) return <><span className="text-[var(--gs-fg)] font-medium">{context}</span> &middot; {transition}</>;
        return transition;
     }
 
-    // If description is just repeating the title or action, remove it, show entity context instead
     const generic = desc.toLowerCase() === log.title.toLowerCase() || desc.toLowerCase() === log.action.replace(/_/g, ' ').toLowerCase();
     
     if (generic) {
-       return context;
+       return <span className="text-[var(--gs-fg)] font-medium">{context}</span>;
     }
 
     if (context && !desc.includes(context)) {
-       return `${context} · ${desc}`;
+       return <><span className="text-[var(--gs-fg)] font-medium">{context}</span> &middot; {desc}</>;
     }
 
     return desc;
@@ -202,11 +200,11 @@ export function ActivityFeed({ token, workspaceId }: ActivityFeedProps) {
   const getActorLabel = (actor: ActivityActor) => {
     if (actor && (actor.name || actor.email)) {
       if (actor.email === 'system@growsuite.com' || actor.name?.toLowerCase() === 'system admin') {
-         return 'by System Admin';
+         return 'System';
       }
-      return `by ${actor.name || actor.email}`;
+      return `${actor.name || actor.email}`;
     }
-    return 'System generated';
+    return 'System';
   };
 
   const getEntityUrl = (log: ActivityLog) => {
@@ -214,7 +212,6 @@ export function ActivityFeed({ token, workspaceId }: ActivityFeedProps) {
     if (log.client) return `/dashboard/clients/${log.client.id}`;
     if (log.project) return `/dashboard/projects/${log.project.id}`;
     if (log.invoice) return `/dashboard/invoices/${log.invoice.id}`;
-    // Deals and tasks don't have dedicated detail pages yet, they open in modals or sidepanels usually
     return null;
   };
 
@@ -229,42 +226,35 @@ export function ActivityFeed({ token, workspaceId }: ActivityFeedProps) {
     return <Activity className="h-4 w-4 text-[var(--gs-muted)]" />;
   };
 
-  const handleRowClick = (log: ActivityLog) => {
-    const url = getEntityUrl(log);
-    if (url) {
-      router.push(url);
-    }
-  };
-
   if (loading) {
     return <TableSkeleton />;
   }
 
   return (
-    <div className="w-full max-w-[1100px] mx-auto flex flex-col gap-8 animate-fade pb-16 px-4 md:px-0">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--gs-border)] pb-5">
+    <div className="w-full max-w-[800px] mx-auto flex flex-col gap-8 animate-fade pb-16 px-4 md:px-0">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#1E1E1E] pb-5">
         <div className="flex flex-col gap-1">
           <h1 className="text-xl font-bold text-[var(--gs-fg)] tracking-tight">Activity Log</h1>
-          <p className="text-[13px] text-[var(--gs-muted)]">Real-time feed of all workspace events across entities.</p>
+          <p className="text-[13px] text-[var(--gs-muted)]">Real-time timeline of workspace events.</p>
         </div>
         
         <div className="relative">
           <button 
             onClick={() => setFilterOpen(!filterOpen)}
-            className="flex items-center justify-between gap-3 bg-[var(--gs-surface)] border border-[var(--gs-border)] hover:border-[var(--gs-border-strong)] px-3 py-1.5 rounded-[6px] text-[13px] font-medium text-[var(--gs-fg)] transition-colors outline-none min-w-[140px]"
+            className="flex items-center justify-between gap-3 bg-[var(--gs-bg-alt)] border border-[var(--gs-border)] hover:border-[var(--gs-border-strong)] px-3 py-1.5 rounded-[6px] text-[13px] font-medium text-[var(--gs-fg)] transition-colors outline-none min-w-[140px] shadow-sm"
           >
             {FILTERS.find(f => f.value === filter)?.label}
             <ChevronDown className="h-3.5 w-3.5 text-[var(--gs-muted)]" />
           </button>
           {filterOpen && (
-            <div className="absolute right-0 top-full mt-1 w-48 bg-[var(--gs-bg)] border border-[var(--gs-border-strong)] rounded-[8px] shadow-xl overflow-hidden z-50">
+            <div className="absolute right-0 top-full mt-1 w-48 bg-[var(--gs-surface)] border border-[var(--gs-border)] rounded-[8px] shadow-2xl overflow-hidden z-50">
               <div className="flex flex-col p-1">
                 {FILTERS.map(f => (
                   <button
                     key={f.value}
                     onClick={() => { setFilter(f.value); setFilterOpen(false); }}
                     className={`flex items-center justify-between px-3 py-2 text-[13px] rounded-[4px] font-medium transition-colors ${
-                      filter === f.value ? "bg-[var(--gs-surface)] text-[var(--gs-fg)]" : "text-[var(--gs-muted)] hover:text-[var(--gs-fg)] hover:bg-[var(--gs-surface)]"
+                      filter === f.value ? "bg-[#252528] text-[var(--gs-fg)]" : "text-[var(--gs-muted)] hover:text-[var(--gs-fg)] hover:bg-[var(--gs-bg-alt)]"
                     }`}
                   >
                     {f.label}
@@ -277,21 +267,25 @@ export function ActivityFeed({ token, workspaceId }: ActivityFeedProps) {
         </div>
       </div>
 
-      <div className="flex flex-col bg-[var(--gs-bg)] border border-[var(--gs-border)] rounded-[8px] shadow-sm overflow-hidden">
+      <div className="flex flex-col">
         {filteredActivities.length === 0 ? (
-          <div className="text-center py-16 flex flex-col items-center">
-            <Activity className="h-6 w-6 text-[var(--gs-border-strong)] mb-4" />
+          <div className="text-center py-20 flex flex-col items-center bg-[var(--gs-surface)] border border-[var(--gs-border)] rounded-[8px] shadow-sm">
+            <Activity className="h-8 w-8 text-[#555555] mb-4" />
             <h3 className="text-[var(--gs-fg)] font-semibold text-[14px]">No activity found</h3>
             <p className="text-[var(--gs-muted)] text-[13px] mt-1">Adjust your filters to see more events.</p>
           </div>
         ) : (
-          Object.entries(groupedActivities).map(([dateLabel, groupLogs]) => (
-            <div key={dateLabel} className="flex flex-col">
-              <div className="bg-[var(--gs-surface)] border-y border-[var(--gs-border)] px-5 py-2 first:border-t-0">
+          Object.entries(groupedActivities).map(([dateLabel, groupLogs], groupIndex) => (
+            <div key={dateLabel} className="flex flex-col mb-8 last:mb-0">
+              <div className="flex items-center gap-4 mb-6">
                 <span className="text-[11px] font-bold text-[var(--gs-muted)] uppercase tracking-widest">{dateLabel}</span>
+                <div className="flex-1 h-px bg-[#1E1E1E]" />
               </div>
               
-              <div className="flex flex-col divide-y divide-[var(--gs-border)]">
+              <div className="relative pl-6 md:pl-[120px]">
+                {/* Continuous Vertical Timeline Line */}
+                <div className="absolute left-6 md:left-[120px] top-4 bottom-[-16px] w-px bg-[#1E1E1E] -ml-[0.5px] z-0" />
+
                 {groupLogs.map((log) => {
                   const label = getActionLabel(log.action);
                   const icon = getIconForAction(log.action);
@@ -302,39 +296,39 @@ export function ActivityFeed({ token, workspaceId }: ActivityFeedProps) {
                   return (
                     <div 
                       key={log.id} 
-                      onClick={() => handleRowClick(log)}
-                      className={`flex flex-col md:flex-row md:items-start px-5 py-3.5 md:py-3 gap-3 md:gap-5 group transition-colors ${url ? 'cursor-pointer hover:bg-[var(--gs-surface-hover)]' : 'hover:bg-[var(--gs-surface-raised)]'}`}
+                      onClick={() => url ? router.push(url) : null}
+                      className={`relative flex items-start gap-4 md:gap-5 mb-8 last:mb-0 group ${url ? 'cursor-pointer' : ''}`}
                     >
-                      {/* Mobile Header */}
-                      <div className="flex items-center justify-between md:hidden w-full">
-                        <div className="flex items-center gap-2.5">
-                          {icon}
-                          <span className="text-[14px] font-semibold text-[var(--gs-fg)]">{label}</span>
-                        </div>
-                        <span className="text-[13px] font-medium text-[var(--gs-muted)]">{formatTime(log.createdAt)}</span>
-                      </div>
-
-                      {/* Desktop Timestamp */}
-                      <div className="hidden md:flex shrink-0 w-[70px] text-[13px] font-medium text-[var(--gs-muted)] mt-1 tracking-tight">
+                      {/* Desktop Timestamp (Left of line) */}
+                      <div className="hidden md:block absolute left-[-110px] top-[6px] w-[90px] text-right text-[12px] font-medium text-[#555555] tracking-tight group-hover:text-[var(--gs-muted)] transition-colors">
                         {formatTime(log.createdAt)}
                       </div>
 
-                      {/* Desktop Icon */}
-                      <div className="hidden md:flex shrink-0 w-8 h-8 rounded-full border border-[var(--gs-border-strong)] bg-[var(--gs-bg-alt)] items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity">
+                      {/* Timeline Node (The Icon) */}
+                      <div className={`relative z-10 shrink-0 w-8 h-8 rounded-full border bg-[var(--gs-surface)] flex flex-shrink-0 items-center justify-center ml-[-16px] shadow-sm transition-colors ${url ? 'border-[var(--gs-border)] group-hover:border-[#555555]' : 'border-[#1E1E1E]'}`}>
                         {icon}
                       </div>
 
-                      {/* Content */}
-                      <div className="flex-1 flex flex-col min-w-0">
-                        <span className="hidden md:block text-[14px] font-semibold text-[var(--gs-fg)]">{label}</span>
+                      {/* Content (Right of line) */}
+                      <div className="flex-1 flex flex-col min-w-0 pt-[4px]">
+                        <div className="flex items-center justify-between md:justify-start gap-3">
+                          <span className={`text-[14px] font-semibold transition-colors ${url ? 'text-[var(--gs-fg)] group-hover:text-[#FFFFFF]' : 'text-[var(--gs-fg)]'}`}>
+                            {label}
+                          </span>
+                          {/* Mobile Timestamp */}
+                          <span className="md:hidden text-[12px] font-medium text-[#555555]">{formatTime(log.createdAt)}</span>
+                        </div>
+                        
                         {description && (
-                          <span className="text-[14px] text-[var(--gs-muted)] mt-1 md:mt-0.5 leading-snug">
+                          <span className="text-[13px] text-[var(--gs-muted)] mt-1.5 leading-relaxed">
                             {description}
                           </span>
                         )}
                         
-                        <div className="flex items-center mt-1.5 text-[13px] text-[var(--gs-muted)]">
-                           <span>{actorText}</span>
+                        <div className="flex items-center mt-2.5">
+                           <div className="flex items-center gap-1.5 bg-[var(--gs-bg-alt)] border border-[var(--gs-border)] px-2 py-0.5 rounded-[4px]">
+                              <span className="text-[11px] font-semibold text-[var(--gs-muted)]">{actorText}</span>
+                           </div>
                         </div>
                       </div>
                     </div>

@@ -2,37 +2,51 @@ import Link from "next/link";
 
 export function CTA() {
   return (
-    <section className="py-28 bg-[#FAFAF8] border-t border-[rgba(0,0,0,0.06)]">
-      <div className="max-w-[1100px] mx-auto px-6">
-        <div className="flex flex-col items-start gap-8 md:flex-row md:items-end md:justify-between">
+    <section className="relative py-32 md:py-48 bg-[var(--gs-bg-alt)] overflow-hidden flex flex-col items-center justify-center border-t border-[#1a1a1a]">
+      
+      {/* Subtle radial gradient background for depth */}
+      <div 
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] opacity-[0.05] pointer-events-none"
+        style={{
+          background: "radial-gradient(ellipse at center, var(--gs-fg) 0%, transparent 60%)",
+        }}
+      />
+      
+      <div className="relative z-10 max-w-[800px] mx-auto px-6 flex flex-col items-center text-center">
+        
+        {/* Eyebrow */}
+        <span className="text-[11px] font-[700] text-[var(--gs-muted)] uppercase tracking-[0.1em] mb-4">
+          Ready to simplify?
+        </span>
 
-          {/* Copy */}
-          <div className="flex flex-col gap-4 max-w-xl">
-            <h2 className="text-[36px] sm:text-[52px] font-[800] tracking-[-0.05em] text-[#0A0A0A] leading-[1]">
-              Your business is already moving.
-              <br />
-              <span className="text-[#8A8A8A]">Give it a better system.</span>
-            </h2>
-            <p className="text-[15px] text-[#5A5A5A] leading-[1.65] font-[400]">
-              Simple business management for freelancers and small teams. Start free — no credit card, no setup, no complexity.
-            </p>
-          </div>
+        {/* Main headline */}
+        <h2 className="text-[36px] sm:text-[48px] md:text-[56px] font-[800] tracking-[-0.04em] text-white leading-[1.05] mb-5 max-w-[640px]">
+          Your business is already moving.
+          <br />
+          <span className="text-[var(--gs-muted)]">Give it a better system.</span>
+        </h2>
+        
+        {/* Supporting sentence */}
+        <p className="text-[16px] text-[#AFAFAF] leading-[1.65] font-[400] max-w-[540px] mb-12 tracking-tight">
+          Manage leads, customers, work, and growth in one connected workspace. Built for teams who demand both speed and clarity.
+        </p>
 
-          {/* CTA */}
-          <div className="flex flex-col items-start md:items-end gap-3 shrink-0">
-            <Link
-              href="/auth/sign-up"
-              className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#0A0A0A] hover:bg-[#2A2A2A] text-white text-[14px] font-[500] rounded-full shadow-sm hover:-translate-y-px transition-all duration-150 whitespace-nowrap"
-            >
-              Start for free
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                <path d="M2.5 6h7M6 2.5l3.5 3.5-3.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </Link>
-            <p className="text-[11px] text-[#AFAFAF] font-[400]">Free plan available. No credit card required.</p>
-          </div>
-
+        {/* Action */}
+        <div className="flex flex-col items-center gap-4">
+          <Link
+            href="/auth/sign-up"
+            className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-white hover:bg-[#F0F0F0] text-[var(--gs-bg-alt)] text-[14px] font-[600] rounded-[8px] shadow-[0_4px_32px_rgba(255,255,255,0.1)] hover:shadow-[0_8px_48px_rgba(255,255,255,0.15)] hover:-translate-y-px transition-all duration-200 whitespace-nowrap tracking-tight"
+          >
+            Start for free
+            <svg width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <path d="M2.5 6h7M6 2.5l3.5 3.5-3.5 3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </Link>
+          <p className="text-[11px] text-[var(--gs-muted-light)] font-[400] tracking-wide mt-2">
+            Free plan available &middot; No credit card required
+          </p>
         </div>
+
       </div>
     </section>
   );

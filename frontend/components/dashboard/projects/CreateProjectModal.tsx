@@ -30,6 +30,7 @@ export function CreateProjectModal({
   const [newClientId, setNewClientId] = useState(initialClientId ? initialClientId.toString() : "");
   const [newStatus, setNewStatus] = useState("PLANNING");
   const [newDeadline, setNewDeadline] = useState("");
+  const [newHourlyRate, setNewHourlyRate] = useState<string>("");
   const [newDescription, setNewDescription] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -63,12 +64,14 @@ export function CreateProjectModal({
         setNewClientId(initialProject.clientId.toString());
         setNewStatus(initialProject.status);
         setNewDeadline(initialProject.deadline ? initialProject.deadline.split('T')[0] : "");
+        setNewHourlyRate(initialProject.hourlyRate ? (initialProject.hourlyRate / 100).toString() : "");
         setNewDescription(initialProject.description || "");
       } else {
         setNewName(initialProjectName || "");
         setNewClientId(initialClientId ? initialClientId.toString() : "");
         setNewStatus("PLANNING");
         setNewDeadline("");
+        setNewHourlyRate("");
         setNewDescription("");
       }
       setErrorMsg("");
@@ -101,6 +104,7 @@ export function CreateProjectModal({
           clientId: parseInt(newClientId),
           status: newStatus,
           deadline: newDeadline || undefined,
+          hourlyRate: newHourlyRate ? Math.round(parseFloat(newHourlyRate) * 100) : null,
           description: newDescription || undefined
         }),
       });
@@ -187,6 +191,22 @@ export function CreateProjectModal({
                     { label: "On Hold", value: "ON_HOLD" },
                     { label: "Completed", value: "COMPLETED" },
                   ]}
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[12px] font-semibold text-[var(--gs-muted)]">Hourly Rate</label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[13px] text-[var(--gs-muted)]">₹</span>
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  placeholder="0.00"
+                  value={newHourlyRate}
+                  onChange={(e) => setNewHourlyRate(e.target.value)}
+                  className="w-full bg-[var(--gs-surface)] border border-[var(--gs-border)] rounded-[6px] px-3 pl-6 py-2 text-[13px] text-[var(--gs-fg)] placeholder-[var(--gs-muted-light)] focus:outline-none focus:border-[var(--gs-fg)]"
                 />
               </div>
             </div>
