@@ -3,7 +3,8 @@
 import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Command, Loader2, CheckCircle2, XCircle } from "lucide-react";
+import { CheckCircle2, XCircle, Loader2, ArrowRight } from "lucide-react";
+import { Logo } from "@/components/ui/Logo";
 
 function VerifyEmailContent() {
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
@@ -94,11 +95,8 @@ export default function VerifyEmailPage() {
   return (
     <div className="min-h-screen bg-[#000000] flex flex-col items-center justify-center p-4 selection:bg-[#EDEDED] selection:text-[#000000]">
       {/* Brand Logo */}
-      <div className="absolute top-8 left-8 flex items-center gap-2">
-        <div className="h-8 w-8 bg-[#EDEDED] rounded-lg flex items-center justify-center">
-          <Command className="h-4 w-4 text-[#000000]" />
-        </div>
-        <span className="text-lg font-bold text-[#EDEDED] tracking-tight">GrowSuite</span>
+      <div className="absolute top-8 left-8">
+        <Logo theme="dark" />
       </div>
 
       <Suspense fallback={

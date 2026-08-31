@@ -49,10 +49,10 @@ export function IntegrationsMarquee() {
         
         {/* Text Header */}
         <div className="text-center flex flex-col items-center gap-4 mb-24">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.06)] text-[11px] font-[700] text-[var(--gs-bg-alt)] uppercase tracking-widest">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.06)] text-[11px] font-bold text-[var(--gs-bg-alt)] uppercase tracking-widest">
             Integrations
           </span>
-          <h2 className="text-[36px] md:text-[48px] font-[800] tracking-tighter text-[var(--gs-bg-alt)] leading-[1.05]">
+          <h2 className="text-[36px] md:text-[48px] font-medium tracking-tight text-[var(--gs-bg-alt)] leading-[1.05]">
             Your entire stack, <br className="hidden sm:block" />deeply connected.
           </h2>
           <p className="text-[16px] text-[var(--gs-muted-light)] max-w-[480px] leading-[1.6]">
@@ -139,7 +139,7 @@ export function IntegrationsMarquee() {
                 
                 {/* Tooltip */}
                 <div className="absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                  <div className="bg-[var(--gs-bg-alt)] text-white text-[11px] font-[600] px-3 py-1.5 rounded-[6px] whitespace-nowrap shadow-xl relative">
+                  <div className="bg-[var(--gs-bg-alt)] text-white text-[11px] font-semibold px-3 py-1.5 rounded-[6px] whitespace-nowrap shadow-xl relative">
                     {node.label}
                     <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[var(--gs-bg-alt)] rotate-45" />
                   </div>

@@ -108,10 +108,10 @@ export function Testimonials() {
         
         {/* Section label */}
         <div className="flex flex-col items-center text-center mb-16 gap-4">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-[rgba(0,0,0,0.06)] shadow-sm text-[11px] font-[700] text-[var(--gs-bg-alt)] uppercase tracking-widest">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-[rgba(0,0,0,0.06)] shadow-sm text-[11px] font-bold text-[var(--gs-bg-alt)] uppercase tracking-widest">
             Wall of Love
           </span>
-          <h2 className="text-[36px] md:text-[52px] font-[800] tracking-tighter text-[var(--gs-bg-alt)] leading-[1.05] max-w-2xl">
+          <h2 className="text-[36px] md:text-[48px] font-medium tracking-tight text-[var(--gs-bg-alt)] leading-[1.05] max-w-2xl">
             Trusted by the fastest <br />
             <span className="text-[#AFAFAF]">growing teams.</span>
           </h2>
@@ -123,7 +123,7 @@ export function Testimonials() {
             {[...logos, ...logos, ...logos].map((logo, i) => (
               <span
                 key={i}
-                className="text-[16px] font-[800] tracking-tighter text-[#CCCCCC] uppercase select-none"
+                className="text-[16px] font-medium tracking-tight text-[#CCCCCC] uppercase select-none"
               >
                 {logo}
               </span>
@@ -148,21 +148,21 @@ export function Testimonials() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div
-                    className="h-10 w-10 rounded-full flex items-center justify-center text-[13px] font-[700] text-[var(--gs-bg-alt)] shadow-inner"
+                    className="h-10 w-10 rounded-full flex items-center justify-center text-[13px] font-bold text-[var(--gs-bg-alt)] shadow-inner"
                     style={{ background: t.avatar }}
                   >
                     {t.initials}
                   </div>
                   <div className="flex flex-col">
                     <div className="flex items-center gap-1">
-                      <span className="text-[14px] font-[700] tracking-tight text-[var(--gs-bg-alt)]">{t.name}</span>
+                      <span className="text-[14px] font-bold tracking-tight text-[var(--gs-bg-alt)]">{t.name}</span>
                       {t.verified && (
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="#007AFF" aria-hidden="true">
                           <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                         </svg>
                       )}
                     </div>
-                    <span className="text-[12px] text-[var(--gs-muted)] font-[500]">{t.role}</span>
+                    <span className="text-[12px] text-[#666] font-medium">{t.role}</span>
                   </div>
                 </div>
                 {/* X Logo faint */}
@@ -172,7 +172,7 @@ export function Testimonials() {
               </div>
 
               {/* Quote */}
-              <p className="text-[14.5px] text-[#333] leading-[1.6] font-[400]">
+              <p className="text-[14.5px] text-[#333] leading-[1.6] font-normal">
                 {t.quote}
               </p>
             </motion.div>

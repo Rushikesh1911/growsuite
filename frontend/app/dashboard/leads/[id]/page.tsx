@@ -8,6 +8,7 @@ import { Topbar } from "@/components/dashboard/Topbar";
 import { useDashboard } from "../../DashboardContext";
 import { ConvertDealModal } from "@/components/dashboard/crm/ConvertDealModal";
 import { LeadDrawer } from "@/components/dashboard/crm/LeadDrawer";
+import { TimelineFeed } from "@/components/dashboard/crm/TimelineFeed";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
@@ -256,43 +257,23 @@ export default function LeadProfilePage() {
                 </div>
               </Card>
 
-              {lead.notes && (
-                <Card className="bg-[var(--gs-surface)] border-[var(--gs-border)] p-5 flex flex-col gap-3 rounded-[12px]">
-                  <h3 className="text-[11px] font-bold uppercase tracking-wider text-[var(--gs-muted)] flex items-center gap-1.5"><FileText className="h-3 w-3" /> Notes</h3>
-                  <p className="text-[13px] text-[var(--gs-muted)] leading-relaxed whitespace-pre-wrap">{lead.notes}</p>
-                </Card>
-              )}
             </div>
 
             <div className="lg:col-span-2">
-              <h3 className="text-[13px] font-bold uppercase tracking-wider text-[var(--gs-muted)] mb-4">Recent Activity</h3>
-              <div className="flex flex-col border border-[var(--gs-border)] rounded-[12px] bg-[var(--gs-surface)] overflow-hidden">
-                {lead.activities?.length === 0 ? (
-                  <div className="p-8 text-center flex flex-col items-center justify-center text-[var(--gs-muted)]">
-                    <p className="text-[13px]">No activity yet.</p>
-                  </div>
-                ) : (
-                  <div className="divide-y divide-[var(--gs-border)]">
-                    {lead.activities?.map((activity: any) => (
-                      <div key={activity.id} className="p-4 flex items-start gap-4 hover:bg-[var(--gs-bg-alt)] transition-colors">
-                        <div className="flex flex-col flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className="text-[13px] font-semibold text-[var(--gs-fg)]">
-                              {activity.title}
-                            </span>
-                          </div>
-                          <span className="text-[13px] text-[var(--gs-muted)] line-clamp-2">
-                            {activity.description}
-                          </span>
-                          <span className="text-[11px] text-[var(--gs-muted-light)] mt-2 font-medium tracking-wide flex items-center gap-2">
-                            {new Date(activity.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
+              <h3 className="text-[13px] font-bold uppercase tracking-wider text-[var(--gs-muted)] mb-4">Activity Feed</h3>
+              <TimelineFeed 
+                token={token!}
+                workspaceId={workspaceId!}
+                entityType="leads"
+                entityId={lead.id}
+                activities={lead.activities}
+                notes={lead.leadNotes}
+                emails={lead.emails}
+                onSuccess={() => {
+                  fetchLead();
+                  window.dispatchEvent(new Event("refreshData"));
+                }}
+              />
             </div>
           </div>
         </div>

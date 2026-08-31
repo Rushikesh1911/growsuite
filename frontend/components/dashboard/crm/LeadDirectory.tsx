@@ -159,7 +159,8 @@ export function LeadDirectory({ token, workspaceId }: LeadDirectoryProps) {
   };
 
   const handleImportLeads = async (data: any[]) => {
-    const res = await fetch(`http://localhost:5000/api/leads/import`, {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const res = await fetch(`${API_URL}/api/leads/import`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

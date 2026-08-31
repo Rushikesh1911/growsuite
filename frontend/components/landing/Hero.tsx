@@ -121,44 +121,61 @@ export function Hero() {
           className="transition-[opacity,transform] duration-500 ease-out mb-6"
           style={{ opacity: visible ? 1 : 0, transform: visible ? "none" : "translateY(10px)" }}
         >
-          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[rgba(0,0,0,0.1)] bg-white text-[11.5px] font-[500] text-[var(--gs-muted-light)]">
+          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[rgba(0,0,0,0.1)] bg-white text-[11.5px] font-medium text-[var(--gs-muted-light)]">
             <span className="relative flex h-1.5 w-1.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#28CA41] opacity-40"></span>
               <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#28CA41]"></span>
             </span>
-            Simple business management for real teams
+            One workspace. Zero fragmentation
           </span>
         </div>
 
         {/* ── Headline ─────────────────────────────────── */}
         <h1
-          className="text-[52px] sm:text-[72px] md:text-[88px] font-extrabold tracking-tighter leading-[0.9] max-w-[820px] transition-[opacity,transform] duration-600 ease-out"
+          className="text-[40px] sm:text-[48px] md:text-[56px] font-medium tracking-tight leading-[1.05] max-w-[820px] transition-[opacity,transform] duration-600 ease-out text-[#111]"
           style={{
             opacity: visible ? 1 : 0,
             transform: visible ? "none" : "translateY(18px)",
             transitionDelay: "80ms",
           }}
         >
-          <span className="bg-clip-text text-transparent bg-gradient-to-b from-[var(--gs-bg)] to-[#404040]">
-            Grow your business.
-          </span>
-          <br />
-          <span className="font-semibold bg-clip-text text-transparent bg-gradient-to-b from-[var(--gs-muted)] to-[#B0B0B0]">
-            Not your CRM.
-          </span>
+          Grow your{" "}
+          <span className="relative inline-block">
+            business
+            <svg
+              className="absolute bottom-[-11px] left-[-6px] w-[calc(100%+12px)] h-auto text-[#333] -z-10 pointer-events-none"
+              viewBox="0 0 200 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              style={{
+                opacity: visible ? 1 : 0,
+                strokeDasharray: 200,
+                strokeDashoffset: visible ? 0 : 200,
+                transition: "stroke-dashoffset 0.8s ease-out 0.4s, opacity 0.4s ease-out 0.4s",
+              }}
+            >
+              <path
+                d="M4 14 Q 100 4 196 12"
+                stroke="currentColor"
+                strokeWidth="3.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </span>.<br />
+          <span className="text-[#666] font-medium">Not your CRM.</span>
         </h1>
 
         {/* ── Subtitle ─────────────────────────────────── */}
         <p
-          className="mt-6 text-[17px] text-[#5A5A5A] max-w-[520px] leading-[1.5] font-[500] tracking-tight transition-[opacity,transform] duration-500 ease-out"
+          className="mt-6 text-[17px] text-[#5A5A5A] max-w-[520px] leading-[1.5] font-medium tracking-tight transition-[opacity,transform] duration-500 ease-out"
           style={{
             opacity: visible ? 1 : 0,
             transform: visible ? "none" : "translateY(12px)",
             transitionDelay: "160ms",
           }}
         >
-          GrowSuite keeps your clients, deals, projects and invoices
-          connected — so you can focus on the work, not the admin.
+          Manage clients, deals, projects and invoices from one workspace — so your team spends less time chasing admin.
         </p>
 
         {/* ── CTAs ─────────────────────────────────────── */}
@@ -172,7 +189,7 @@ export function Hero() {
         >
           <Link
             href="/auth/sign-up"
-            className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[var(--gs-bg-alt)] hover:bg-[var(--gs-border)] text-white text-[15px] font-[600] rounded-[8px] shadow-[0_4px_14px_0_rgba(0,0,0,0.1)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.15)] hover:-translate-y-px transition-all duration-200 w-full sm:w-auto"
+            className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[var(--gs-bg-alt)] hover:bg-[var(--gs-border)] text-white text-[15px] font-semibold rounded-[8px] shadow-[0_4px_14px_0_rgba(0,0,0,0.1)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.15)] hover:-translate-y-px transition-all duration-200 w-full sm:w-auto"
           >
             Start for free
             <svg width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true">
@@ -181,15 +198,15 @@ export function Hero() {
           </Link>
           <a
             href="#product"
-            className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white hover:bg-[#FAFAF8] text-[var(--gs-bg-alt)] text-[15px] font-[600] rounded-[8px] border border-[rgba(0,0,0,0.1)] shadow-sm hover:shadow-md hover:-translate-y-px transition-all duration-200 w-full sm:w-auto"
+            className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white hover:bg-[#FAFAF8] text-[var(--gs-bg-alt)] text-[15px] font-semibold rounded-[8px] border border-[rgba(0,0,0,0.1)] shadow-sm hover:shadow-md hover:-translate-y-px transition-all duration-200 w-full sm:w-auto"
           >
-            See how it works
+            Explore Demo
           </a>
         </div>
 
         {/* ── Switching Cost Subtext ─────────────────────────────────────── */}
         <div
-          className="mt-4 flex items-center justify-center gap-2 text-[12.5px] text-[var(--gs-muted)] font-medium transition-[opacity,transform] duration-500 ease-out"
+          className="mt-4 flex items-center justify-center gap-2 text-[12.5px] text-[#666] font-medium transition-[opacity,transform] duration-500 ease-out"
           style={{
             opacity: visible ? 1 : 0,
             transform: visible ? "none" : "translateY(10px)",
@@ -204,7 +221,7 @@ export function Hero() {
 
         {/* ── Product Demo — Pipeline ────────────────────────── */}
         <motion.div
-          className="relative w-full mt-10 transition-opacity duration-700 ease-out"
+          className="relative w-full -mt-2 transition-opacity duration-700 ease-out"
           style={{
             opacity: visible ? 1 : 0,
             scale,
@@ -227,7 +244,7 @@ export function Hero() {
               <div className="flex-1 flex justify-center">
                 <div className="h-6 w-[200px] rounded-[5px] bg-[var(--gs-surface)] border border-[var(--gs-border)] flex items-center px-2.5 gap-1.5">
                   <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--gs-muted-light)" strokeWidth="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-                  <span className="text-[10px] text-[var(--gs-muted)] font-[400] truncate">app.growsuite.io/pipeline</span>
+                  <span className="text-[10px] text-[#666] font-normal truncate">app.growsuite.io/pipeline</span>
                 </div>
               </div>
             </div>
@@ -241,13 +258,13 @@ export function Hero() {
                 <div className="p-4 flex flex-col gap-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3 w-full">
-                      <div className="h-7 w-7 rounded-[6px] hover:bg-[var(--gs-surface)] flex items-center justify-center text-[var(--gs-muted)] transition-colors shrink-0">
+                      <div className="h-7 w-7 rounded-[6px] hover:bg-[var(--gs-surface)] flex items-center justify-center text-[#666] transition-colors shrink-0">
                         <Menu className="h-4 w-4" strokeWidth={2} />
                       </div>
                       <div className="flex items-center justify-between flex-1 min-w-0 p-1.5 -ml-1.5 rounded-[6px] bg-[var(--gs-surface)]">
                         <span className="text-[14px] font-semibold tracking-tight leading-tight truncate text-[var(--gs-fg)] max-w-[130px]">Rugved Workspace</span>
                         <div className="h-5 w-5 rounded-[4px] border border-[var(--gs-border)] flex items-center justify-center bg-[var(--gs-bg-alt)] shrink-0">
-                          <ChevronsUpDown className="h-3 w-3 text-[var(--gs-muted)]" strokeWidth={2} />
+                          <ChevronsUpDown className="h-3 w-3 text-[#666]" strokeWidth={2} />
                         </div>
                       </div>
                     </div>
@@ -271,10 +288,10 @@ export function Hero() {
                         className={`flex items-center gap-2.5 px-3 py-1.5 rounded-[6px] text-[13px] font-medium select-none ${
                           item.active
                             ? "bg-[var(--gs-surface)] text-[var(--gs-fg)]"
-                            : "text-[var(--gs-muted)]"
+                            : "text-[#666]"
                         }`}
                       >
-                        <Icon strokeWidth={1.5} className={`h-[18px] w-[18px] shrink-0 ${item.active ? "text-[var(--gs-fg)]" : "text-[var(--gs-muted)]"}`} />
+                        <Icon strokeWidth={1.5} className={`h-[18px] w-[18px] shrink-0 ${item.active ? "text-[var(--gs-fg)]" : "text-[#666]"}`} />
                         {item.label}
                       </div>
                     );
@@ -283,11 +300,11 @@ export function Hero() {
 
                 {/* Bottom Settings Group */}
                 <div className="p-3 border-t border-[var(--gs-border)] flex flex-col gap-1">
-                  <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-[6px] text-[13px] font-medium text-[var(--gs-muted)]">
+                  <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-[6px] text-[13px] font-medium text-[#666]">
                     <Settings strokeWidth={1.5} className="h-[18px] w-[18px] shrink-0" />
                     Settings
                   </div>
-                  <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-[6px] text-[13px] font-medium text-[var(--gs-muted)]">
+                  <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-[6px] text-[13px] font-medium text-[#666]">
                     <LifeBuoy strokeWidth={1.5} className="h-[18px] w-[18px] shrink-0" />
                     Support
                   </div>
@@ -300,15 +317,15 @@ export function Hero() {
                 {/* Topbar */}
                 <div className="h-[52px] border-b border-[var(--gs-border)] flex items-center justify-between px-5 bg-[var(--gs-bg)] shrink-0">
                   <div className="flex items-center gap-3">
-                    <h2 className="text-[14px] font-[600] text-[var(--gs-fg)] tracking-[-0.02em]">Sales Pipeline</h2>
-                    <span className="text-[11px] text-[var(--gs-muted)] font-[400]">4 deals · ₹5,25,000</span>
+                    <h2 className="text-[14px] font-semibold text-[var(--gs-fg)] tracking-[-0.02em]">Sales Pipeline</h2>
+                    <span className="text-[11px] text-[#666] font-normal">4 deals · ₹5,25,000</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <button className="flex items-center gap-1.5 text-[12px] font-[500] text-[#AFAFAF] px-2.5 py-1.5 border border-[var(--gs-border)] rounded-[7px] bg-[var(--gs-surface)] hover:bg-[#1A1A1A] transition-colors" aria-label="Filter deals">
+                    <button className="flex items-center gap-1.5 text-[12px] font-medium text-[#AFAFAF] px-2.5 py-1.5 border border-[var(--gs-border)] rounded-[7px] bg-[var(--gs-surface)] hover:bg-[#1A1A1A] transition-colors" aria-label="Filter deals">
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
                       Filters
                     </button>
-                    <button className="flex items-center gap-1.5 text-[12px] font-[500] text-[var(--gs-bg)] px-3 py-1.5 bg-[var(--gs-fg)] rounded-[7px] hover:bg-white transition-colors" aria-label="Create new deal">
+                    <button className="flex items-center gap-1.5 text-[12px] font-medium text-[var(--gs-bg)] px-3 py-1.5 bg-[var(--gs-fg)] rounded-[7px] hover:bg-white transition-colors" aria-label="Create new deal">
                       <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M6 1v10M1 6h10"/></svg>
                       New deal
                     </button>
@@ -324,12 +341,12 @@ export function Hero() {
                         <div key={stage} className="w-[260px] flex flex-col shrink-0">
                           <div className="flex items-center justify-between mb-3 px-0.5">
                             <div className="flex items-center gap-2">
-                              <span className="text-[11px] font-[600] text-[var(--gs-fg)] uppercase tracking-[0.06em]">
+                              <span className="text-[11px] font-semibold text-[var(--gs-fg)] uppercase tracking-[0.06em]">
                                 {STAGE_LABELS[stage]}
                               </span>
-                              <span className="text-[10px] text-[var(--gs-muted)] font-[400] tabular-nums">{cards.length}</span>
+                              <span className="text-[10px] text-[#666] font-normal tabular-nums">{cards.length}</span>
                             </div>
-                            <span className="text-[11px] font-[500] text-[var(--gs-muted-light)] tabular-nums">{STAGE_TOTALS[stage]}</span>
+                            <span className="text-[11px] font-medium text-[var(--gs-muted-light)] tabular-nums">{STAGE_TOTALS[stage]}</span>
                           </div>
 
                           <div className="flex flex-col gap-2.5">
@@ -345,11 +362,11 @@ export function Hero() {
                                 aria-label={`Open deal: ${card.title} at ${card.company}`}
                               >
                                 <div>
-                                  <p className="text-[12.5px] font-[600] text-[var(--gs-fg)] leading-snug">{card.title}</p>
-                                  <p className="text-[11px] text-[var(--gs-muted)] mt-0.5 font-[400]">{card.company}</p>
+                                  <p className="text-[12.5px] font-semibold text-[var(--gs-fg)] leading-snug">{card.title}</p>
+                                  <p className="text-[11px] text-[#666] mt-0.5 font-normal">{card.company}</p>
                                 </div>
                                 <div className="flex items-center justify-between">
-                                  <span className="text-[12px] font-[700] text-[var(--gs-fg)] tabular-nums">{card.value}</span>
+                                  <span className="text-[12px] font-bold text-[var(--gs-fg)] tabular-nums">{card.value}</span>
                                   <div className="flex items-center gap-1.5">
                                     <div className="h-1 w-14 rounded-full bg-[var(--gs-border)] overflow-hidden" aria-hidden="true">
                                       <div
@@ -357,12 +374,12 @@ export function Hero() {
                                         style={{ width: `${card.probability}%` }}
                                       />
                                     </div>
-                                    <span className="text-[10px] text-[var(--gs-muted)] font-[400] tabular-nums">{card.probability}%</span>
+                                    <span className="text-[10px] text-[#666] font-normal tabular-nums">{card.probability}%</span>
                                   </div>
                                 </div>
                                 <div className="flex items-center gap-1">
                                   <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--gs-muted-light)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                                  <span className="text-[10px] text-[var(--gs-muted-light)] font-[400]">Close {card.close}</span>
+                                  <span className="text-[10px] text-[var(--gs-muted-light)] font-normal">Close {card.close}</span>
                                 </div>
                               </button>
                             ))}
@@ -389,12 +406,12 @@ export function Hero() {
                   {/* Drawer header */}
                   <div className="flex items-start justify-between p-4 border-b border-[var(--gs-border)]">
                     <div className="flex-1 min-w-0 pr-2">
-                      <p className="text-[13px] font-[600] text-[var(--gs-fg)] leading-snug truncate">{selectedDeal.title}</p>
-                      <p className="text-[11px] text-[var(--gs-muted)] mt-0.5">{selectedDeal.company}</p>
+                      <p className="text-[13px] font-semibold text-[var(--gs-fg)] leading-snug truncate">{selectedDeal.title}</p>
+                      <p className="text-[11px] text-[#666] mt-0.5">{selectedDeal.company}</p>
                     </div>
                     <button
                       onClick={closeDeal}
-                      className="h-6 w-6 rounded-[5px] flex items-center justify-center text-[var(--gs-muted)] hover:text-[var(--gs-fg)] hover:bg-[#1A1A1A] transition-colors shrink-0"
+                      className="h-6 w-6 rounded-[5px] flex items-center justify-center text-[#666] hover:text-[var(--gs-fg)] hover:bg-[#1A1A1A] transition-colors shrink-0"
                       aria-label="Close deal drawer"
                     >
                       <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true"><path d="M1 1l10 10M11 1L1 11"/></svg>
@@ -412,16 +429,16 @@ export function Hero() {
 
                   {/* Note */}
                   <div className="p-4 flex-1">
-                    <p className="text-[10px] font-[600] text-[var(--gs-muted-light)] uppercase tracking-[0.07em] mb-2">Note</p>
-                    <p className="text-[12px] text-[var(--gs-muted)] leading-[1.6]">{selectedDeal.note}</p>
+                    <p className="text-[10px] font-semibold text-[var(--gs-muted-light)] uppercase tracking-[0.07em] mb-2">Note</p>
+                    <p className="text-[12px] text-[#666] leading-[1.6]">{selectedDeal.note}</p>
                   </div>
 
                   {/* Actions */}
                   <div className="p-4 border-t border-[var(--gs-border)] flex flex-col gap-2">
-                    <button className="w-full h-8 rounded-[7px] bg-[var(--gs-fg)] text-[var(--gs-bg)] text-[12px] font-[500] hover:bg-white transition-colors">
+                    <button className="w-full h-8 rounded-[7px] bg-[var(--gs-fg)] text-[var(--gs-bg)] text-[12px] font-medium hover:bg-white transition-colors">
                       Move to next stage
                     </button>
-                    <button className="w-full h-8 rounded-[7px] border border-[var(--gs-border)] text-[#AFAFAF] text-[12px] font-[400] hover:bg-[#1A1A1A] transition-colors">
+                    <button className="w-full h-8 rounded-[7px] border border-[var(--gs-border)] text-[#AFAFAF] text-[12px] font-normal hover:bg-[#1A1A1A] transition-colors">
                       Add note
                     </button>
                   </div>
@@ -431,7 +448,7 @@ export function Hero() {
           </div>
 
           {/* Hint below frame */}
-          <p className="text-center text-[11px] text-[#AFAFAF] font-[400] mt-4 pb-12 transition-[opacity] duration-500" style={{ opacity: visible ? 1 : 0, transitionDelay: "700ms" }}>
+          <p className="text-center text-[11px] text-[#AFAFAF] font-normal mt-4 pb-12 transition-[opacity] duration-500" style={{ opacity: visible ? 1 : 0, transitionDelay: "700ms" }}>
             Click any deal to inspect it. This is the real GrowSuite interface.
           </p>
         </motion.div>
@@ -444,8 +461,8 @@ export function Hero() {
 function DrawerField({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
   return (
     <div className="flex items-center justify-between px-4 py-2.5 gap-3">
-      <span className="text-[10px] font-[500] text-[var(--gs-muted)] uppercase tracking-[0.06em] shrink-0">{label}</span>
-      <span className={`text-[12px] font-[500] text-[var(--gs-fg)] text-right truncate ${mono ? "font-mono" : ""}`}>{value}</span>
+      <span className="text-[10px] font-medium text-[#666] uppercase tracking-[0.06em] shrink-0">{label}</span>
+      <span className={`text-[12px] font-medium text-[var(--gs-fg)] text-right truncate ${mono ? "font-mono" : ""}`}>{value}</span>
     </div>
   );
 }

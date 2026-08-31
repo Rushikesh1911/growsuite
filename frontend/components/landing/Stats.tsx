@@ -37,12 +37,12 @@ function StatItem({ stat, index, active }: { stat: typeof stats[0], index: numbe
       className="flex flex-col items-center text-center px-8 py-10 animate-fade-up"
       style={{ animationDelay: `${index * 100}ms`, animationFillMode: "both" }}
     >
-      <div className="text-[52px] sm:text-[60px] font-[800] tracking-[-0.04em] text-white leading-none tabular-nums">
+      <div className="text-[52px] sm:text-[60px] font-medium tracking-[-0.04em] text-white leading-none tabular-nums">
         {stat.decimal ? val.toFixed(1) : val.toLocaleString()}
-        <span className="text-[var(--gs-muted)]">{stat.suffix}</span>
+        <span className="text-[#666]">{stat.suffix}</span>
       </div>
-      <div className="mt-3 text-[14px] font-[600] text-[#E5E5E5]">{stat.label}</div>
-      <div className="mt-1 text-[12px] text-[var(--gs-muted-light)] font-[400]">{stat.description}</div>
+      <div className="mt-3 text-[14px] font-semibold text-[#E5E5E5]">{stat.label}</div>
+      <div className="mt-1 text-[12px] text-[var(--gs-muted-light)] font-normal">{stat.description}</div>
     </div>
   );
 }
@@ -93,7 +93,7 @@ export function Stats() {
       <div className="relative z-10 max-w-6xl mx-auto px-6">
         {/* Section label */}
         <div className="flex justify-center mb-4 pt-12">
-          <span className="text-[11px] font-[700] uppercase tracking-widest text-[var(--gs-muted-light)]">
+          <span className="text-[11px] font-bold uppercase tracking-widest text-[var(--gs-muted-light)]">
             Trusted at scale
           </span>
         </div>
@@ -114,7 +114,7 @@ export function Stats() {
         {/* Bottom label */}
         <div className="flex justify-center gap-6 pb-12 mt-2">
           {["SOC 2 Type II", "GDPR Compliant", "99.9% SLA", "256-bit AES"].map((badge) => (
-            <span key={badge} className="text-[11px] text-[var(--gs-border-strong)] font-[500]">{badge}</span>
+            <span key={badge} className="text-[11px] text-[var(--gs-border-strong)] font-medium">{badge}</span>
           ))}
         </div>
       </div>

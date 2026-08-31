@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Check, ChevronRight, Loader2, Mail, Plus, X } from "lucide-react";
 import Link from "next/link";
+import { Logo } from "@/components/ui/Logo";
 import confetti from "canvas-confetti";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -109,15 +110,9 @@ export default function OnboardingPage() {
       
       {/* ── Top-left logo ── */}
       <div className="absolute top-8 left-8">
-        <div className="flex items-center gap-2.5">
-          <div className="h-[28px] w-[28px] rounded-[7.5px] bg-[#0F0F0F] flex items-center justify-center shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M8 1.5L14 5v6L8 14.5 2 11V5L8 1.5Z" stroke="white" strokeOpacity="0.8" strokeWidth="1"/>
-              <path d="M8 4.5L11.5 8 8 11.5 4.5 8 8 4.5Z" fill="white" fillOpacity="1"/>
-            </svg>
-          </div>
-          <span className="text-[14px] font-[700] tracking-[-0.025em] text-[#111111]">GrowSuite</span>
-        </div>
+        <Link href="/">
+          <Logo theme="light" />
+        </Link>
       </div>
 
       <div className="w-full max-w-md">
@@ -173,7 +168,7 @@ export default function OnboardingPage() {
                   type="text"
                   value={workspaceName}
                   onChange={e => setWorkspaceName(e.target.value)}
-                  className="w-full bg-white border border-[#EAEAEA] rounded-[8px] px-3.5 py-2.5 text-[13px] focus:outline-none focus:border-[#000000] focus:ring-1 focus:ring-[#000000] transition-shadow placeholder-[#AFAFAF]"
+                  className="w-full bg-white border border-[#EAEAEA] rounded-[8px] px-3.5 py-2.5 text-[14px] font-medium text-[#000000] focus:outline-none focus:border-[#000000] focus:ring-transparent transition-colors placeholder-[#AFAFAF]"
                   placeholder="e.g. Acme Corp"
                   autoFocus
                 />
@@ -186,7 +181,7 @@ export default function OnboardingPage() {
                 <select
                   value={useCase}
                   onChange={e => setUseCase(e.target.value)}
-                  className="w-full bg-white border border-[#EAEAEA] rounded-[8px] px-3.5 py-2.5 text-[13px] focus:outline-none focus:border-[#000000] focus:ring-1 focus:ring-[#000000] transition-shadow text-[#111]"
+                  className="w-full bg-white border border-[#EAEAEA] rounded-[8px] px-3.5 py-2.5 text-[14px] font-medium text-[#000000] focus:outline-none focus:border-[#000000] focus:ring-transparent transition-colors"
                 >
                   <option value="B2B Sales">B2B Sales</option>
                   <option value="Agency & Services">Agency & Services</option>
@@ -241,7 +236,7 @@ export default function OnboardingPage() {
                       value={email}
                       onChange={e => handleUpdateEmail(i, e.target.value)}
                       placeholder="colleague@company.com"
-                      className="w-full bg-white border border-[#EAEAEA] rounded-[8px] pl-9 pr-3.5 py-2 text-[13px] focus:outline-none focus:border-[#000000] transition-colors"
+                      className="w-full bg-white border border-[#EAEAEA] rounded-[8px] pl-9 pr-3.5 py-2.5 text-[14px] font-medium text-[#000000] focus:outline-none focus:border-[#000000] focus:ring-transparent transition-colors placeholder-[#AFAFAF]"
                       autoFocus={i === 0}
                     />
                   </div>

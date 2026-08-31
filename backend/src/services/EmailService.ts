@@ -39,7 +39,7 @@ export class EmailService {
                 <td style="padding: 40px;">
                   <div style="margin-bottom: 30px;">
                     <span style="font-size: 24px; font-weight: 800; color: #000000;">
-                      <span style="display: inline-block; width: 24px; height: 24px; background-color: #000000; color: #ffffff; text-align: center; line-height: 24px; border-radius: 6px; margin-right: 8px; font-size: 14px;">⌘</span>
+                      <span style="display: inline-block; width: 24px; height: 24px; background-color: #000000; color: #ffffff; text-align: center; line-height: 24px; border-radius: 6px; margin-right: 8px; font-size: 14px;">⬢</span>
                       GrowSuite
                     </span>
                   </div>
@@ -98,7 +98,7 @@ export class EmailService {
                   <!-- Logo / Brand -->
                   <div style="margin-bottom: 30px;">
                     <span style="font-size: 24px; font-weight: 800; letter-spacing: -0.5px; color: #000000;">
-                      <span style="display: inline-block; width: 24px; height: 24px; background-color: #000000; color: #ffffff; text-align: center; line-height: 24px; border-radius: 6px; margin-right: 8px; font-size: 14px;">⌘</span>
+                      <span style="display: inline-block; width: 24px; height: 24px; background-color: #000000; color: #ffffff; text-align: center; line-height: 24px; border-radius: 6px; margin-right: 8px; font-size: 14px;">⬢</span>
                       GrowSuite
                     </span>
                   </div>
@@ -271,6 +271,57 @@ export class EmailService {
       return true;
     } catch (error) {
       console.error('[EMAIL ERROR] Failed to send invoice email:', error);
+      return false;
+    }
+  }
+
+  static async sendPasswordResetEmail(toEmail: string, token: string) {
+    if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
+      console.log(`[EMAIL MOCK] 📧 Skipping actual email due to missing SMTP_USER/PASS`);
+      console.log(`[EMAIL MOCK] 📧 Reset Link: ${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/auth/reset-password?token=${token}`);
+      return true;
+    }
+
+    try {
+      await transporter.sendMail({
+        from: process.env.SMTP_FROM || '"GrowSuite" <noreply@growsuite.com>',
+        to: toEmail,
+        subject: `Reset your GrowSuite password`,
+        html: `
+          <!DOCTYPE html>
+          <html>
+          <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f4f4f5; margin: 0; padding: 40px 20px; color: #18181b;">
+            <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+              <tr>
+                <td style="padding: 40px;">
+                  <div style="margin-bottom: 30px;">
+                    <span style="font-size: 24px; font-weight: 800; color: #000000;">
+                      <span style="display: inline-block; width: 24px; height: 24px; background-color: #000000; color: #ffffff; text-align: center; line-height: 24px; border-radius: 6px; margin-right: 8px; font-size: 14px;">⬢</span>
+                      GrowSuite
+                    </span>
+                  </div>
+                  <h1 style="margin: 0 0 16px; font-size: 24px; font-weight: 700; color: #09090b;">Reset your password</h1>
+                  <p style="margin: 0 0 24px; font-size: 16px; line-height: 1.6; color: #52525b;">
+                    We received a request to reset the password for your GrowSuite account. Click the button below to choose a new password. This link will expire in 1 hour.
+                  </p>
+                  <a href="${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/auth/reset-password?token=${token}" 
+                     style="display: inline-block; background-color: #000000; color: #ffffff; font-size: 15px; font-weight: 600; text-decoration: none; padding: 14px 28px; border-radius: 8px; text-align: center;">
+                    Reset Password
+                  </a>
+                  <p style="margin: 32px 0 0; font-size: 14px; color: #a1a1aa;">
+                    If you didn't request a password reset, you can safely ignore this email.
+                  </p>
+                </td>
+              </tr>
+            </table>
+          </body>
+          </html>
+        `
+      });
+      console.log(`[EMAIL] ✅ Password reset email sent to ${toEmail}`);
+      return true;
+    } catch (error) {
+      console.error('[EMAIL ERROR] Failed to send password reset email:', error);
       return false;
     }
   }

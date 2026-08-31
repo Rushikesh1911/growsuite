@@ -17,5 +17,6 @@ router.put('/:id', ClientController.updateClient);
 router.patch('/:id/archive', ClientController.archiveClient);
 router.patch('/bulk-archive', ClientController.bulkArchiveClients);
 router.post('/:id/notes', ClientController.addNote);
+router.post('/:id/activities', ClientController.addActivity);
 
 export default router;

@@ -12,6 +12,7 @@ export function IntegrationsSettings({ token, workspaceId }: { token: string; wo
   const [razorpayKeyId, setRazorpayKeyId] = useState("");
   const [razorpayKeySecret, setRazorpayKeySecret] = useState("");
   const [hasRazorpay, setHasRazorpay] = useState(false);
+  const [hasGoogleCalendar, setHasGoogleCalendar] = useState(false);
 
   const fetchWorkspace = useCallback(async () => {
     try {
@@ -27,6 +28,14 @@ export function IntegrationsSettings({ token, workspaceId }: { token: string; wo
         setRazorpayKeySecret(data.razorpayKeySecret ? "••••••••••••••••" : "");
         setHasRazorpay(!!data.razorpayKeyId);
       }
+      
+      const userRes = await fetch(`${API_URL}/api/auth/me`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const userData = await userRes.json();
+      if (userRes.ok && userData) {
+        setHasGoogleCalendar(userData.hasGoogleCalendar || false);
+      }
     } catch (err) {
       console.error(err);
     } finally {
@@ -36,6 +45,16 @@ export function IntegrationsSettings({ token, workspaceId }: { token: string; wo
 
   useEffect(() => {
     fetchWorkspace();
+    
+    // Check URL params for google connect success/error
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("success") === "google_connected") {
+       window.dispatchEvent(new CustomEvent("showToast", { detail: { message: "Google Calendar connected successfully", type: "success" } }));
+       window.history.replaceState({}, document.title, window.location.pathname);
+    } else if (params.get("error")) {
+       window.dispatchEvent(new CustomEvent("showToast", { detail: { message: "Failed to connect Google Calendar", type: "error" } }));
+       window.history.replaceState({}, document.title, window.location.pathname);
+    }
   }, [fetchWorkspace]);
 
   const handleSaveRazorpay = async () => {
@@ -67,6 +86,37 @@ export function IntegrationsSettings({ token, workspaceId }: { token: string; wo
       window.dispatchEvent(new CustomEvent("showToast", { detail: { message: "Network error", type: "error" } }));
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const handleConnectGoogle = async () => {
+    try {
+      const res = await fetch(`${API_URL}/api/google/login`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const data = await res.json();
+      if (res.ok && data.url) {
+        window.location.href = data.url;
+      } else {
+        window.dispatchEvent(new CustomEvent("showToast", { detail: { message: "Failed to initiate connection", type: "error" } }));
+      }
+    } catch (error) {
+      window.dispatchEvent(new CustomEvent("showToast", { detail: { message: "Network error", type: "error" } }));
+    }
+  };
+
+  const handleDisconnectGoogle = async () => {
+    try {
+      const res = await fetch(`${API_URL}/api/google/disconnect`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        setHasGoogleCalendar(false);
+        window.dispatchEvent(new CustomEvent("showToast", { detail: { message: "Google Calendar disconnected", type: "success" } }));
+      }
+    } catch (error) {
+      window.dispatchEvent(new CustomEvent("showToast", { detail: { message: "Network error", type: "error" } }));
     }
   };
 
@@ -143,8 +193,8 @@ export function IntegrationsSettings({ token, workspaceId }: { token: string; wo
           </div>
         </div>
 
-        {/* Google Calendar (Placeholder) */}
-        <div className="bg-[#141414] border border-[#262626] rounded-xl p-6 flex flex-col gap-4 opacity-50">
+        {/* Google Calendar */}
+        <div className="bg-[#141414] border border-[#262626] rounded-xl p-6 flex flex-col gap-4">
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-[8px] bg-white flex items-center justify-center shrink-0">
@@ -155,9 +205,16 @@ export function IntegrationsSettings({ token, workspaceId }: { token: string; wo
                 <p className="text-[13px] text-[var(--gs-muted)]">Calendar Sync</p>
               </div>
             </div>
-            <div className="text-[11px] font-medium uppercase tracking-wide text-[var(--gs-muted)]">
-              Coming Soon
-            </div>
+            {hasGoogleCalendar ? (
+              <div className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wide text-[var(--gs-muted)]">
+                <div className="w-1.5 h-1.5 rounded-full bg-[var(--gs-fg)]" />
+                Connected
+              </div>
+            ) : (
+              <div className="text-[11px] font-medium uppercase tracking-wide text-[var(--gs-muted)]">
+                Not Connected
+              </div>
+            )}
           </div>
           
           <p className="text-[13px] text-[var(--gs-muted)]">
@@ -165,12 +222,21 @@ export function IntegrationsSettings({ token, workspaceId }: { token: string; wo
           </p>
 
           <div className="flex flex-col gap-3 mt-auto border-t border-[#262626] pt-4">
-            <button
-              disabled
-              className="bg-transparent border border-[#262626] text-[var(--gs-muted)] px-4 py-2 rounded-md text-[13px] font-medium w-full cursor-not-allowed outline-none"
-            >
-              Configuration Unavailable
-            </button>
+            {hasGoogleCalendar ? (
+              <button
+                onClick={handleDisconnectGoogle}
+                className="bg-transparent border border-[#262626] text-red-400 hover:bg-red-500/10 px-4 py-2 rounded-md text-[13px] font-medium w-full transition-colors outline-none"
+              >
+                Disconnect
+              </button>
+            ) : (
+              <button
+                onClick={handleConnectGoogle}
+                className="bg-transparent border border-[#262626] text-[var(--gs-fg)] hover:bg-[#1f1f1f] px-4 py-2 rounded-md text-[13px] font-medium w-full transition-colors outline-none"
+              >
+                Connect Google Calendar
+              </button>
+            )}
           </div>
         </div>
 

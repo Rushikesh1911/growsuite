@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, ArrowRight, Loader2, Command } from "lucide-react";
+import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { PopoverSelect } from "@/components/ui/popover-select";
+import { Logo } from "@/components/ui/Logo";
 
 export default function CreateWorkspacePage() {
   const router = useRouter();
@@ -75,11 +76,8 @@ export default function CreateWorkspacePage() {
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-[#1A1A1A] rounded-full blur-[120px] opacity-20 pointer-events-none" />
 
       {/* Brand Logo */}
-      <div className="absolute top-8 left-8 flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity z-10" onClick={() => router.push("/dashboard")}>
-        <div className="h-8 w-8 bg-[var(--gs-fg)] rounded-lg flex items-center justify-center">
-          <Command className="h-4 w-4 text-[var(--gs-bg)]" />
-        </div>
-        <span className="text-lg font-bold text-[var(--gs-fg)] tracking-tight">GrowSuite</span>
+      <div className="absolute top-8 left-8 cursor-pointer hover:opacity-80 transition-opacity z-10" onClick={() => router.push("/dashboard")}>
+        <Logo theme="light" />
       </div>
 
       <div className="w-full max-w-[480px] animate-in fade-in slide-in-from-bottom-4 duration-500 z-10">

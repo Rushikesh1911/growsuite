@@ -611,4 +611,59 @@ export class LeadController {
       res.status(500).json({ error: 'Failed to import leads' });
     }
   }
+  
+  // Add a manual activity (e.g. Call, Meeting)
+  static async addActivity(req: AuthRequest, res: Response) {
+    try {
+      const workspaceId = req.workspaceId!;
+      const actorId = req.user!.userId;
+      const leadId = parseInt(req.params.id as string, 10);
+      const { action, title, description, metadata } = req.body;
+
+      if (isNaN(leadId) || !action || !title) {
+        res.status(400).json({ error: 'Missing required fields' });
+        return;
+      }
+
+      // Verify lead exists and belongs to workspace
+      const lead = await prisma.lead.findUnique({ where: { id: leadId, workspaceId } });
+      if (!lead) {
+        res.status(404).json({ error: 'Lead not found' });
+        return;
+      }
+
+      const activity = await prisma.activityLog.create({
+        data: ActivityService.generateLog({
+          action,
+          title,
+          description: description || null,
+          actorId,
+          workspaceId,
+          leadId,
+        }),
+      });
+
+      // Update metadata if provided
+      if (metadata) {
+        await prisma.activityLog.update({
+          where: { id: activity.id },
+          data: { metadata },
+        });
+        activity.metadata = metadata;
+      }
+
+      // Fetch the updated lead to emit
+      const updatedLead = await prisma.lead.findUnique({
+        where: { id: leadId },
+        include: { assignee: { include: { user: true } } }
+      });
+
+      SocketService.emitToWorkspace(workspaceId, 'lead_updated', updatedLead);
+
+      res.status(201).json(activity);
+    } catch (error) {
+      console.error('Error adding activity:', error);
+      res.status(500).json({ error: 'Failed to log activity' });
+    }
+  }
 }

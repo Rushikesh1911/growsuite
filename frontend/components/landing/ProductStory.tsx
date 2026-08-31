@@ -1,25 +1,44 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
 import Link from "next/link";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { CheckSquare, CreditCard, Users, LineChart, Check, Calendar } from "lucide-react";
 
 export function ProductStory() {
+  const containerRef = useRef<HTMLElement>(null);
+  
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+
+  // Different parallax speeds for the cards to create depth
+  // Removed parallax on individual cards to maintain strict grid alignment
+  // const yFast = useTransform(scrollYProgress, [0, 1], [60, -60]);
+  // const yMedium = useTransform(scrollYProgress, [0, 1], [30, -30]);
+  // const ySlow = useTransform(scrollYProgress, [0, 1], [10, -10]);
+
   return (
-    <section className="relative w-full max-w-7xl mx-auto px-6 py-24 z-10" id="product">
-      <div className="flex flex-col items-center justify-center text-center mb-16">
-        <h2 className="text-[32px] md:text-[40px] font-extrabold tracking-tight text-inherit leading-[1.1] max-w-[600px]">
-          Everything you need.<br/>
-          <span className="text-black/40 dark:text-[var(--gs-muted)]">Nothing you don't.</span>
-        </h2>
-      </div>
+    <section ref={containerRef} className="relative w-full bg-black py-32 z-10 border-y border-[#222]" id="product">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="flex flex-col items-center justify-center text-center mb-16">
+          <h2 className="text-[36px] md:text-[48px] font-medium tracking-tight text-[#EDEDED] leading-[1.1] max-w-[600px]">
+            One Workspace.<br/>
+            <span className="text-[#888]">Every part of the client journey.</span>
+          </h2>
+        </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[420px]">
+        
         {/* Task Management (2 columns on large screens) */}
-        <div className="lg:col-span-2 bg-[var(--gs-surface)] rounded-[24px] border border-[var(--gs-border)] overflow-hidden flex flex-col group relative">
-          <div className="p-8 pb-4">
-            <h3 className="text-[24px] font-bold text-[var(--gs-fg)] tracking-tight mb-2">Task management? Check.</h3>
-            <p className="text-[15px] text-[var(--gs-muted)] max-w-[400px]">
+        <motion.div 
+          className="lg:col-span-2 bg-[#0A0A0A] border border-[#222] rounded-[16px] overflow-hidden flex flex-col group relative"
+        >
+          <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: `linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)`, backgroundSize: "32px 32px", maskImage: "radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 100%)" }} />
+          <div className="p-8 pb-0 relative z-10">
+            <h3 className="text-[20px] font-medium text-[#EDEDED] tracking-tight mb-2">Task management? Check.</h3>
+            <p className="text-[14px] text-[#888] max-w-[400px]">
               Set tasks and assign to members of your team to streamline communication and make sure nothing is missed.
             </p>
           </div>
@@ -29,7 +48,7 @@ export function ProductStory() {
               <div className="flex items-center justify-between mb-4">
                 <span className="text-[14px] font-semibold text-[var(--gs-fg)]">My tasks</span>
                 <div className="flex gap-2">
-                  <span className="text-[11px] font-medium text-[var(--gs-muted)] border border-[var(--gs-border)] bg-[var(--gs-bg)] px-2 py-1 rounded-[6px]">Add Task</span>
+                  <span className="text-[11px] font-medium text-[#666] border border-[var(--gs-border)] bg-[var(--gs-bg)] px-2 py-1 rounded-[6px]">Add Task</span>
                   <span className="text-[11px] font-medium text-white bg-[var(--gs-status-overdue)] px-2 py-1 rounded-[6px]">All Tasks</span>
                 </div>
               </div>
@@ -48,7 +67,7 @@ export function ProductStory() {
                   <div className="flex gap-4">
                     <div>
                       <div className="text-[10px] text-[var(--gs-muted-light)] mb-1">Deadline</div>
-                      <div className="text-[10px] text-[var(--gs-muted)]">12am, Oct 15</div>
+                      <div className="text-[10px] text-[#666]">12am, Oct 15</div>
                     </div>
                     <div>
                       <div className="text-[10px] text-[var(--gs-muted-light)] mb-1">Status</div>
@@ -65,24 +84,27 @@ export function ProductStory() {
                   <div className="flex gap-4">
                     <div>
                       <div className="text-[10px] text-[var(--gs-muted-light)] mb-1">Deadline</div>
-                      <div className="text-[10px] text-[var(--gs-muted)]">11am, Oct 15</div>
+                      <div className="text-[10px] text-[#666]">11am, Oct 15</div>
                     </div>
                     <div>
                       <div className="text-[10px] text-[var(--gs-muted-light)] mb-1">Status</div>
-                      <div className="text-[10px] font-medium text-[var(--gs-muted)] bg-[var(--gs-border)] px-1.5 py-0.5 rounded-[4px]">Non-urgent</div>
+                      <div className="text-[10px] font-medium text-[#666] bg-[var(--gs-border)] px-1.5 py-0.5 rounded-[4px]">Non-urgent</div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Invoices & Payments */}
-        <div className="bg-[var(--gs-surface)] rounded-[24px] border border-[var(--gs-border)] overflow-hidden flex flex-col group relative">
-          <div className="p-8 pb-4 relative z-10">
-            <h3 className="text-[24px] font-bold text-[var(--gs-fg)] tracking-tight mb-2">Fast, easy payments</h3>
-            <p className="text-[15px] text-[var(--gs-muted)]">
+        <motion.div 
+          className="bg-[#0A0A0A] border border-[#222] rounded-[16px] overflow-hidden flex flex-col group relative"
+        >
+          <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: `linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)`, backgroundSize: "32px 32px", maskImage: "radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 100%)" }} />
+          <div className="p-8 pb-0 relative z-10">
+            <h3 className="text-[20px] font-medium text-[#EDEDED] tracking-tight mb-2">Fast, easy payments</h3>
+            <p className="text-[14px] text-[#888]">
               Send beautiful invoices and get paid via credit card or ACH directly from your clients.
             </p>
           </div>
@@ -104,19 +126,22 @@ export function ProductStory() {
                       <span>****</span>
                       <span>2719</span>
                     </div>
-                    <span className="text-[24px] font-bold tracking-tighter">₹4,200</span>
+                    <span className="text-[24px] font-medium tracking-tight">₹4,200</span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Real-time Pipeline */}
-        <div className="bg-[var(--gs-surface)] rounded-[24px] border border-[var(--gs-border)] overflow-hidden flex flex-col group relative">
-          <div className="p-8 pb-4 relative z-10">
-            <h3 className="text-[24px] font-bold text-[var(--gs-fg)] tracking-tight mb-2">Pipeline visibility</h3>
-            <p className="text-[15px] text-[var(--gs-muted)]">
+        <motion.div 
+          className="bg-[#0A0A0A] border border-[#222] rounded-[16px] overflow-hidden flex flex-col group relative"
+        >
+          <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: `linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)`, backgroundSize: "32px 32px", maskImage: "radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 100%)" }} />
+          <div className="p-8 pb-0 relative z-10">
+            <h3 className="text-[20px] font-medium text-[#EDEDED] tracking-tight mb-2">Pipeline visibility</h3>
+            <p className="text-[14px] text-[#888]">
               Get more bang for your buck by closing deals faster with an organized, visual sales pipeline.
             </p>
           </div>
@@ -139,26 +164,29 @@ export function ProductStory() {
                 </div>
              </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Team & Permissions */}
-        <div className="bg-[var(--gs-surface)] rounded-[24px] border border-[var(--gs-border)] overflow-hidden flex flex-col group relative">
-          <div className="p-8 pb-4 relative z-10">
-            <h3 className="text-[24px] font-bold text-[var(--gs-fg)] tracking-tight mb-2">Manage your team</h3>
-            <p className="text-[15px] text-[var(--gs-muted)]">
+        <motion.div 
+          className="bg-[#0A0A0A] border border-[#222] rounded-[16px] overflow-hidden flex flex-col group relative"
+        >
+          <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: `linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)`, backgroundSize: "32px 32px", maskImage: "radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 100%)" }} />
+          <div className="p-8 pb-0 relative z-10">
+            <h3 className="text-[20px] font-medium text-[#EDEDED] tracking-tight mb-2">Manage your team</h3>
+            <p className="text-[14px] text-[#888]">
               Give your team authority to manage projects, clients, and deals with robust access control.
             </p>
           </div>
           
           <div className="flex-1 relative p-6 flex flex-col justify-end">
-            <div className="bg-[var(--gs-bg-alt)] border border-[var(--gs-border)] rounded-[12px] p-4 shadow-sm mb-4">
+            <div className="bg-[var(--gs-bg-alt)] border border-[var(--gs-border)] rounded-[12px] p-4 shadow-sm mb-4 translate-y-2 group-hover:-translate-y-1 transition-transform duration-500">
                <div className="flex items-center gap-3 mb-4">
-                 <div className="w-10 h-10 rounded-full bg-[var(--gs-border)] overflow-hidden flex items-center justify-center text-[10px] font-bold text-[var(--gs-fg)]">
-                   DT
+                 <div className="w-10 h-10 rounded-full bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-[12px] font-bold text-indigo-600 overflow-hidden relative">
+                   <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Dwayne Tatum" className="w-full h-full object-cover" />
                  </div>
                  <div>
                    <div className="text-[13px] font-medium text-[var(--gs-fg)]">Dwayne Tatum</div>
-                   <div className="text-[11px] text-[var(--gs-muted)]">Project Manager</div>
+                   <div className="text-[11px] text-[#666]">Project Manager</div>
                  </div>
                </div>
                
@@ -186,39 +214,52 @@ export function ProductStory() {
                </div>
             </div>
             
-            <div className="flex items-center gap-[-8px]">
-              <div className="w-8 h-8 rounded-full border-2 border-[var(--gs-surface)] bg-[#444444] z-30"></div>
-              <div className="w-8 h-8 rounded-full border-2 border-[var(--gs-surface)] bg-[#666666] -ml-3 z-20"></div>
-              <div className="w-8 h-8 rounded-full border-2 border-[var(--gs-surface)] bg-[#888888] -ml-3 z-10"></div>
-              <div className="w-8 h-8 rounded-full border-2 border-[var(--gs-surface)] bg-[var(--gs-border)] flex items-center justify-center -ml-3 z-0 text-[10px] font-medium text-[var(--gs-muted)]">+3</div>
+            <div className="flex items-center">
+              <div className="w-8 h-8 rounded-full border-2 border-[var(--gs-surface)] bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center text-[10px] font-bold z-30 overflow-hidden relative">
+                <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User 1" className="w-full h-full object-cover" />
+              </div>
+              <div className="w-8 h-8 rounded-full border-2 border-[var(--gs-surface)] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-[10px] font-bold -ml-3 z-20 overflow-hidden relative">
+                <img src="https://randomuser.me/api/portraits/men/46.jpg" alt="User 2" className="w-full h-full object-cover" />
+              </div>
+              <div className="w-8 h-8 rounded-full border-2 border-[var(--gs-surface)] bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center text-[10px] font-bold -ml-3 z-10 overflow-hidden relative">
+                <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="User 3" className="w-full h-full object-cover" />
+              </div>
+              <div className="w-8 h-8 rounded-full border-2 border-[var(--gs-surface)] bg-[var(--gs-bg-alt)] text-[var(--gs-fg)] flex items-center justify-center -ml-3 z-0 text-[10px] font-medium shadow-sm">+3</div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* CTA Highlight Block */}
-        <div className="bg-[#0A0A0B] border border-[var(--gs-border)] rounded-[24px] overflow-hidden flex flex-col relative group text-[var(--gs-fg)] p-8 shadow-2xl">
-           <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-50"></div>
+        <motion.div 
+          className="bg-black border border-[#222] rounded-[16px] overflow-hidden flex flex-col relative group text-[var(--gs-fg)] p-8 shadow-2xl"
+        >
+           <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] to-transparent opacity-50"></div>
            
-           <h3 className="text-[28px] font-bold tracking-tight mb-4 leading-tight relative z-10 text-white">
+           <h3 className="text-[24px] font-medium tracking-tight mb-4 leading-tight relative z-10 text-[#EDEDED]">
              What would you do with an extra 10 hours / week?
            </h3>
            
-           <p className="text-[15px] text-white/80 leading-relaxed mb-8 relative z-10 max-w-[280px]">
+           <p className="text-[14px] text-[#888] leading-relaxed mb-8 relative z-10 max-w-[280px]">
              Our clients save on average 520 hours every year by using GrowSuite instead of scattered tools. Join them.
            </p>
            
            <div className="mt-auto flex flex-col sm:flex-row gap-3 relative z-10">
-              <Link href="/auth/sign-up" className="flex-1 bg-white hover:bg-gray-100 text-black font-bold rounded-[8px] py-3 flex items-center justify-center gap-2 transition-colors text-[14px]">
-                Sign up
-                <span className="text-[16px]">»</span>
+              <Link href="/auth/sign-up" className="flex-1 bg-white hover:bg-gray-100 text-black font-bold rounded-[8px] py-3 flex items-center justify-center gap-2 transition-all duration-200 hover:-translate-y-px hover:shadow-md text-[14px]">
+               Sign up
              </Link>
-             <button className="flex-1 bg-black/20 hover:bg-black/30 text-white font-semibold rounded-[8px] py-3 flex items-center justify-center gap-2 transition-colors text-[14px] border border-white/20">
+             <button className="group flex-1 bg-black/20 hover:bg-black/30 text-white font-semibold rounded-[8px] py-3 flex items-center justify-center gap-2 transition-colors text-[14px] border border-white/20">
                <Calendar className="w-4 h-4" />
-               Book Call
+               <div className="relative overflow-hidden h-[20px]">
+                 <div className="flex flex-col transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-1/2">
+                   <span className="flex items-center justify-center h-[20px]">Book Call</span>
+                   <span className="flex items-center justify-center h-[20px]">Book Call</span>
+                 </div>
+               </div>
              </button>
            </div>
-        </div>
+        </motion.div>
 
+      </div>
       </div>
     </section>
   );

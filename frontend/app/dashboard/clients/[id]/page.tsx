@@ -9,6 +9,7 @@ import { CreateInvoiceModal } from "@/components/dashboard/finance/CreateInvoice
 import { EditClientModal } from "@/components/dashboard/clients/EditClientModal";
 import { Topbar } from "@/components/dashboard/Topbar";
 import { EventToast } from "@/components/ui/event-toast";
+import { TimelineFeed } from "@/components/dashboard/crm/TimelineFeed";
 import { useDashboard } from "../../DashboardContext";
 import { formatCurrency } from "@/lib/currency";
 
@@ -37,7 +38,8 @@ interface Client {
     payments?: { id: number; amount: string; date: string; method?: string; reference?: string }[];
   }[];
   activities?: any[];
-  notes?: any[];
+  clientNotes?: any[];
+  emails?: any[];
   originalDeal?: { id: number; title: string; estimatedValue: string };
 }
 
@@ -402,45 +404,7 @@ export default function ClientProfilePage() {
                     )}
                   </div>
 
-                  <div className="mt-4 flex items-center justify-between">
-                    <h3 className="text-[14px] font-bold text-[var(--gs-fg)] tracking-tight">Notes</h3>
-                  </div>
-                  
-                  <div className="bg-[var(--gs-surface)] border border-[var(--gs-border)] rounded-[8px] p-5 flex flex-col gap-4 text-[13px]">
-                    <form onSubmit={handleAddNote} className="flex flex-col gap-2">
-                      <textarea
-                        value={newNote}
-                        onChange={(e) => setNewNote(e.target.value)}
-                        placeholder="Add a note about this client..."
-                        className="w-full bg-[var(--gs-bg)] border border-[var(--gs-border)] rounded-[6px] px-3 py-2 text-[13px] text-[var(--gs-fg)] focus:outline-none focus:border-[var(--gs-border-strong)] resize-none h-20"
-                      />
-                      <div className="flex justify-end">
-                        <button
-                          type="submit"
-                          disabled={!newNote.trim() || isSubmittingNote}
-                          className="bg-[var(--gs-fg)] text-[var(--gs-bg)] hover:opacity-90 px-3 py-1.5 rounded-[4px] font-bold text-[11px] uppercase tracking-wide transition-opacity disabled:opacity-50"
-                        >
-                          {isSubmittingNote ? "Adding..." : "Add Note"}
-                        </button>
-                      </div>
-                    </form>
-
-                    {client.notes && client.notes.length > 0 && (
-                      <div className="flex flex-col gap-4 mt-2 pt-4 border-t border-[var(--gs-border)]">
-                        {client.notes.map((note) => (
-                          <div key={note.id} className="flex flex-col gap-1.5">
-                            <div className="flex items-center justify-between">
-                              <span className="text-[11px] font-bold text-[var(--gs-fg)]">{note.author?.user?.name || note.author?.user?.email || "Unknown"}</span>
-                              <span className="text-[11px] text-[var(--gs-muted)]">
-                                {new Date(note.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric' })}
-                              </span>
-                            </div>
-                            <p className="text-[13px] text-[var(--gs-fg)] whitespace-pre-wrap leading-relaxed">{note.content}</p>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
+                  {/* Notes removed and moved to Activity tab */}
                 </div>
               </div>
             )}
@@ -561,9 +525,22 @@ export default function ClientProfilePage() {
             )}
 
             {activeTab === "activity" && (
-              <div className="py-12 flex flex-col items-start h-full">
-                <span className="text-[15px] font-bold text-[var(--gs-fg)] tracking-tight capitalize">{activeTab}</span>
-                <p className="text-[13px] text-[var(--gs-muted)] mt-1.5">Detailed {activeTab} view coming soon.</p>
+              <div className="py-6 flex flex-col items-start h-full max-w-[800px]">
+                <div className="w-full">
+                  <TimelineFeed 
+                    token={token!}
+                    workspaceId={workspaceId!}
+                    entityType="clients"
+                    entityId={client.id}
+                    activities={client.activities}
+                    notes={client.clientNotes}
+                    emails={client.emails}
+                    onSuccess={() => {
+                      fetchClient();
+                      window.dispatchEvent(new Event("refreshData"));
+                    }}
+                  />
+                </div>
               </div>
             )}
           </div>

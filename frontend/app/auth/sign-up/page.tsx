@@ -3,10 +3,11 @@
 import { useState, Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useGoogleLogin } from "@react-oauth/google";
-import { Lock, Mail, User, ArrowRight, Loader2, Command } from "lucide-react";
+import { Mail, Lock, User, ArrowRight, Loader2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import Link from "next/link";
 import { GoogleLogin } from "@react-oauth/google";
+import { Logo } from "@/components/ui/Logo";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
@@ -102,30 +103,28 @@ function SignUpContent() {
     <div className="min-h-screen bg-[#000000] flex flex-col items-center justify-center p-4 selection:bg-[#EDEDED] selection:text-[#000000]">
       
       {/* Brand Logo */}
-      <div className="absolute top-8 left-8 flex items-center gap-2">
-        <div className="h-8 w-8 bg-[#EDEDED] rounded-lg flex items-center justify-center">
-          <Command className="h-4 w-4 text-[#000000]" />
-        </div>
-        <span className="text-lg font-bold text-[#EDEDED] tracking-tight">GrowSuite</span>
+      <div className="absolute top-8 left-8">
+        <Logo theme="dark" />
       </div>
 
       <div className="w-full max-w-[400px] animate-in fade-in slide-in-from-bottom-4 duration-500">
-        <div className="w-full max-w-[400px] flex flex-col items-center">
-          <h1 className="text-3xl font-bold tracking-tight text-[#EDEDED] mb-2 text-center">
+        <div className="flex flex-col items-center text-center mb-8 gap-2">
+          <h1 className="text-2xl font-medium text-[#EDEDED] tracking-tight">
             {verificationSent ? "Check your inbox" : "Create an account"}
           </h1>
-          <p className="text-[#A1A1AA] text-sm text-center mb-8">
+          <p className="text-[14px] text-[#888888]">
             {verificationSent ? "We just sent a verification link to your email." : "Start scaling your business with GrowSuite"}
           </p>
+        </div>
 
           {verificationSent ? (
-            <div className="w-full bg-[#111111] border border-[#222222] rounded-xl p-8 flex flex-col items-center justify-center text-center">
+            <div className="w-full bg-[#0A0A0A] border border-[#222222] rounded-[12px] p-8 flex flex-col items-center justify-center text-center shadow-2xl">
               <div className="h-16 w-16 bg-[#222222] rounded-full flex items-center justify-center mb-6">
                 <svg className="w-8 h-8 text-[#EDEDED]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
               </div>
-              <h3 className="text-[#EDEDED] font-bold text-lg mb-2">Verify your email address</h3>
+              <h3 className="text-[#EDEDED] font-medium text-lg mb-2">Verify your email address</h3>
               <p className="text-[#A1A1AA] text-sm mb-6">
                 Please click the link in the email we sent to <strong>{email}</strong> to activate your account.
               </p>
@@ -134,7 +133,7 @@ function SignUpContent() {
               </Link>
             </div>
           ) : (
-            <Card className="bg-[#0A0A0A] border-[#222222] p-8 shadow-2xl rounded-[12px]">
+            <Card className="bg-[#0A0A0A] border-[#222222] p-8 shadow-2xl rounded-[12px] w-full">
               <form onSubmit={handleSignUp} className="flex flex-col gap-5">
                 
                 <div className="flex flex-col gap-2">
@@ -178,21 +177,25 @@ function SignUpContent() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="••••••••"
-                      className="w-full bg-[#000000] border border-[#333333] rounded-[6px] pl-9 pr-4 py-2.5 text-[14px] text-[#EDEDED] focus:outline-none focus:border-[#666666] transition-colors placeholder:text-[#444444]"
+                      className={`w-full bg-[#000000] border ${error ? 'border-red-500/50 focus:border-red-500' : 'border-[#333333] focus:border-[#666666]'} rounded-[6px] pl-9 pr-4 py-2.5 text-[14px] text-[#EDEDED] focus:outline-none transition-colors placeholder:text-[#444444]`}
                     />
                   </div>
+                  {error && (
+                    <div className="text-[12px] text-red-500 font-medium mt-1">
+                      {error === "Email already in use" ? (
+                        <span>Email already in use. <Link href="/auth/sign-in" className="underline hover:text-red-400">Sign in instead?</Link></span>
+                      ) : (
+                        error
+                      )}
+                    </div>
+                  )}
                 </div>
 
-                {error && (
-                  <div className="bg-red-500/10 border border-red-500/20 rounded-[6px] p-3 text-center">
-                    <p className="text-[12px] text-red-500 font-medium">{error}</p>
-                  </div>
-                )}
                 <div className="flex flex-col gap-2.5">
                   <button
                     type="button"
                     onClick={() => loginWithGoogle()}
-                    className="w-full bg-[#EDEDED] hover:bg-[#FFFFFF] text-[#000000] border border-[#EDEDED] rounded-[6px] py-2.5 px-4 text-[13px] font-bold flex items-center justify-center gap-2.5 transition-colors"
+                    className="w-full bg-[#EDEDED] hover:bg-[#FFFFFF] text-[#000000] border border-[#EDEDED] rounded-[6px] py-2.5 px-4 text-[13px] font-medium flex items-center justify-center gap-2.5 transition-colors"
                   >
                     <svg viewBox="0 0 24 24" className="h-4 w-4" xmlns="http://www.w3.org/2000/svg">
                       <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -207,7 +210,7 @@ function SignUpContent() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="mt-2 w-full bg-[#EDEDED] hover:bg-[#FFFFFF] text-[#000000] rounded-[6px] py-2.5 px-4 text-[13px] font-bold flex items-center justify-center gap-2 transition-all disabled:opacity-50"
+                  className="mt-2 w-full bg-[#EDEDED] hover:bg-[#FFFFFF] text-[#000000] rounded-[6px] py-2.5 px-4 text-[13px] font-medium flex items-center justify-center gap-2 transition-all disabled:opacity-50"
                 >
                   {loading ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -218,7 +221,6 @@ function SignUpContent() {
               </form>
             </Card>
           )}
-        </div>
         
         {!verificationSent && (
           <div className="text-center mt-8">

@@ -8,6 +8,25 @@ import { LayoutDashboard, Target, Layers, Users, FolderKanban, CheckSquare, Cale
 
 export type DashboardView = "dashboard" | "leads" | "pipeline" | "clients" | "projects" | "tasks" | "time-tracking" | "calendar" | "invoices" | "payments" | "analytics" | "activity" | "settings" | "profile" | "help";
 
+export const NAV_ITEMS = [
+  { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { type: "divider" },
+  { id: "leads", label: "Leads", icon: Target },
+  { id: "pipeline", label: "Pipeline", icon: Layers },
+  { id: "clients", label: "Clients", icon: Users },
+  { type: "divider" },
+  { id: "projects", label: "Projects", icon: FolderKanban },
+  { id: "tasks", label: "Tasks", icon: CheckSquare },
+  { id: "time-tracking", label: "Time Tracking", icon: Timer },
+  { id: "calendar", label: "Calendar", icon: Calendar },
+  { type: "divider" },
+  { id: "invoices", label: "Invoices", icon: Receipt },
+  { id: "payments", label: "Payments", icon: CreditCard },
+  { type: "divider" },
+  { id: "analytics", label: "Analytics", icon: LineChart },
+  { id: "activity", label: "Activity", icon: Activity },
+] as const;
+
 interface SidebarProps {
   currentView: DashboardView;
   setView: (view: DashboardView) => void;
@@ -171,27 +190,21 @@ export function Sidebar({ currentView, setView }: SidebarProps) {
 
       {/* Main Nav */}
       <nav className={`flex-1 ${collapsed ? "px-2" : "px-3"} pb-4 flex flex-col gap-0.5 overflow-y-auto overflow-x-hidden`}>
-        
-        <NavItem id="dashboard" label="Dashboard" icon={LayoutDashboard} />
-        <Divider />
-        
-        <NavItem id="leads" label="Leads" icon={Target} />
-        <NavItem id="pipeline" label="Pipeline" icon={Layers} />
-        <NavItem id="clients" label="Clients" icon={Users} />
-        <Divider />
-
-        <NavItem id="projects" label="Projects" icon={FolderKanban} />
-        <NavItem id="tasks" label="Tasks" icon={CheckSquare} />
-        <NavItem id="time-tracking" label="Time Tracking" icon={Timer} />
-        <NavItem id="calendar" label="Calendar" icon={Calendar} />
-        <Divider />
-
-        <NavItem id="invoices" label="Invoices" icon={Receipt} />
-        <NavItem id="payments" label="Payments" icon={CreditCard} />
-        <Divider />
-
-        <NavItem id="analytics" label="Analytics" icon={LineChart} />
-        <NavItem id="activity" label="Activity" icon={Activity} />
+        {NAV_ITEMS.map((item, idx) => {
+          if ("type" in item && item.type === "divider") {
+            return <Divider key={`div-${idx}`} />;
+          }
+          if (!("id" in item)) return null;
+          
+          return (
+            <NavItem 
+              key={item.id} 
+              id={item.id as DashboardView} 
+              label={item.label} 
+              icon={item.icon} 
+            />
+          );
+        })}
       </nav>
 
       {/* Bottom Footer Area */}

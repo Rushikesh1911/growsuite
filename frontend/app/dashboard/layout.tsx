@@ -8,6 +8,7 @@ import { DashboardProvider } from "./DashboardContext";
 import { Toast } from "@/components/ui/toast";
 import { SocketProvider } from "@/components/providers/SocketProvider";
 import { GlobalTimer } from "@/components/dashboard/time/GlobalTimer";
+import { CommandPalette } from "@/components/dashboard/CommandPalette";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
@@ -156,6 +157,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             type={toastType}
             action={toastAction}
           />
+          
+          <CommandPalette />
         </div>
       </SocketProvider>
     </DashboardProvider>

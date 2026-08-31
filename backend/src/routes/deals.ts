@@ -14,5 +14,6 @@ router.post('/', DealController.createDeal);
 router.put('/:id', DealController.updateDeal);
 router.post('/:id/convert', DealController.convertDeal);
 router.post('/:id/notes', DealController.addNote);
+router.post('/:id/activities', DealController.addActivity);
 
 export default router;

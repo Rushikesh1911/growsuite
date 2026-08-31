@@ -273,4 +273,63 @@ export class DealController {
       res.status(500).json({ error: 'Failed to add note' });
     }
   }
+  
+  // Add a manual activity (e.g. Call, Meeting)
+  static async addActivity(req: AuthRequest, res: Response) {
+    try {
+      const workspaceId = req.workspaceId!;
+      const actorId = req.user!.userId;
+      const dealId = parseInt(req.params.id as string, 10);
+      const { action, title, description, metadata } = req.body;
+
+      if (isNaN(dealId) || !action || !title) {
+        res.status(400).json({ error: 'Missing required fields' });
+        return;
+      }
+
+      // Verify deal exists and belongs to workspace
+      const deal = await prisma.deal.findUnique({ where: { id: dealId, workspaceId } });
+      if (!deal) {
+        res.status(404).json({ error: 'Deal not found' });
+        return;
+      }
+
+      const activity = await prisma.activityLog.create({
+        data: ActivityService.generateLog({
+          action,
+          title,
+          description: description || null,
+          actorId,
+          workspaceId,
+          dealId,
+        }),
+      });
+
+      // Update metadata if provided
+      if (metadata) {
+        await prisma.activityLog.update({
+          where: { id: activity.id },
+          data: { metadata },
+        });
+        activity.metadata = metadata;
+      }
+
+      // Fetch the updated deal to emit
+      const updatedDeal = await prisma.deal.findUnique({
+        where: { id: dealId },
+        include: { 
+          tasks: { orderBy: { createdAt: 'desc' } },
+          activities: { orderBy: { createdAt: 'desc' } },
+          dealNotes: { include: { author: { include: { user: true } } }, orderBy: { createdAt: 'desc' } }
+        }
+      });
+
+      SocketService.emitToWorkspace(workspaceId, 'deal_updated', updatedDeal);
+
+      res.status(201).json(activity);
+    } catch (error) {
+      console.error('Error adding activity:', error);
+      res.status(500).json({ error: 'Failed to log activity' });
+    }
+  }
 }

@@ -22,5 +22,6 @@ router.patch('/:id', LeadController.updateLead);
 router.post('/:id/convert-to-deal', LeadController.convertToDeal);
 router.post('/:id/email', LeadController.sendEmail);
 router.post('/:id/notes', LeadController.addNote);
+router.post('/:id/activities', LeadController.addActivity);
 
 export default router;

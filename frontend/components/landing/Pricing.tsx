@@ -53,11 +53,11 @@ export function Pricing() {
         
         {/* Header */}
         <div className="flex flex-col items-center text-center gap-4 mb-16 mx-auto max-w-2xl">
-          <span className="text-[11px] font-[700] text-[#AFAFAF] uppercase tracking-[0.1em]">Pricing</span>
-          <h2 className="text-[32px] sm:text-[44px] font-[800] tracking-[-0.04em] text-[var(--gs-bg-alt)] leading-[1.08]">
+          <span className="text-[11px] font-bold text-[#AFAFAF] uppercase tracking-[0.1em]">Pricing</span>
+          <h2 className="text-[36px] md:text-[48px] font-medium tracking-[-0.04em] text-[var(--gs-bg-alt)] leading-[1.08]">
             Simple, transparent pricing.
           </h2>
-          <p className="text-[16px] text-[var(--gs-muted)] max-w-md leading-[1.65]">
+          <p className="text-[16px] text-[#666] max-w-md leading-[1.65]">
             Start for free. Upgrade when your business is ready.
           </p>
 
@@ -65,7 +65,7 @@ export function Pricing() {
           <div className="mt-6 flex items-center gap-3 p-1.5 bg-[#EAEAEA] rounded-[8px] border border-[rgba(0,0,0,0.05)] shadow-inner">
             <button
               onClick={() => setYearly(false)}
-              className={`px-5 py-2 rounded-[6px] text-[13px] font-[600] transition-all duration-300 ${
+              className={`px-5 py-2 rounded-[6px] text-[13px] font-semibold transition-all duration-300 ${
                 !yearly ? "bg-white text-[var(--gs-bg-alt)] shadow-[0_2px_8px_rgba(0,0,0,0.08)]" : "text-[var(--gs-muted-light)] hover:text-[var(--gs-bg-alt)]"
               }`}
             >
@@ -73,7 +73,7 @@ export function Pricing() {
             </button>
             <button
               onClick={() => setYearly(true)}
-              className={`px-5 py-2 rounded-[6px] text-[13px] font-[600] transition-all duration-300 flex items-center gap-2 ${
+              className={`px-5 py-2 rounded-[6px] text-[13px] font-semibold transition-all duration-300 flex items-center gap-2 ${
                 yearly ? "bg-white text-[var(--gs-bg-alt)] shadow-[0_2px_8px_rgba(0,0,0,0.08)]" : "text-[var(--gs-muted-light)] hover:text-[var(--gs-bg-alt)]"
               }`}
             >
@@ -106,26 +106,26 @@ export function Pricing() {
                 )}
 
                 <div className="mb-6">
-                  <h3 className={`text-[20px] font-bold tracking-tight mb-2 ${isPro ? "text-white" : "text-[var(--gs-bg-alt)]"}`}>
+                  <h3 className={`text-[20px] font-medium tracking-tight mb-2 ${isPro ? "text-white" : "text-[var(--gs-bg-alt)]"}`}>
                     {plan.name}
                   </h3>
-                  <p className={`text-[13px] leading-relaxed ${isPro ? "text-[var(--gs-muted)]" : "text-[var(--gs-muted)]"}`}>
+                  <p className={`text-[13px] leading-relaxed ${isPro ? "text-[#666]" : "text-[#666]"}`}>
                     {plan.description}
                   </p>
                 </div>
 
                 <div className="mb-8 flex items-baseline gap-1">
-                  <span className={`text-[44px] font-[800] tracking-tight tabular-nums leading-none ${isPro ? "text-white" : "text-[var(--gs-bg-alt)]"}`}>
+                  <span className={`text-[44px] font-medium tracking-tight tabular-nums leading-none ${isPro ? "text-white" : "text-[var(--gs-bg-alt)]"}`}>
                     ₹{price.toLocaleString('en-IN')}
                   </span>
-                  <span className={`text-[14px] font-medium ${isPro ? "text-[var(--gs-muted-light)]" : "text-[var(--gs-muted)]"}`}>
+                  <span className={`text-[14px] font-medium ${isPro ? "text-[var(--gs-muted-light)]" : "text-[#666]"}`}>
                     /mo
                   </span>
                 </div>
 
                 <Link
                   href={plan.href}
-                  className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-[8px] text-[14px] font-[600] transition-all duration-200 mb-10 ${
+                  className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-[8px] text-[14px] font-semibold transition-all duration-200 mb-10 ${
                     isPro 
                       ? "bg-white text-[var(--gs-bg-alt)] hover:bg-[#EAEAEA] hover:scale-[1.02]" 
                       : "bg-[#FAFAF8] text-[var(--gs-bg-alt)] border border-[rgba(0,0,0,0.08)] hover:bg-[#EAEAEA]"

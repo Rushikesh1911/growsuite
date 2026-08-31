@@ -3,6 +3,7 @@ import { Response } from 'express';
 import { AuthRequest } from '../middleware/auth';
 import { PrismaClient } from '../../generated/prisma';
 import { SocketService } from '../socket';
+import { ActivityService } from '../services/ActivityService';
 
 const prisma = new PrismaClient();
 
@@ -254,8 +255,7 @@ export class ClientController {
         company: client.company || client.Company || 'Unknown',
         email: client.email || client.Email || null,
         phone: client.phone || client.Phone || null,
-        address: client.address || client.Address || null,
-        status: 'ACTIVE',
+        billingAddress: client.address || client.billingAddress || client.Address || null,
       }));
 
       const result = await prisma.client.createMany({
@@ -271,6 +271,60 @@ export class ClientController {
     } catch (error) {
       console.error('Error importing clients:', error);
       res.status(500).json({ error: 'Failed to import clients' });
+    }
+  }
+
+  // Add a manual activity (e.g. Call, Meeting)
+  static async addActivity(req: AuthRequest, res: Response) {
+    try {
+      const workspaceId = req.workspaceId!;
+      const actorId = req.user!.userId;
+      const clientId = parseInt(req.params.id as string, 10);
+      const { action, title, description, metadata } = req.body;
+
+      if (isNaN(clientId) || !action || !title) {
+        res.status(400).json({ error: 'Missing required fields' });
+        return;
+      }
+
+      // Verify client exists and belongs to workspace
+      const client = await prisma.client.findUnique({ where: { id: clientId, workspaceId } });
+      if (!client) {
+        res.status(404).json({ error: 'Client not found' });
+        return;
+      }
+
+      const activity = await prisma.activityLog.create({
+        data: ActivityService.generateLog({
+          action,
+          title,
+          description: description || null,
+          actorId,
+          workspaceId,
+          clientId,
+        }),
+      });
+
+      // Update metadata if provided
+      if (metadata) {
+        await prisma.activityLog.update({
+          where: { id: activity.id },
+          data: { metadata },
+        });
+        activity.metadata = metadata;
+      }
+
+      // Fetch the updated client to emit
+      const updatedClient = await prisma.client.findUnique({
+        where: { id: clientId }
+      });
+
+      SocketService.emitToWorkspace(workspaceId, 'client_updated', updatedClient);
+
+      res.status(201).json(activity);
+    } catch (error) {
+      console.error('Error adding activity:', error);
+      res.status(500).json({ error: 'Failed to log activity' });
     }
   }
 }

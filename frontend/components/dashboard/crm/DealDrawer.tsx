@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { X, MessageSquare, Activity, Clock, Send, DollarSign } from "lucide-react";
 import { formatDate } from "@/lib/formatters";
 import { Input } from "@/components/ui/input";
+import { TimelineFeed } from "@/components/dashboard/crm/TimelineFeed";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
@@ -24,10 +25,6 @@ export function DealDrawer({ token, workspaceId, dealId, onClose, onSuccess }: a
     contactPhone: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // Note State
-  const [newNote, setNewNote] = useState("");
-  const [isSubmittingNote, setIsSubmittingNote] = useState(false);
 
   useEffect(() => {
     const fetchDeal = async () => {
@@ -91,35 +88,6 @@ export function DealDrawer({ token, workspaceId, dealId, onClose, onSuccess }: a
     }
   };
 
-  const handleAddNote = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newNote.trim()) return;
-    setIsSubmittingNote(true);
-
-    try {
-      const res = await fetch(`${API_URL}/api/deals/${dealId}/notes`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-          "x-workspace-id": workspaceId.toString(),
-        },
-        body: JSON.stringify({ content: newNote }),
-      });
-      
-      if (res.ok) {
-        const note = await res.json();
-        setDeal((prev: any) => ({
-          ...prev,
-          dealNotes: [note, ...(prev.dealNotes || [])]
-        }));
-        setNewNote("");
-      }
-    } catch (error) {} finally {
-      setIsSubmittingNote(false);
-    }
-  };
-
   if (loading || !deal) {
     return (
       <div className="fixed inset-0 bg-[var(--gs-bg)]/60 backdrop-blur-sm z-[100] flex justify-end">
@@ -129,11 +97,6 @@ export function DealDrawer({ token, workspaceId, dealId, onClose, onSuccess }: a
       </div>
     );
   }
-
-  const timelineItems = [
-    ...(deal.activities || []).map((a: any) => ({ ...a, type: 'activity', date: new Date(a.createdAt) })),
-    ...(deal.dealNotes || []).map((n: any) => ({ ...n, type: 'note', date: new Date(n.createdAt) }))
-  ].sort((a, b) => b.date.getTime() - a.date.getTime());
 
   return (
     <div className="fixed inset-0 bg-[var(--gs-bg)]/60 backdrop-blur-sm z-[100] flex justify-end">
@@ -266,63 +229,17 @@ export function DealDrawer({ token, workspaceId, dealId, onClose, onSuccess }: a
               </div>
             </form>
           ) : (
-            <div className="flex flex-col h-full relative">
-              {/* Timeline */}
-              <div className="flex-1 p-6 flex flex-col gap-6 overflow-y-auto pb-24">
-                {timelineItems.length === 0 && (
-                  <div className="text-center py-8 text-[var(--gs-muted)] text-[13px]">
-                    No activity yet.
-                  </div>
-                )}
-                {timelineItems.map((item: any, i) => (
-                  <div key={i} className="flex gap-4">
-                    <div className="mt-1 shrink-0">
-                      {item.type === 'activity' ? (
-                        <div className="h-8 w-8 rounded-full bg-[var(--gs-surface)] border border-[var(--gs-border)] flex items-center justify-center">
-                          <Activity className="h-4 w-4 text-[var(--gs-muted)]" />
-                        </div>
-                      ) : (
-                        <div className="h-8 w-8 rounded-full bg-[#007CF0]/10 border border-[#007CF0]/20 flex items-center justify-center">
-                          <MessageSquare className="h-4 w-4 text-[#007CF0]" />
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex flex-col flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-2 mb-1">
-                        <span className="text-[13px] font-medium text-[var(--gs-fg)] truncate">
-                          {item.type === 'activity' ? item.title : item.author?.user?.name || item.author?.user?.email}
-                        </span>
-                        <span className="text-[11px] text-[var(--gs-muted)] whitespace-nowrap flex items-center gap-1">
-                          <Clock className="h-3 w-3" />
-                          {formatDate(item.createdAt)}
-                        </span>
-                      </div>
-                      <div className="text-[13px] text-[var(--gs-muted)] bg-[var(--gs-surface)] p-3 rounded-[8px] border border-[var(--gs-border)] whitespace-pre-wrap">
-                        {item.type === 'activity' ? item.description : item.content}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              
-              {/* Note Input */}
-              <div className="absolute bottom-0 left-0 right-0 p-4 bg-[var(--gs-bg)] border-t border-[var(--gs-border)]">
-                <form onSubmit={handleAddNote} className="flex gap-2">
-                  <input
-                    type="text"
-                    placeholder="Write a note..."
-                    value={newNote}
-                    onChange={e => setNewNote(e.target.value)}
-                    className="flex-1 bg-[var(--gs-surface)] border border-[var(--gs-border)] rounded-[6px] px-4 py-2 text-[13px] text-[var(--gs-fg)] focus:outline-none focus:border-[var(--gs-border-strong)]"
-                  />
-                  <button
-                    type="submit"
-                    disabled={isSubmittingNote || !newNote.trim()}
-                    className="bg-[var(--gs-fg)] hover:bg-[var(--gs-fg)] text-[var(--gs-bg)] h-[38px] w-[38px] flex items-center justify-center rounded-[6px] transition-colors disabled:opacity-50 shrink-0"
-                  >
-                    <Send className="h-4 w-4" />
-                  </button>
-                </form>
+            <div className="flex flex-col h-full overflow-y-auto">
+              <div className="p-6">
+                <TimelineFeed 
+                  token={token}
+                  workspaceId={workspaceId}
+                  entityType="deals"
+                  entityId={dealId}
+                  activities={deal.activities}
+                  notes={deal.dealNotes}
+                  onSuccess={onSuccess}
+                />
               </div>
             </div>
           )}

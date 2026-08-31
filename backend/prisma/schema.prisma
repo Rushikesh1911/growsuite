@@ -22,6 +22,8 @@ model User {
   emailSignature String?
   emailVerified  DateTime?
   verificationToken String?
+  resetPasswordToken String?
+  resetPasswordExpires DateTime?
   avatarUrl      String?
   createdAt      DateTime @default(now())
   updatedAt DateTime @updatedAt

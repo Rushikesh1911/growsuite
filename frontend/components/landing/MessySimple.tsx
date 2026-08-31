@@ -9,15 +9,15 @@ import { Logo } from "@/components/ui/Logo";
 const SCATTERED_TAGS = [
   { label: "WhatsApp threads",        top: "10%", left: "8%",  rot: -4, size: 14, opacity: 0.9, delay: 0.1 },
   { label: "Google Sheets",           top: "22%", left: "68%", rot: 5,  size: 13, opacity: 0.6, delay: 0.4 },
-  { label: "Email drafts",            top: "38%", left: "15%", rot: -2, size: 15, opacity: 1,   delay: 0.25 },
-  { label: "Sticky notes",            top: "65%", left: "75%", rot: 6,  size: 12, opacity: 0.5, delay: 0.55 },
-  { label: "Notion pages",            top: "75%", left: "10%", rot: -5, size: 13, opacity: 0.7, delay: 0.35 },
-  { label: "Separate invoicing tool", top: "8%",  left: "45%", rot: 2,  size: 14, opacity: 0.8, delay: 0.2 },
-  { label: "Another project app",     top: "45%", left: "48%", rot: -6, size: 12, opacity: 0.4, delay: 0.05 },
-  { label: "Calendar reminders",      top: "52%", left: "20%", rot: 4,  size: 14, opacity: 0.85,delay: 0.45 },
+  { label: "Forgotten follow-ups",    top: "38%", left: "15%", rot: -2, size: 15, opacity: 1,   delay: 0.25 },
+  { label: "Switching contexts",      top: "65%", left: "65%", rot: 6,  size: 12, opacity: 0.5, delay: 0.55 },
+  { label: "Duplicated data",         top: "75%", left: "10%", rot: -5, size: 13, opacity: 0.7, delay: 0.35 },
+  { label: "Invoices disconnected",   top: "8%",  left: "40%", rot: 2,  size: 14, opacity: 0.8, delay: 0.2 },
+  { label: "Deal status?",            top: "45%", left: "48%", rot: -6, size: 13, opacity: 0.4, delay: 0.05 },
+  { label: "Client messages",         top: "52%", left: "20%", rot: 4,  size: 14, opacity: 0.85,delay: 0.45 },
   { label: "Excel files",             top: "80%", left: "45%", rot: -3, size: 15, opacity: 1,   delay: 0.15 },
-  { label: "Paper receipts",          top: "88%", left: "70%", rot: 5,  size: 13, opacity: 0.6, delay: 0.6 },
-  { label: "Slack messages",          top: "5%",  left: "75%", rot: -4, size: 12, opacity: 0.5, delay: 0.3 },
+  { label: "Payment tracking",        top: "88%", left: "65%", rot: 5,  size: 13, opacity: 0.6, delay: 0.6 },
+  { label: "Project updates in Email",top: "5%",  left: "65%", rot: -4, size: 12, opacity: 0.5, delay: 0.3 },
 ];
 
 const UNIFIED = [
@@ -54,11 +54,11 @@ export function MessySimple() {
           {/* Left — The Problem */}
           <div className="flex flex-col gap-10 h-full">
             <div className="flex flex-col gap-4">
-              <span className="text-[11px] font-[700] text-[#AFAFAF] uppercase tracking-widest">The problem</span>
-              <h2 className="text-[32px] sm:text-[42px] font-[800] tracking-tighter text-[var(--gs-bg-alt)] leading-[1.05]">
+              <span className="text-[11px] font-medium text-[#AFAFAF] uppercase tracking-widest">The problem</span>
+              <h2 className="text-[36px] md:text-[48px] font-medium tracking-tight text-[var(--gs-bg-alt)] leading-[1.05]">
                 Too many places<br />to run one business.
               </h2>
-              <p className="text-[15px] text-[#5A5A5A] leading-[1.65] font-[400] max-w-md">
+              <p className="text-[15px] text-[#5A5A5A] leading-[1.65] font-normal max-w-md">
                 Running a business often means jumping between too many tools. Context gets lost. Time gets wasted. Things fall through the gaps.
               </p>
             </div>
@@ -82,7 +82,7 @@ export function MessySimple() {
                     left: tag.left,
                     fontSize: `${tag.size}px`,
                   }}
-                  className="px-3.5 py-1.5 rounded-full border border-[rgba(0,0,0,0.08)] bg-white font-[500] text-[#333] shadow-sm whitespace-nowrap"
+                  className="px-3.5 py-1.5 rounded-full border border-[rgba(0,0,0,0.08)] bg-white font-medium text-[#333] shadow-sm whitespace-nowrap"
                 >
                   {tag.label}
                 </motion.div>
@@ -93,11 +93,11 @@ export function MessySimple() {
           {/* Right — The Solution */}
           <div className="flex flex-col gap-10 h-full">
             <div className="flex flex-col gap-4">
-              <span className="text-[11px] font-[700] text-[#AFAFAF] uppercase tracking-widest">The solution</span>
-              <h2 className="text-[32px] sm:text-[42px] font-[800] tracking-tighter text-[var(--gs-bg-alt)] leading-[1.05]">
-                One workspace.<br /><span className="text-[#AFAFAF]">Less chasing.</span>
+              <span className="text-[11px] font-medium text-[#AFAFAF] uppercase tracking-widest">The solution</span>
+              <h2 className="text-[36px] md:text-[48px] font-medium tracking-tight text-[var(--gs-bg-alt)] leading-[1.05]">
+                One workspace.<br /><span className="text-[#AFAFAF]">Everything stays connected.</span>
               </h2>
-              <p className="text-[15px] text-[#5A5A5A] leading-[1.65] font-[400] max-w-md">
+              <p className="text-[15px] text-[#5A5A5A] leading-[1.65] font-normal max-w-md">
                 GrowSuite connects every part of your business. Clients, deals, projects and invoices — all together. Nothing to stitch. Nothing to sync.
               </p>
             </div>
@@ -129,7 +129,7 @@ export function MessySimple() {
                     <div className="h-7 w-7 rounded-[8px] bg-[#F5F5F0] flex items-center justify-center shrink-0">
                       <ItemIcon type={item.icon} />
                     </div>
-                    <span className="text-[13px] font-[600] text-[var(--gs-bg-alt)]">{item.label}</span>
+                    <span className="text-[13px] font-semibold text-[var(--gs-bg-alt)]">{item.label}</span>
                     <ArrowRight className="w-3.5 h-3.5 text-[#AFAFAF] ml-auto transition-transform duration-200 group-hover:translate-x-1" />
                   </motion.div>
                 ))}
@@ -143,7 +143,7 @@ export function MessySimple() {
                 transition={{ duration: 0.4, delay: 1.4 }}
                 className="px-5 py-3 bg-[#FAFAF8]/50 border-t border-[rgba(0,0,0,0.04)] flex justify-center"
               >
-                <span className="text-[10px] font-[700] text-[#AFAFAF] uppercase tracking-[0.15em]">
+                <span className="text-[10px] font-medium text-[#AFAFAF] uppercase tracking-[0.15em]">
                   + Everything else, in sync
                 </span>
               </motion.div>

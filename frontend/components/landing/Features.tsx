@@ -11,10 +11,10 @@ export function Features() {
         
         {/* Section header */}
         <div className="flex flex-col items-center text-center mb-16 gap-5">
-          <h2 className="text-[40px] sm:text-[56px] font-[800] tracking-[-0.04em] text-[var(--gs-bg-alt)] leading-[1.05] max-w-2xl">
+          <h2 className="text-[36px] md:text-[48px] font-medium tracking-[-0.04em] text-[var(--gs-bg-alt)] leading-[1.05] max-w-2xl">
             Intelligence at every stage of your pipeline.
           </h2>
-          <p className="text-[18px] text-[var(--gs-muted-light)] max-w-xl leading-[1.6] font-[400] tracking-[-0.01em]">
+          <p className="text-[18px] text-[var(--gs-muted-light)] max-w-xl leading-[1.6] font-normal tracking-[-0.01em]">
             A complete operations platform built for speed. GrowSuite brings intelligence to your revenue journey.
           </p>
         </div>
@@ -28,8 +28,8 @@ export function Features() {
               <div className="h-10 w-10 rounded-[10px] bg-[var(--gs-surface)] border border-[var(--gs-border)] shadow-sm flex items-center justify-center mb-6">
                 <Users className="h-5 w-5 text-[var(--gs-fg)]" strokeWidth={2.5} />
               </div>
-              <h3 className="text-[24px] font-[700] tracking-tight text-[var(--gs-fg)] mb-3">Contact Intelligence</h3>
-              <p className="text-[15px] text-[var(--gs-muted)] leading-[1.6]">
+              <h3 className="text-[24px] font-medium tracking-tight text-[var(--gs-fg)] mb-3">Contact Intelligence</h3>
+              <p className="text-[15px] text-[#666] leading-[1.6]">
                 Enrich every contact with activity history, communication logs, and relationship scoring — all in one clean view.
               </p>
             </div>
@@ -37,11 +37,11 @@ export function Features() {
             {/* UI Mockup - Client Table snippet using real GS styles */}
             <div className="flex-1 relative min-h-[220px] bg-[var(--gs-surface)] rounded-[16px] border border-[var(--gs-border)] shadow-sm overflow-hidden transform group-hover:-translate-y-2 transition-all duration-500">
               <div className="p-3.5 border-b border-[var(--gs-border)] bg-[var(--gs-bg)] flex justify-between items-center">
-                <div className="text-[12px] font-[600] text-[var(--gs-fg)]">Clients</div>
+                <div className="text-[12px] font-semibold text-[var(--gs-fg)]">Clients</div>
                 <div className="bg-[var(--gs-surface)] border border-[var(--gs-border)] text-[var(--gs-fg)] text-[10px] px-2 py-1 rounded-[4px]">Filters</div>
               </div>
               <div className="flex flex-col">
-                <div className="grid grid-cols-[1fr_80px_70px] gap-2 px-4 py-2 border-b border-[var(--gs-border)] text-[10px] font-[600] text-[var(--gs-muted-light)] uppercase tracking-wider bg-[var(--gs-surface)]">
+                <div className="grid grid-cols-[1fr_80px_70px] gap-2 px-4 py-2 border-b border-[var(--gs-border)] text-[10px] font-semibold text-[var(--gs-muted-light)] uppercase tracking-wider bg-[var(--gs-surface)]">
                   <div>Name / Company</div><div>Status</div><div className="text-right">Value</div>
                 </div>
                 {[
@@ -51,13 +51,13 @@ export function Features() {
                 ].map((c, i) => (
                   <div key={i} className={`grid grid-cols-[1fr_80px_70px] gap-2 px-4 py-2.5 items-center border-b border-[var(--gs-border)] ${c.active ? 'bg-[var(--gs-surface-raised)]' : 'bg-[var(--gs-surface)]'}`}>
                     <div className="flex flex-col">
-                      <span className="font-[600] text-[11px] text-[var(--gs-fg)] truncate">{c.name}</span>
-                      <span className="font-[500] text-[10px] text-[var(--gs-muted)] truncate">{c.company}</span>
+                      <span className="font-semibold text-[11px] text-[var(--gs-fg)] truncate">{c.name}</span>
+                      <span className="font-medium text-[10px] text-[#666] truncate">{c.company}</span>
                     </div>
                     <div>
-                      <span className={`px-1.5 py-0.5 rounded-[4px] text-[9px] font-[600] ${c.status === 'Active' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'bg-[var(--gs-border)] text-[var(--gs-muted)]'}`}>{c.status}</span>
+                      <span className={`px-1.5 py-0.5 rounded-[4px] text-[9px] font-semibold ${c.status === 'Active' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'bg-[var(--gs-border)] text-[#666]'}`}>{c.status}</span>
                     </div>
-                    <div className="font-[600] text-[11px] text-[var(--gs-muted)] font-mono text-right">{c.val}</div>
+                    <div className="font-semibold text-[11px] text-[#666] font-mono text-right">{c.val}</div>
                   </div>
                 ))}
               </div>
@@ -77,8 +77,8 @@ export function Features() {
               <div className="h-10 w-10 rounded-[10px] bg-[var(--gs-surface)] border border-[var(--gs-border)] shadow-sm flex items-center justify-center mb-6">
                 <BarChart3 className="h-5 w-5 text-[var(--gs-fg)]" strokeWidth={2.5} />
               </div>
-              <h3 className="text-[20px] font-[700] tracking-tight text-[var(--gs-fg)] mb-2">Pipeline Analytics</h3>
-              <p className="text-[14px] text-[var(--gs-muted)] leading-[1.6]">
+              <h3 className="text-[20px] font-medium tracking-tight text-[var(--gs-fg)] mb-2">Pipeline Analytics</h3>
+              <p className="text-[14px] text-[#666] leading-[1.6]">
                 Real-time deal flow visualization with win-rate forecasting and revenue projections.
               </p>
             </div>
@@ -90,20 +90,20 @@ export function Features() {
              <div className="relative h-[160px] w-full mb-8 transform group-hover:translate-x-2 transition-transform duration-500 flex flex-col gap-3 justify-center">
                 <div className="bg-[var(--gs-surface)] border border-[var(--gs-border)] rounded-[8px] p-2.5 shadow-sm flex items-center gap-3">
                   <div className="w-6 h-6 rounded-full bg-amber-500/10 flex items-center justify-center"><Zap className="w-3 h-3 text-amber-600 dark:text-amber-400"/></div>
-                  <span className="text-[12px] font-[600] text-[var(--gs-fg)]">When deal is closed</span>
+                  <span className="text-[12px] font-semibold text-[var(--gs-fg)]">When deal is closed</span>
                 </div>
                 <div className="w-px h-4 bg-[var(--gs-border-strong)] ml-6"/>
                 <div className="bg-[var(--gs-surface)] border border-[var(--gs-border)] rounded-[8px] p-2.5 shadow-sm flex items-center gap-3">
                   <div className="w-6 h-6 rounded-[6px] bg-indigo-500/10 flex items-center justify-center"><svg className="w-3 h-3 text-indigo-600 dark:text-indigo-400" viewBox="0 0 24 24" fill="currentColor"><path d="M22 4 12 14.01l-3-3"/></svg></div>
-                  <span className="text-[12px] font-[600] text-[var(--gs-fg)]">Send welcome email</span>
+                  <span className="text-[12px] font-semibold text-[var(--gs-fg)]">Send welcome email</span>
                 </div>
              </div>
              <div className="flex flex-col z-10">
               <div className="h-10 w-10 rounded-[10px] bg-[var(--gs-surface)] border border-[var(--gs-border)] shadow-sm flex items-center justify-center mb-6">
                 <Zap className="h-5 w-5 text-[var(--gs-fg)]" strokeWidth={2.5} />
               </div>
-              <h3 className="text-[20px] font-[700] tracking-tight text-[var(--gs-fg)] mb-2">Workflow Automation</h3>
-              <p className="text-[14px] text-[var(--gs-muted)] leading-[1.6]">
+              <h3 className="text-[20px] font-medium tracking-tight text-[var(--gs-fg)] mb-2">Workflow Automation</h3>
+              <p className="text-[14px] text-[#666] leading-[1.6]">
                 Trigger automated sequences across email, tasks, and notifications instantly.
               </p>
             </div>
@@ -115,8 +115,8 @@ export function Features() {
               <div className="h-10 w-10 rounded-[10px] bg-[var(--gs-surface)] border border-[var(--gs-border)] shadow-sm flex items-center justify-center mb-6">
                 <GitBranch className="h-5 w-5 text-[var(--gs-fg)]" strokeWidth={2.5} />
               </div>
-              <h3 className="text-[24px] font-[700] tracking-tight text-[var(--gs-fg)] mb-3">Multi-pipeline CRM</h3>
-              <p className="text-[15px] text-[var(--gs-muted)] leading-[1.6]">
+              <h3 className="text-[24px] font-medium tracking-tight text-[var(--gs-fg)] mb-3">Multi-pipeline CRM</h3>
+              <p className="text-[15px] text-[#666] leading-[1.6]">
                 Manage multiple sales motions simultaneously. Customizable stages and drag-and-drop Kanban boards built for high-velocity teams.
               </p>
             </div>
@@ -124,22 +124,22 @@ export function Features() {
             <div className="flex-1 relative min-h-[220px] bg-[var(--gs-surface)] rounded-[16px] border border-[var(--gs-border)] shadow-sm p-4 overflow-hidden transform group-hover:scale-[1.02] transition-all duration-500 flex gap-4">
                
               <div className="flex-1 flex flex-col gap-2.5">
-                 <h3 className="text-[10px] font-[600] text-[var(--gs-muted)] uppercase tracking-wider mb-1">Qualified</h3>
+                 <h3 className="text-[10px] font-semibold text-[#666] uppercase tracking-wider mb-1">Qualified</h3>
                  <div className="p-2.5 bg-[var(--gs-surface)] border border-[var(--gs-border)] rounded-[6px] shadow-sm flex flex-col gap-1.5">
                    <h4 className="text-[11px] font-bold text-[var(--gs-fg)] tracking-tight">Enterprise Expansion</h4>
-                   <p className="text-[9px] text-[var(--gs-muted)] font-medium">Acme Corp</p>
+                   <p className="text-[9px] text-[#666] font-medium">Acme Corp</p>
                  </div>
                  <div className="p-2.5 bg-[var(--gs-surface)] border border-[var(--gs-border)] rounded-[6px] shadow-sm flex flex-col gap-1.5 mt-1">
                    <h4 className="text-[11px] font-bold text-[var(--gs-fg)] tracking-tight">Q4 Software License</h4>
-                   <p className="text-[9px] text-[var(--gs-muted)] font-medium">TechFlow Inc.</p>
+                   <p className="text-[9px] text-[#666] font-medium">TechFlow Inc.</p>
                  </div>
               </div>
               
               <div className="flex-1 flex flex-col gap-2.5 opacity-60">
-                 <h3 className="text-[10px] font-[600] text-[var(--gs-muted)] uppercase tracking-wider mb-1">Proposal</h3>
+                 <h3 className="text-[10px] font-semibold text-[#666] uppercase tracking-wider mb-1">Proposal</h3>
                  <div className="p-2.5 bg-[var(--gs-surface)] border border-[var(--gs-border)] rounded-[6px] shadow-sm flex flex-col gap-1.5">
                    <h4 className="text-[11px] font-bold text-[var(--gs-fg)] tracking-tight">Global Rollout</h4>
-                   <p className="text-[9px] text-[var(--gs-muted)] font-medium">Stripe</p>
+                   <p className="text-[9px] text-[#666] font-medium">Stripe</p>
                  </div>
               </div>
             </div>
