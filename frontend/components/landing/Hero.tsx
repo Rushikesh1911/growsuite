@@ -114,6 +114,75 @@ export function Hero() {
         aria-hidden="true"
       />
 
+      {/* Hand-Drawn Illustrations (Hidden on smaller screens) */}
+      <motion.div
+        initial={{ opacity: 0, x: -30, rotate: -5 }}
+        animate={{ opacity: visible ? 1 : 0, x: visible ? 0 : -30, rotate: visible ? -2 : -5 }}
+        transition={{ delay: 0.4, duration: 1, ease: "easeOut" }}
+        className="absolute hidden xl:block z-0 pointer-events-none opacity-90"
+        style={{ top: "15%", left: "8%", width: "190px" }}
+      >
+        {/* Project Board & Invoice Illustration */}
+        <svg viewBox="0 0 200 240" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto drop-shadow-sm">
+          {/* Accent block (highlighting a card) */}
+          <rect x="110" y="70" width="45" height="35" fill="#28CA41" fillOpacity="0.2" transform="rotate(5 110 70)" />
+          
+          {/* Project Board (Kanban style) */}
+          <path d="M20 40 L 160 30 L 170 180 L 30 190 Z" stroke="#111" strokeWidth="2" strokeLinejoin="round" />
+          <path d="M25 70 L 165 60" stroke="#111" strokeWidth="1.5" strokeLinecap="round" />
+          <path d="M70 65 L 75 185 M120 62 L 125 182" stroke="#111" strokeWidth="1.5" strokeLinecap="round" />
+          
+          {/* Cards on board */}
+          <path d="M35 85 L 60 82 M38 100 L 63 97 M32 115 L 57 112 M40 135 L 65 132" stroke="#111" strokeWidth="2" strokeLinecap="round" />
+          <path d="M80 80 L 105 77 M85 105 L 110 102 M82 125 L 107 122" stroke="#111" strokeWidth="2" strokeLinecap="round" />
+          <path d="M130 75 L 155 72" stroke="#111" strokeWidth="2" strokeLinecap="round" />
+          
+          {/* Client Card / Document Floating over board */}
+          <path d="M110 140 L 180 120 L 190 190 L 120 210 Z" fill="#FAFAF8" stroke="#111" strokeWidth="2" strokeLinejoin="round" />
+          <path d="M125 155 L 170 140 M130 170 L 175 155 M135 185 L 160 175" stroke="#111" strokeWidth="1.5" strokeLinecap="round" />
+          
+          {/* Upward Arrow (Hand-drawn growth) */}
+          <path d="M-10 150 C 10 160, 40 140, 60 100 C 70 80, 80 50, 100 20" stroke="#111" strokeWidth="2" strokeLinecap="round" />
+          <path d="M70 20 L 100 20 L 95 50" stroke="#111" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          
+          {/* Sparkles */}
+          <path d="M170 20 L 175 10 L 180 20 L 170 15 L 180 15 Z" stroke="#111" strokeWidth="1" strokeLinejoin="round" />
+          <path d="M10 200 L 15 190 L 20 200 L 10 195 L 20 195 Z" stroke="#111" strokeWidth="1" strokeLinejoin="round" />
+        </svg>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, x: 30, rotate: 8 }}
+        animate={{ opacity: visible ? 1 : 0, x: visible ? 0 : 30, rotate: visible ? 5 : 8 }}
+        transition={{ delay: 0.6, duration: 1, ease: "easeOut" }}
+        className="absolute hidden xl:block z-0 pointer-events-none opacity-[0.7]"
+        style={{ top: "25%", right: "8%", width: "150px" }}
+      >
+        {/* Cleaner Calendar Illustration */}
+        <svg viewBox="0 0 200 180" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto">
+          {/* Accent block (checked day) */}
+          <rect x="135" y="105" width="40" height="40" fill="#28CA41" fillOpacity="0.25" transform="rotate(2 135 105)" />
+          
+          {/* Calendar Body */}
+          <path d="M25 45 L 185 35 L 195 155 L 35 165 Z" stroke="#111" strokeWidth="2.5" strokeLinejoin="round" />
+          
+          {/* Header Line */}
+          <path d="M30 85 L 190 75" stroke="#111" strokeWidth="2" strokeLinecap="round" />
+          
+          {/* Minimal Grid lines */}
+          <path d="M82 82 L 90 162 M138 78 L 145 158 M28 125 L 192 115" stroke="#111" strokeWidth="1.5" strokeLinecap="round" strokeOpacity="0.7" />
+          
+          {/* Rings */}
+          <path d="M50 25 L 48 55 M100 22 L 98 52 M150 19 L 148 49" stroke="#111" strokeWidth="3" strokeLinecap="round" />
+          
+          {/* Checkmark in accent block */}
+          <path d="M145 125 L 152 135 L 168 115" stroke="#111" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
+          
+          {/* Sparkles */}
+          <path d="M180 15 L 185 8 L 190 15 L 180 12 L 190 12 Z" stroke="#111" strokeWidth="1.5" strokeLinejoin="round" strokeOpacity="0.8" />
+        </svg>
+      </motion.div>
+
       <div className="relative z-10 w-full max-w-[1100px] mx-auto px-6 flex flex-col items-center text-center">
 
         {/* ── Eyebrow ─────────────────────────────────── */}
@@ -449,7 +518,7 @@ export function Hero() {
 
           {/* Hint below frame */}
           <p className="text-center text-[11px] text-[#AFAFAF] font-normal mt-4 pb-12 transition-[opacity] duration-500" style={{ opacity: visible ? 1 : 0, transitionDelay: "700ms" }}>
-            Click any deal to inspect it. This is the real GrowSuite interface.
+            Explore the real GrowSuite interface — click any deal to inspect it.
           </p>
         </motion.div>
       </div>

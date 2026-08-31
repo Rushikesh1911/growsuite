@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Settings, Headphones, X } from 'lucide-react';
 import Link from 'next/link';
 
@@ -7,7 +7,18 @@ interface SidebarFooterProps {
 }
 
 export function SidebarFooter({ collapsed }: SidebarFooterProps) {
-  const [showPromo, setShowPromo] = useState(true);
+  const [showPromo, setShowPromo] = useState(false);
+
+  useEffect(() => {
+    if (!localStorage.getItem('gs_hide_promo_ai')) {
+      setShowPromo(true);
+    }
+  }, []);
+
+  const dismissPromo = () => {
+    localStorage.setItem('gs_hide_promo_ai', 'true');
+    setShowPromo(false);
+  };
 
   if (collapsed) {
     return (
@@ -27,7 +38,7 @@ export function SidebarFooter({ collapsed }: SidebarFooterProps) {
       {showPromo && (
         <div className="relative bg-[#141414] border border-[#262626] rounded-xl px-4 py-3">
           <button 
-            onClick={() => setShowPromo(false)}
+            onClick={dismissPromo}
             className="absolute top-2.5 right-2.5 text-[var(--gs-muted)] hover:text-[var(--gs-fg)] transition-colors outline-none"
             aria-label="Dismiss notification"
           >
@@ -43,9 +54,9 @@ export function SidebarFooter({ collapsed }: SidebarFooterProps) {
           <p className="text-[var(--gs-muted)] text-[12px] leading-snug line-clamp-2 mb-2">
             Let GrowSuite automatically prepare and manage customer follow-ups.
           </p>
-          <button className="text-[#28CA41] text-[12px] font-medium hover:underline flex items-center transition-all outline-none">
+          <Link href="/dashboard/settings" onClick={dismissPromo} className="text-[#28CA41] text-[12px] font-medium hover:underline flex items-center transition-all outline-none">
             Try it &rarr;
-          </button>
+          </Link>
         </div>
       )}
 
