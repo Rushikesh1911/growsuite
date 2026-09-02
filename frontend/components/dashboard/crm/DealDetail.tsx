@@ -4,7 +4,9 @@ import { PopoverSelect } from "@/components/ui/popover-select";
 import { Deal } from "./types";
 import { formatCurrency } from "@/lib/currency";
 import { CreateTaskModal } from "./CreateTaskModal";
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { RichNoteEditor } from "../shared/RichNoteEditor";
+import { TimelineFeed, TimelineEvent } from "../shared/TimelineFeed";
 
 interface DealDetailProps {
   selectedDeal: Deal | null;
@@ -41,6 +43,59 @@ export function DealDetail({
   const closeDateStr = selectedDeal.expectedClose 
     ? new Date(selectedDeal.expectedClose).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
     : "Not set";
+
+  const timelineEvents: TimelineEvent[] = useMemo(() => {
+    const events: TimelineEvent[] = [];
+    
+    // Fallback parsing for legacy notes (the old String column)
+    if (selectedDeal.notes && (!selectedDeal.dealNotes || selectedDeal.dealNotes.length === 0)) {
+      selectedDeal.notes.split('\n\n').forEach((noteBlock, idx) => {
+        if (noteBlock.trim()) {
+           events.push({
+             id: `legacy-${idx}`,
+             type: 'NOTE',
+             createdAt: selectedDeal.updatedAt,
+             content: noteBlock,
+             author: { name: 'System (Legacy)' }
+           });
+        }
+      });
+    }
+
+    if (selectedDeal.dealNotes) {
+      selectedDeal.dealNotes.forEach((note: any) => {
+        events.push({
+          id: `note-${note.id}`,
+          type: 'NOTE',
+          createdAt: note.createdAt,
+          content: note.content,
+          author: { 
+            name: note.author?.user?.name, 
+            email: note.author?.user?.email 
+          }
+        });
+      });
+    }
+
+    if (selectedDeal.activities) {
+      selectedDeal.activities.forEach((act: any) => {
+        // Skip DEAL_NOTE_ADDED activity since we render the actual notes
+        if (act.action === 'DEAL_NOTE_ADDED') return;
+
+        events.push({
+          id: `act-${act.id}`,
+          type: 'ACTIVITY',
+          createdAt: act.createdAt,
+          action: act.action,
+          title: act.title,
+          description: act.description,
+          actor: { name: 'System' } // Usually actor is populated if joined, but simplifying here
+        });
+      });
+    }
+
+    return events;
+  }, [selectedDeal]);
 
   return (
     <div className="flex flex-col h-full animate-in fade-in duration-200">
@@ -182,44 +237,26 @@ export function DealDetail({
 
         {/* Activity Feed */}
         <div className="flex flex-col gap-4">
-          <h4 className="text-[11px] text-[var(--gs-muted-light)] font-bold uppercase tracking-wider">Internal Notes</h4>
+          <h4 className="text-[11px] text-[var(--gs-muted-light)] font-bold uppercase tracking-wider">Activity & Notes</h4>
           
-          <div className="flex gap-2">
-            <input
-              placeholder="Add a note..."
+          <div className="flex flex-col gap-2 relative z-20">
+            <RichNoteEditor
               value={newNote}
-              onChange={(e) => setNewNote(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault();
-                  handleAddNote();
-                }
-              }}
-              className="flex-1 bg-[var(--gs-surface)] border border-[var(--gs-border)] rounded-[6px] px-3 py-1.5 text-[12px] text-[var(--gs-fg)] placeholder:text-[var(--gs-muted)] focus:outline-none focus:border-[var(--gs-border-strong)] transition-colors"
+              onChange={(val) => setNewNote(val)}
+              onSubmit={handleAddNote}
             />
-            <button
-              onClick={handleAddNote}
-              className="bg-[var(--gs-surface)] border border-[var(--gs-border)] hover:bg-[var(--gs-bg-alt)] text-[var(--gs-fg)] px-3 py-1.5 rounded-[6px] text-[12px] font-semibold transition-colors"
-            >
-              Save
-            </button>
+            <div className="flex justify-end mt-2">
+              <button
+                onClick={handleAddNote}
+                className="bg-[var(--gs-fg)] hover:bg-[var(--gs-fg-secondary)] text-[var(--gs-bg)] px-4 py-1.5 rounded-[6px] text-[12px] font-bold transition-colors"
+              >
+                Post Note
+              </button>
+            </div>
           </div>
 
-          <div className="flex flex-col gap-3">
-            {selectedDeal.notes ? (
-              <div className="flex flex-col gap-3 border-b border-[var(--gs-border)] pb-3 last:border-b-0">
-                {selectedDeal.notes.split('\n\n').map((noteBlock, i) => (
-                  <div key={i} className="flex gap-2.5 items-start text-xs">
-                    <Clock className="h-3.5 w-3.5 text-[var(--gs-muted)] shrink-0 mt-0.5" />
-                    <span className="text-[var(--gs-muted)] leading-relaxed whitespace-pre-wrap">{noteBlock}</span>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center py-6">
-                <span className="text-[11px] text-[var(--gs-muted)] font-medium italic">No notes recorded yet.</span>
-              </div>
-            )}
+          <div className="mt-4 relative z-0">
+             <TimelineFeed events={timelineEvents} />
           </div>
         </div>
       </div>

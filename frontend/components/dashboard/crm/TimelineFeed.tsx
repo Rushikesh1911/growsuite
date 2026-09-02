@@ -4,13 +4,14 @@ import { useState } from "react";
 import { Send, Activity, MessageSquare, Phone, Calendar, Mail, Clock, CheckCircle2, XCircle, PhoneCall, PhoneForwarded, PhoneOff } from "lucide-react";
 import { formatDate } from "@/lib/formatters";
 import { Button } from "@/components/ui/button";
+import { RichNoteEditor } from "../shared/RichNoteEditor";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 type TimelineFeedProps = {
   token: string;
   workspaceId: number;
-  entityType: "leads" | "deals" | "clients";
+  entityType: "leads" | "deals" | "clients" | "projects";
   entityId: number;
   activities?: any[];
   notes?: any[];
@@ -107,6 +108,33 @@ export function TimelineFeed({ token, workspaceId, entityType, entityId, activit
     ...emails.map(e => ({ ...e, itemType: 'email', date: new Date(e.sentAt || e.createdAt) }))
   ].sort((a, b) => b.date.getTime() - a.date.getTime());
 
+  // Parses text like "Hello @[John Doe](12) how are you?" into React nodes
+  const parseMentions = (text: string) => {
+    const mentionRegex = /@\[(.*?)\]\((.*?)\)/g;
+    const parts = [];
+    let lastIndex = 0;
+    let match;
+
+    while ((match = mentionRegex.exec(text)) !== null) {
+      if (match.index > lastIndex) {
+        parts.push(text.substring(lastIndex, match.index));
+      }
+      const display = match[1];
+      parts.push(
+        <span key={match.index} className="text-[var(--gs-fg)] font-bold bg-[var(--gs-bg-alt)] border border-[var(--gs-border-strong)] px-1.5 py-0.5 rounded-[4px]">
+          @{display}
+        </span>
+      );
+      lastIndex = match.index + match[0].length;
+    }
+
+    if (lastIndex < text.length) {
+      parts.push(text.substring(lastIndex));
+    }
+
+    return parts.length > 0 ? parts : text;
+  };
+
   return (
     <div className="flex flex-col gap-6">
       
@@ -135,18 +163,21 @@ export function TimelineFeed({ token, workspaceId, entityType, entityId, activit
 
         <div className="p-4 bg-[var(--gs-surface)]">
           {activeTab === "note" && (
-            <form onSubmit={handleSubmitNote} className="flex flex-col gap-3">
-              <textarea 
-                rows={3} 
-                placeholder="Start typing to leave a note..."
+            <div className="flex flex-col gap-3">
+              <RichNoteEditor
                 value={noteContent}
-                onChange={e => setNoteContent(e.target.value)}
-                className="w-full bg-transparent border-none text-[13px] text-[var(--gs-fg)] focus:ring-0 focus:outline-none resize-none placeholder:text-[var(--gs-muted)]"
+                onChange={setNoteContent}
+                onSubmit={() => {
+                  const e = new Event("submit") as unknown as React.FormEvent;
+                  handleSubmitNote(e);
+                }}
+                placeholder="Start typing to leave a note... Use @ to tag someone."
+                submitting={isSubmitting}
               />
               <div className="flex justify-end pt-2 border-t border-[var(--gs-border)]">
-                <Button type="submit" disabled={isSubmitting || !noteContent.trim()} className="h-[32px] px-4 text-xs font-semibold bg-[var(--gs-fg)] text-[var(--gs-bg)] hover:bg-[var(--gs-fg)]">Save Note</Button>
+                <Button onClick={handleSubmitNote} disabled={isSubmitting || !noteContent.trim()} className="h-[32px] px-4 text-xs font-semibold bg-[var(--gs-fg)] text-[var(--gs-bg)] hover:bg-[var(--gs-fg)]">Save Note</Button>
               </div>
-            </form>
+            </div>
           )}
 
           {activeTab === "call" && (
@@ -286,7 +317,7 @@ export function TimelineFeed({ token, workspaceId, entityType, entityId, activit
                 
                 {(item.content || item.description || item.body) && (
                   <div className="text-[13px] text-[var(--gs-fg)] bg-[var(--gs-surface)] p-3.5 rounded-[8px] border border-[var(--gs-border)] whitespace-pre-wrap leading-relaxed mt-1">
-                    {item.itemType === 'note' ? item.content : 
+                    {item.itemType === 'note' ? parseMentions(item.content || "") : 
                      item.itemType === 'email' ? (
                        <div className="flex flex-col gap-2">
                          <span className="font-semibold text-[var(--gs-fg)]">{item.subject}</span>

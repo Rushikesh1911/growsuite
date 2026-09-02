@@ -16,4 +16,6 @@ export interface Deal {
   archivedAt?: string | null;
   convertedToClientId: number | null;
   workspaceId: number | null;
+  activities?: any[];
+  dealNotes?: any[];
 }

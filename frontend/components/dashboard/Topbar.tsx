@@ -76,6 +76,7 @@ export function Topbar({ currentView = "overview", breadcrumbs }: TopbarProps) {
     clients: any[];
     projects: any[];
     tasks: any[];
+    invoices: any[];
   } | null>(null);
   const [isSearching, setIsSearching] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -375,7 +376,20 @@ export function Topbar({ currentView = "overview", breadcrumbs }: TopbarProps) {
                     </div>
                   )}
 
-                  {(!searchResults.leads.length && !searchResults.clients.length && !searchResults.deals.length && !searchResults.projects.length && !searchResults.tasks.length) && (
+                  {/* Results for Invoices */}
+                  {searchResults.invoices.length > 0 && (
+                    <div className="mb-2">
+                      <div className="px-3 py-1 text-[10px] font-bold text-[var(--gs-muted)] uppercase tracking-wider">Invoices</div>
+                      {searchResults.invoices.map((invoice: any) => (
+                        <button key={invoice.id} onMouseDown={() => { router.push(`/dashboard/invoices/${invoice.id}`); setSearchOpen(false); }} className="w-full text-left px-4 py-2 hover:bg-[var(--gs-surface)] flex flex-col gap-0.5 outline-none">
+                          <span className="text-[13px] font-medium text-[var(--gs-fg)]">{invoice.invoiceNumber}</span>
+                          <span className="text-[11px] text-[var(--gs-muted)]">{invoice.client?.name}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  {(!searchResults.leads.length && !searchResults.clients.length && !searchResults.deals.length && !searchResults.projects.length && !searchResults.tasks.length && !searchResults.invoices.length) && (
                     <div className="px-4 py-6 text-center flex flex-col gap-1">
                       <span className="text-[13px] font-medium text-[var(--gs-fg)]">No results found</span>
                       <span className="text-[12px] text-[var(--gs-muted)]">Try a different search term</span>

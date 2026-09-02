@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useDashboard } from "@/app/dashboard/DashboardContext";
+import { CustomFieldForm } from "../shared/CustomFieldsRenderer";
 
 interface CreateClientModalProps {
   token: string;
@@ -20,6 +22,9 @@ export function CreateClientModal({
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [customFieldsValues, setCustomFieldsValues] = useState<Record<string, any>>({});
+  const { customFields } = useDashboard();
+  const clientFields = customFields.filter(f => f.entityType === 'CLIENT');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,7 +40,7 @@ export function CreateClientModal({
           Authorization: `Bearer ${token}`,
           "x-workspace-id": workspaceId.toString(),
         },
-        body: JSON.stringify({ name, company, email }),
+        body: JSON.stringify({ name, company, email, customFields: customFieldsValues }),
       });
 
       if (res.ok) {
@@ -96,6 +101,12 @@ export function CreateClientModal({
               className="bg-[var(--gs-surface)] text-[var(--gs-fg)] border-[var(--gs-border)] focus:border-[var(--gs-fg-secondary)] h-[32px] text-xs"
             />
           </div>
+
+          <CustomFieldForm
+            fields={clientFields}
+            values={customFieldsValues}
+            onChange={(key, value) => setCustomFieldsValues(prev => ({ ...prev, [key]: value }))}
+          />
           
           {errorMsg && <div className="text-xs text-[var(--gs-accent)] font-semibold p-2 bg-red-900/20 rounded-[6px]" role="alert">{errorMsg}</div>}
           {successMsg && <div className="text-xs text-green-400 font-semibold p-2 bg-green-900/20 rounded-[6px]" role="alert">{successMsg}</div>}

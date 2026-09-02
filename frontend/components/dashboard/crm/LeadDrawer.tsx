@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from "react";
 import { X, User, MessageSquare, Activity, Clock, Send } from "lucide-react";
 import { PopoverSelect } from "@/components/ui/popover-select";
 import { formatDate } from "@/lib/formatters";
+import { useDashboard } from "@/app/dashboard/DashboardContext";
+import { CustomFieldForm } from "../shared/CustomFieldsRenderer";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
@@ -23,6 +25,8 @@ export function LeadDrawer({ token, workspaceId, leadId, onClose, onSuccess }: a
   const [lead, setLead] = useState<any>(null);
   const [members, setMembers] = useState<WorkspaceMember[]>([]);
   const [loading, setLoading] = useState(true);
+  const { customFields } = useDashboard();
+  const leadFields = customFields.filter(f => f.entityType === 'LEAD');
 
   // Form State
   const [formData, setFormData] = useState({
@@ -32,6 +36,7 @@ export function LeadDrawer({ token, workspaceId, leadId, onClose, onSuccess }: a
     phone: "",
     source: "",
     assigneeId: "",
+    customFields: {} as Record<string, any>,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -73,6 +78,7 @@ export function LeadDrawer({ token, workspaceId, leadId, onClose, onSuccess }: a
             phone: data.phone || "",
             source: data.source || "",
             assigneeId: data.assigneeId || "",
+            customFields: data.customFields || {},
           });
         }
       } catch (err) {} finally {
@@ -276,7 +282,13 @@ export function LeadDrawer({ token, workspaceId, leadId, onClose, onSuccess }: a
                 </div>
               </div>
               
-              <div className="pt-4 border-t border-[var(--gs-border)] flex justify-end">
+              <CustomFieldForm
+                fields={leadFields}
+                values={formData.customFields}
+                onChange={(key, value) => setFormData(prev => ({ ...prev, customFields: { ...prev.customFields, [key]: value } }))}
+              />
+
+              <div className="pt-4 mt-2 border-t border-[var(--gs-border)] flex justify-end gap-3">
                 <button
                   type="submit"
                   disabled={isSubmitting}

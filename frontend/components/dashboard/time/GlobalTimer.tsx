@@ -28,6 +28,22 @@ export function GlobalTimer() {
     return () => clearInterval(interval);
   }, []);
 
+  // UI Preference to hide timer
+  const [hideTimer, setHideTimer] = useState(false);
+  useEffect(() => {
+    // Check initial
+    if (typeof window !== "undefined") {
+      setHideTimer(localStorage.getItem('growsuite_hide_timer') === 'true');
+      
+      const handleHideTimerChanged = () => {
+        setHideTimer(localStorage.getItem('growsuite_hide_timer') === 'true');
+      };
+      
+      window.addEventListener('hideTimerChanged', handleHideTimerChanged);
+      return () => window.removeEventListener('hideTimerChanged', handleHideTimerChanged);
+    }
+  }, []);
+
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (activeTimer && activeTimer.startTime) {
@@ -129,6 +145,8 @@ export function GlobalTimer() {
   // Which implies it only shows when active, or is a tiny circle when not active.
   // Let's make it always visible as a floating play button, or a compact bar.
   
+  if (hideTimer) return null;
+
   return (
     <div className="fixed bottom-10 right-10 z-[100] flex flex-col items-end gap-2">
       {activeTimer ? (

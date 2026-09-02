@@ -15,7 +15,7 @@ export function CTA() {
   const yContent = useTransform(scrollYProgress, [0, 1], [40, -40]);
 
   return (
-    <section ref={containerRef} className="relative py-32 md:py-48 bg-[var(--gs-bg-alt)] overflow-hidden flex flex-col items-center justify-center border-t border-[#1a1a1a]">
+    <section ref={containerRef} className="dark-section relative py-32 md:py-48 bg-[var(--gs-bg-alt)] overflow-hidden flex flex-col items-center justify-center border-t border-[#1a1a1a]">
       
       {/* Subtle radial gradient background for depth with parallax */}
       <motion.div 

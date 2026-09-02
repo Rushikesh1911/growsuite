@@ -1,0 +1,21 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const auth_1 = require("../middleware/auth");
+const workspaceAuth_1 = require("../middleware/workspaceAuth");
+const ProjectController_1 = require("../controllers/ProjectController");
+const router = (0, express_1.Router)();
+router.use(auth_1.requireAuth);
+router.use(workspaceAuth_1.requireWorkspaceAccess);
+router.get('/', ProjectController_1.ProjectController.getProjects);
+router.get('/:id', ProjectController_1.ProjectController.getProjectById);
+router.post('/', ProjectController_1.ProjectController.createProject);
+router.get('/:id/tasks', ProjectController_1.ProjectController.getProjectTasks);
+router.post('/:id/tasks', ProjectController_1.ProjectController.createTask);
+router.post('/:id/notes', ProjectController_1.ProjectController.addNote);
+router.put('/:id', ProjectController_1.ProjectController.updateProject);
+router.patch('/:id/archive', ProjectController_1.ProjectController.archiveProject);
+router.patch('/:id/unarchive', ProjectController_1.ProjectController.unarchiveProject);
+router.delete('/:id', ProjectController_1.ProjectController.deleteProject);
+exports.default = router;
+//# sourceMappingURL=projects.js.map

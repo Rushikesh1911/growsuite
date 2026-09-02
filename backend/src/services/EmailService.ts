@@ -39,7 +39,7 @@ export class EmailService {
                 <td style="padding: 40px;">
                   <div style="margin-bottom: 30px;">
                     <span style="font-size: 24px; font-weight: 800; color: #000000;">
-                      <span style="display: inline-block; width: 24px; height: 24px; background-color: #000000; color: #ffffff; text-align: center; line-height: 24px; border-radius: 6px; margin-right: 8px; font-size: 14px;">⬢</span>
+                      <span style="display: inline-block; width: 24px; height: 24px; background-color: #000000; color: #ffffff; text-align: center; line-height: 24px; border-radius: 6px; margin-right: 8px; font-size: 14px; font-weight: bold; font-family: sans-serif;">G</span>
                       GrowSuite
                     </span>
                   </div>
@@ -98,7 +98,7 @@ export class EmailService {
                   <!-- Logo / Brand -->
                   <div style="margin-bottom: 30px;">
                     <span style="font-size: 24px; font-weight: 800; letter-spacing: -0.5px; color: #000000;">
-                      <span style="display: inline-block; width: 24px; height: 24px; background-color: #000000; color: #ffffff; text-align: center; line-height: 24px; border-radius: 6px; margin-right: 8px; font-size: 14px;">⬢</span>
+                      <span style="display: inline-block; width: 24px; height: 24px; background-color: #000000; color: #ffffff; text-align: center; line-height: 24px; border-radius: 6px; margin-right: 8px; font-size: 14px; font-weight: bold; font-family: sans-serif;">G</span>
                       GrowSuite
                     </span>
                   </div>
@@ -296,7 +296,7 @@ export class EmailService {
                 <td style="padding: 40px;">
                   <div style="margin-bottom: 30px;">
                     <span style="font-size: 24px; font-weight: 800; color: #000000;">
-                      <span style="display: inline-block; width: 24px; height: 24px; background-color: #000000; color: #ffffff; text-align: center; line-height: 24px; border-radius: 6px; margin-right: 8px; font-size: 14px;">⬢</span>
+                      <span style="display: inline-block; width: 24px; height: 24px; background-color: #000000; color: #ffffff; text-align: center; line-height: 24px; border-radius: 6px; margin-right: 8px; font-size: 14px; font-weight: bold; font-family: sans-serif;">G</span>
                       GrowSuite
                     </span>
                   </div>

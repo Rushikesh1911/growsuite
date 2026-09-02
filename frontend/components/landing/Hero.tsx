@@ -116,9 +116,18 @@ export function Hero() {
 
       {/* Hand-Drawn Illustrations (Hidden on smaller screens) */}
       <motion.div
-        initial={{ opacity: 0, x: -30, rotate: -5 }}
-        animate={{ opacity: visible ? 1 : 0, x: visible ? 0 : -30, rotate: visible ? -2 : -5 }}
-        transition={{ delay: 0.4, duration: 1, ease: "easeOut" }}
+        initial={{ opacity: 0, x: -30, rotate: -5, y: 0 }}
+        animate={
+          visible
+            ? { opacity: 1, x: 0, rotate: -2, y: [0, -10, 0] }
+            : { opacity: 0, x: -30, rotate: -5, y: 0 }
+        }
+        transition={{
+          opacity: { delay: 0.4, duration: 1, ease: "easeOut" },
+          x: { delay: 0.4, duration: 1, ease: "easeOut" },
+          rotate: { delay: 0.4, duration: 1, ease: "easeOut" },
+          y: visible ? { delay: 1.4, duration: 5, repeat: Infinity, ease: "easeInOut" } : { duration: 0 },
+        }}
         className="absolute hidden xl:block z-0 pointer-events-none opacity-90"
         style={{ top: "15%", left: "8%", width: "190px" }}
       >
@@ -152,9 +161,18 @@ export function Hero() {
       </motion.div>
 
       <motion.div
-        initial={{ opacity: 0, x: 30, rotate: 8 }}
-        animate={{ opacity: visible ? 1 : 0, x: visible ? 0 : 30, rotate: visible ? 5 : 8 }}
-        transition={{ delay: 0.6, duration: 1, ease: "easeOut" }}
+        initial={{ opacity: 0, x: 30, rotate: 8, y: 0 }}
+        animate={
+          visible
+            ? { opacity: 1, x: 0, rotate: 5, y: [0, 8, 0] }
+            : { opacity: 0, x: 30, rotate: 8, y: 0 }
+        }
+        transition={{
+          opacity: { delay: 0.6, duration: 1, ease: "easeOut" },
+          x: { delay: 0.6, duration: 1, ease: "easeOut" },
+          rotate: { delay: 0.6, duration: 1, ease: "easeOut" },
+          y: visible ? { delay: 1.6, duration: 6, repeat: Infinity, ease: "easeInOut" } : { duration: 0 },
+        }}
         className="absolute hidden xl:block z-0 pointer-events-none opacity-[0.7]"
         style={{ top: "25%", right: "8%", width: "150px" }}
       >

@@ -19,6 +19,9 @@ import searchRoutes from './routes/search';
 import googleRoutes from './routes/google';
 import onboardingRoutes from './routes/onboarding';
 import timeEntryRoutes from './routes/timeEntry.routes';
+import customFieldsRoutes from './routes/customFields';
+import webToLeadRoutes from './routes/webToLead';
+import automationsRoutes from './routes/automations';
 import path from 'path';
 import { PrismaClient } from '../generated/prisma';
 import { SocketService } from './socket';
@@ -62,6 +65,9 @@ app.use('/api/search', searchRoutes);
 app.use('/api/google', googleRoutes);
 app.use('/api/onboarding', onboardingRoutes);
 app.use('/api/workspaces/:workspaceId/time-entries', timeEntryRoutes);
+app.use('/api/custom-fields', customFieldsRoutes);
+app.use('/api/web-to-lead', webToLeadRoutes);
+app.use('/api/automations', automationsRoutes);
 
 // Health check endpoint
 app.get('/health', async (req: Request, res: Response) => {

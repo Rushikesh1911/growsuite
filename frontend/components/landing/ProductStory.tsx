@@ -20,14 +20,14 @@ export function ProductStory() {
   // const ySlow = useTransform(scrollYProgress, [0, 1], [10, -10]);
 
   return (
-    <section ref={containerRef} className="relative w-full bg-black py-32 z-10 border-y border-[#222]" id="product">
+    <section ref={containerRef} className="dark-section relative w-full bg-black py-32 z-10 border-y border-[#222]" id="product">
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex flex-col items-center justify-center text-center mb-16">
           <h2 className="text-[36px] md:text-[48px] font-medium tracking-tight text-[#EDEDED] leading-[1.1] max-w-[600px]">
             One Workspace.<br/>
             <span className="text-[#888]">Every part of the client journey.</span>
           </h2>
-        </div>
+        </div>  
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[420px]">
         

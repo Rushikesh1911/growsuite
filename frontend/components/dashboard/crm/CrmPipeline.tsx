@@ -84,6 +84,18 @@ export function CrmPipeline({ token, workspaceId }: CrmPipelineProps) {
 
   // Selected Deal for Inspector
   const [selectedDealId, setSelectedDealId] = useState<number | null>(null);
+  
+  // Auto-select deal from query params (e.g. from notifications)
+  useEffect(() => {
+    const dealParam = searchParams?.get("deal");
+    if (dealParam && deals.length > 0 && !selectedDealId) {
+      const id = parseInt(dealParam, 10);
+      if (!isNaN(id) && deals.some(d => d.id === id)) {
+        setSelectedDealId(id);
+      }
+    }
+  }, [searchParams, deals, selectedDealId]);
+
   const selectedDeal = deals.find((d) => d.id === selectedDealId) || null;
 
   const { socket } = useSocket();
@@ -197,29 +209,23 @@ export function CrmPipeline({ token, workspaceId }: CrmPipelineProps) {
 
   const handleAddNote = async () => {
     if (!newNote.trim() || !selectedDealId) return;
-    
-    const deal = deals.find(d => d.id === selectedDealId);
-    if (!deal) return;
-    
-    const dateStr = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    const formattedNote = `[${dateStr}] ${newNote.trim()}`;
-    // Prepend new note to the top
-    const updatedNotes = deal.notes ? `${formattedNote}\n\n${deal.notes}` : formattedNote;
-    
     try {
-      const res = await fetch(`${API_URL}/api/deals/${selectedDealId}`, {
-        method: "PUT",
+      const res = await fetch(`${API_URL}/api/deals/${selectedDealId}/notes`, {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
           "x-workspace-id": workspaceId.toString(),
         },
-        body: JSON.stringify({ notes: updatedNotes }),
+        body: JSON.stringify({ content: newNote.trim() }),
       });
+
       if (res.ok) {
         const updated = await res.json();
         setDeals(deals.map(d => d.id === selectedDealId ? updated : d));
         setNewNote("");
+      } else {
+        console.error("Failed to add note");
       }
     } catch(err) {
       console.error("Failed to add note", err);

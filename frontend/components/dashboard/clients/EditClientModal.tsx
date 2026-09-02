@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { X } from "lucide-react";
+import { useDashboard } from "@/app/dashboard/DashboardContext";
+import { CustomFieldForm } from "../shared/CustomFieldsRenderer";
 
 interface EditClientModalProps {
   token: string;
@@ -19,9 +21,12 @@ export function EditClientModal({ token, workspaceId, client, onClose, onSuccess
     company: client.company || "",
     email: client.email || "",
     phone: client.phone || "",
-    billingAddress: client.billingAddress || ""
+    billingAddress: client.billingAddress || "",
+    customFields: client.customFields || {}
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { customFields } = useDashboard();
+  const clientFields = customFields.filter(f => f.entityType === 'CLIENT');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -121,6 +126,12 @@ export function EditClientModal({ token, workspaceId, client, onClose, onSuccess
                 className="w-full bg-[var(--gs-surface)] border border-[var(--gs-border)] rounded-[6px] px-3 py-2 text-[13px] text-[var(--gs-fg)] focus:outline-none focus:border-[var(--gs-border-strong)] resize-none h-20"
               />
             </div>
+
+            <CustomFieldForm
+              fields={clientFields}
+              values={formData.customFields}
+              onChange={(key, value) => setFormData(prev => ({ ...prev, customFields: { ...prev.customFields, [key]: value } }))}
+            />
 
           </div>
           

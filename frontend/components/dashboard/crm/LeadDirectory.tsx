@@ -13,6 +13,8 @@ import { WebToLeadModal } from "./WebToLeadModal";
 import { TableSkeleton, BoardSkeleton } from "@/components/ui/skeleton";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { useSocket } from "@/components/providers/SocketProvider";
+import { useDashboard } from "@/app/dashboard/DashboardContext";
+import { CustomFieldForm } from "../shared/CustomFieldsRenderer";
 
 interface Lead {
   id: number;
@@ -39,8 +41,11 @@ export function LeadDirectory({ token, workspaceId }: LeadDirectoryProps) {
   const [filterStatus, setFilterStatus] = useState<string | null>(null);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   
+  const { customFields } = useDashboard();
+  const leadFields = customFields.filter(f => f.entityType === 'LEAD');
+
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [newLead, setNewLead] = useState({ contactName: "", company: "", email: "", phone: "", source: "", notes: "" });
+  const [newLead, setNewLead] = useState({ contactName: "", company: "", email: "", phone: "", source: "", notes: "", customFields: {} as Record<string, any> });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [isWebToLeadModalOpen, setIsWebToLeadModalOpen] = useState(false);
@@ -146,7 +151,7 @@ export function LeadDirectory({ token, workspaceId }: LeadDirectoryProps) {
       
       if (res.ok) {
         setIsCreateModalOpen(false);
-        setNewLead({ contactName: "", company: "", email: "", phone: "", source: "", notes: "" });
+        setNewLead({ contactName: "", company: "", email: "", phone: "", source: "", notes: "", customFields: {} });
         fetchLeads();
         window.dispatchEvent(new Event("refreshData"));
         window.dispatchEvent(new CustomEvent('showToast', { detail: { message: "Lead added to directory", type: "success" } }));
@@ -707,6 +712,12 @@ export function LeadDirectory({ token, workspaceId }: LeadDirectoryProps) {
                   className="w-full bg-[var(--gs-surface)] border border-[var(--gs-border)] rounded-[6px] px-3 py-2 text-[13px] text-[var(--gs-fg)] focus:outline-none focus:border-[var(--gs-border-strong)] resize-none h-16"
                 />
               </div>
+
+              <CustomFieldForm
+                fields={leadFields}
+                values={newLead.customFields}
+                onChange={(key, value) => setNewLead(prev => ({ ...prev, customFields: { ...prev.customFields, [key]: value } }))}
+              />
 
               <div className="pt-4 mt-2 border-t border-[var(--gs-border)] flex justify-end gap-3">
                 <button

@@ -37,8 +37,15 @@ function SignInContent() {
       if (res.ok) {
         localStorage.setItem("growsuite_token", data.token);
         localStorage.setItem("growsuite_user", JSON.stringify(data.user));
-        if (redirect) {
-          router.push(redirect);
+        
+        const storedRedirect = localStorage.getItem("growsuite_redirect");
+        const finalRedirect = redirect || storedRedirect;
+        if (storedRedirect) {
+          localStorage.removeItem("growsuite_redirect");
+        }
+        
+        if (finalRedirect) {
+          router.push(finalRedirect);
         } else {
           router.push("/dashboard");
         }
@@ -65,7 +72,14 @@ function SignInContent() {
       if (res.ok) {
         localStorage.setItem("growsuite_token", data.token);
         localStorage.setItem("growsuite_user", JSON.stringify(data.user));
-        router.push(redirect || "/dashboard");
+        
+        const storedRedirect = localStorage.getItem("growsuite_redirect");
+        const finalRedirect = redirect || storedRedirect;
+        if (storedRedirect) {
+          localStorage.removeItem("growsuite_redirect");
+        }
+        
+        router.push(finalRedirect || "/dashboard");
       } else {
         setError(data.error || "Google login failed");
       }

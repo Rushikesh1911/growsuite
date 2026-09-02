@@ -6,6 +6,8 @@ import { Topbar } from "@/components/dashboard/Topbar";
 import { EventToast } from "@/components/ui/event-toast";
 import { MoreHorizontal } from "lucide-react";
 import { TaskManagement } from "@/components/dashboard/projects/TaskManagement";
+import { TimelineFeed } from "@/components/dashboard/crm/TimelineFeed";
+import { RichNoteEditor } from "@/components/dashboard/shared/RichNoteEditor";
 import { useDashboard } from "../../DashboardContext";
 import { formatCurrency } from "@/lib/currency";
 
@@ -36,6 +38,8 @@ interface ProjectType {
     createdAt: string;
     actor?: { name: string; email: string };
   }[];
+  projectNotes?: any[];
+  emails?: any[];
 }
 
 type Tab = "tasks" | "invoices" | "activity";
@@ -61,28 +65,29 @@ export default function ProjectProfilePage() {
 
   const projectId = params?.id as string;
 
-  useEffect(() => {
-    const fetchProject = async () => {
-      if (!projectId || !token || !workspaceId) return;
-      try {
-        const res = await fetch(`${API_URL}/api/projects/${projectId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "x-workspace-id": workspaceId.toString(),
-          },
-        });
-        if (res.ok) {
-          const data = await res.json();
-          setProject(data);
-        } else {
-          router.push("/dashboard/projects");
-        }
-      } catch (error) {
-        console.error("Failed to fetch project:", error);
-      } finally {
-        setLoading(false);
+  const fetchProject = async () => {
+    if (!projectId || !token || !workspaceId) return;
+    try {
+      const res = await fetch(`${API_URL}/api/projects/${projectId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "x-workspace-id": workspaceId.toString(),
+        },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setProject(data);
+      } else {
+        router.push("/dashboard/projects");
       }
-    };
+    } catch (error) {
+      console.error("Failed to fetch project:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchProject();
   }, [projectId, token, workspaceId, router]);
 
@@ -253,36 +258,19 @@ export default function ProjectProfilePage() {
             {activeTab === "activity" && (
               <div className="h-full overflow-y-auto custom-scrollbar p-8">
                 <div className="flex flex-col gap-4 max-w-2xl mx-auto">
-                  <h3 className="text-[14px] font-bold text-[var(--gs-fg)] tracking-tight">Event History</h3>
-                  
-                  {!project.activities || project.activities.length === 0 ? (
-                    <div className="py-12 flex flex-col items-center justify-center border border-dashed border-[var(--gs-border)] rounded-[8px] bg-[var(--gs-surface)]">
-                      <span className="text-[13px] font-medium text-[var(--gs-muted)]">No recent activity.</span>
-                    </div>
-                  ) : (
-                    <div className="flex flex-col gap-4 relative">
-                      <div className="absolute left-4 top-2 bottom-2 w-px bg-[var(--gs-border)]" />
-                      {project.activities.map((act) => (
-                        <div key={act.id} className="flex gap-4 relative z-10">
-                          <div className="w-8 h-8 rounded-full bg-[var(--gs-surface)] border-2 border-[var(--gs-border)] flex items-center justify-center shrink-0 mt-0.5 shadow-sm">
-                            <span className="text-[10px] font-bold text-[var(--gs-fg)]">
-                              {act.actor?.name?.[0]?.toUpperCase() || act.actor?.email?.[0]?.toUpperCase() || "A"}
-                            </span>
-                          </div>
-                          <div className="flex flex-col gap-1 pt-1.5 pb-3">
-                            <div className="flex items-center gap-2">
-                              <span className="text-[13px] font-bold text-[var(--gs-fg)]">{act.title}</span>
-                              <span className="text-[11px] font-mono text-[var(--gs-muted)]">• {new Date(act.createdAt).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}</span>
-                            </div>
-                            {act.description && (
-                              <p className="text-[13px] text-[var(--gs-muted)] leading-relaxed">{act.description}</p>
-                            )}
-                            <span className="text-[11px] font-bold text-[var(--gs-muted-light)] uppercase tracking-wider mt-1">{act.action.replace(/_/g, ' ')}</span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                  <TimelineFeed 
+                    token={token!}
+                    workspaceId={workspaceId!}
+                    entityType="projects"
+                    entityId={project.id}
+                    activities={project.activities}
+                    notes={project.projectNotes}
+                    emails={project.emails}
+                    onSuccess={() => {
+                      fetchProject();
+                      window.dispatchEvent(new Event("refreshData"));
+                    }}
+                  />
                 </div>
               </div>
             )}

@@ -5,6 +5,8 @@ import { X, MessageSquare, Activity, Clock, Send, DollarSign } from "lucide-reac
 import { formatDate } from "@/lib/formatters";
 import { Input } from "@/components/ui/input";
 import { TimelineFeed } from "@/components/dashboard/crm/TimelineFeed";
+import { useDashboard } from "@/app/dashboard/DashboardContext";
+import { CustomFieldForm } from "../shared/CustomFieldsRenderer";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
@@ -12,6 +14,8 @@ export function DealDrawer({ token, workspaceId, dealId, onClose, onSuccess }: a
   const [activeTab, setActiveTab] = useState<"details" | "activity">("details");
   const [deal, setDeal] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const { customFields } = useDashboard();
+  const dealFields = customFields.filter(f => f.entityType === 'DEAL');
 
   // Form State
   const [formData, setFormData] = useState({
@@ -23,6 +27,7 @@ export function DealDrawer({ token, workspaceId, dealId, onClose, onSuccess }: a
     contactName: "",
     contactEmail: "",
     contactPhone: "",
+    customFields: {} as Record<string, any>,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -49,6 +54,7 @@ export function DealDrawer({ token, workspaceId, dealId, onClose, onSuccess }: a
               contactName: currentDeal.contactName || "",
               contactEmail: currentDeal.contactEmail || "",
               contactPhone: currentDeal.contactPhone || "",
+              customFields: currentDeal.customFields || {},
             });
           }
         }
@@ -217,6 +223,12 @@ export function DealDrawer({ token, workspaceId, dealId, onClose, onSuccess }: a
                   />
                 </div>
               </div>
+
+              <CustomFieldForm
+                fields={dealFields}
+                values={formData.customFields}
+                onChange={(key, value) => setFormData(prev => ({ ...prev, customFields: { ...prev.customFields, [key]: value } }))}
+              />
 
               <div className="pt-4 border-t border-[var(--gs-border)] flex justify-end">
                 <button

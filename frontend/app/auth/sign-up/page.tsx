@@ -28,7 +28,10 @@ function SignUpContent() {
     if (defaultEmail) {
       setEmail(defaultEmail);
     }
-  }, [defaultEmail]);
+    if (redirect) {
+      localStorage.setItem("growsuite_redirect", redirect);
+    }
+  }, [defaultEmail, redirect]);
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();

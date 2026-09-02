@@ -5,6 +5,7 @@ import { DealService } from '../services/DealService';
 import { ActivityService } from '../services/ActivityService';
 import { NotificationService } from '../services/NotificationService';
 import { SocketService } from '../socket';
+import { AutomationEngine } from '../services/AutomationEngine';
 
 const prisma = new PrismaClient();
 
@@ -40,7 +41,7 @@ export class DealController {
     try {
       const workspaceId = req.workspaceId!;
       const actorId = req.user!.userId;
-      const { title, company, contactName, contactEmail, contactPhone, estimatedValue } = req.body;
+      const { title, company, contactName, contactEmail, contactPhone, estimatedValue, customFields } = req.body;
 
       if (!title || !company) {
         res.status(400).json({ error: 'Title and company are required' });
@@ -57,6 +58,7 @@ export class DealController {
             contactEmail,
             contactPhone,
             estimatedValue: estimatedValue || 0,
+            customFields,
             workspaceId,
           },
         });
@@ -94,7 +96,7 @@ export class DealController {
         stage, probability, expectedClose,
         title, company, estimatedValue,
         contactName, contactEmail, contactPhone,
-        notes, archivedAt
+        notes, archivedAt, customFields
       } = req.body;
 
       if (isNaN(dealId)) {
@@ -125,6 +127,7 @@ export class DealController {
       if (contactPhone !== undefined) updateData.contactPhone = contactPhone;
       if (notes !== undefined) updateData.notes = notes;
       if (archivedAt !== undefined) updateData.archivedAt = archivedAt ? new Date(archivedAt) : null;
+      if (customFields !== undefined) updateData.customFields = customFields;
 
       const deal = await prisma.deal.update({
         where: { id: dealId, workspaceId },
@@ -176,6 +179,11 @@ export class DealController {
         }
       }
 
+      // ─── AUTOMATION TRIGGER ───
+      if (stage && stage !== existingDeal.stage) {
+        AutomationEngine.executeWorkflow(workspaceId, 'DEAL_STAGE_CHANGED', { deal });
+      }
+
       SocketService.emitToWorkspace(workspaceId, 'deal_updated', deal);
 
       res.json(deal);
@@ -224,7 +232,8 @@ export class DealController {
 
       // Find the workspace member for the current user
       const member = await prisma.workspaceMember.findUnique({
-        where: { userId_workspaceId: { userId, workspaceId } }
+        where: { userId_workspaceId: { userId, workspaceId } },
+        include: { user: true }
       });
 
       if (!member) {
@@ -246,6 +255,17 @@ export class DealController {
         }
       });
 
+      // Parse mentions from content: @[Name](userId)
+      const mentionRegex = /@\[.*?\]\((.*?)\)/g;
+      const mentionedUserIds = new Set<number>();
+      let match;
+      while ((match = mentionRegex.exec(content)) !== null) {
+        const id = parseInt(match[1] as string, 10);
+        if (!isNaN(id) && id !== userId) {
+          mentionedUserIds.add(id);
+        }
+      }
+
       // Record Activity
       await ActivityService.logActivity({
         workspaceId,
@@ -266,7 +286,19 @@ export class DealController {
         }
       });
 
-      res.status(201).json(note);
+      // Send notifications
+      for (const mentionedId of Array.from(mentionedUserIds)) {
+        await NotificationService.create({
+          userId: mentionedId,
+          workspaceId,
+          type: 'MENTION',
+          title: 'You were mentioned',
+          body: `${member.user.name || member.user.email} mentioned you in a note on ${updatedDeal?.title || 'a deal'}.`,
+          link: `/dashboard/pipeline?deal=${dealId}&highlightNote=${note.id}`
+        });
+      }
+
+      res.status(201).json(updatedDeal); // Return the updated deal so the frontend updates immediately
       SocketService.emitToWorkspace(workspaceId, 'deal_updated', updatedDeal);
     } catch (error) {
       console.error('Error adding deal note:', error);

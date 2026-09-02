@@ -9,6 +9,9 @@ import { IntegrationsSettings } from "./IntegrationsSettings";
 import { ProfileSettings } from "./ProfileSettings";
 import { PreferencesSettings } from "./PreferencesSettings";
 import { SecuritySettings } from "./SecuritySettings";
+import { WebToLeadSettings } from "./WebToLeadSettings";
+import { AutomationsSettings } from "./automations/AutomationsSettings";
+import { Workflow } from "lucide-react";
 
 interface SettingsLayoutProps {
   token: string;
@@ -22,7 +25,9 @@ export type SettingsTab =
   | "integrations" 
   | "profile" 
   | "preferences" 
-  | "security";
+  | "security"
+  | "web-to-lead"
+  | "automations";
 
 export function SettingsLayout({ token, workspaceId }: SettingsLayoutProps) {
   const [activeTab, setActiveTab] = useState<SettingsTab>("general");
@@ -61,6 +66,8 @@ export function SettingsLayout({ token, workspaceId }: SettingsLayoutProps) {
             <NavItem id="team" label="Team Members" icon={Users} />
             <NavItem id="billing" label="Billing & Plans" icon={CreditCard} />
             <NavItem id="integrations" label="Integrations" icon={Puzzle} />
+            <NavItem id="web-to-lead" label="Web-to-Lead Forms" icon={Users} />
+            <NavItem id="automations" label="Automations" icon={Workflow} />
           </div>
 
           <div className="flex flex-col gap-1">
@@ -77,6 +84,8 @@ export function SettingsLayout({ token, workspaceId }: SettingsLayoutProps) {
         {activeTab === "team" && <TeamSettings token={token} workspaceId={workspaceId} />}
         {activeTab === "billing" && <BillingSettings token={token} workspaceId={workspaceId} />}
         {activeTab === "integrations" && <IntegrationsSettings token={token} workspaceId={workspaceId} />}
+        {activeTab === "web-to-lead" && <WebToLeadSettings token={token} workspaceId={workspaceId} />}
+        {activeTab === "automations" && <AutomationsSettings token={token} workspaceId={workspaceId} />}
         
         {activeTab === "profile" && <ProfileSettings token={token} />}
         {activeTab === "preferences" && <PreferencesSettings token={token} />}

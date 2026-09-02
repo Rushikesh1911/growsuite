@@ -13,7 +13,7 @@ export function CommandPalette() {
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState<{
-    leads: any[]; deals: any[]; clients: any[]; projects: any[]; tasks: any[];
+    leads: any[]; deals: any[]; clients: any[]; projects: any[]; tasks: any[]; invoices: any[];
   } | null>(null);
 
   const router = useRouter();
@@ -182,6 +182,29 @@ export function CommandPalette() {
                       {task.project?.name && (
                         <span className="text-[11px] text-[var(--gs-muted)] font-normal ml-4 shrink-0">
                           Project: {task.project.name}
+                        </span>
+                      )}
+                    </Command.Item>
+                  ))}
+                </Command.Group>
+              )}
+
+              {results.invoices.length > 0 && (
+                <Command.Group heading="Invoices" className={groupHeadingClass}>
+                  {results.invoices.map(invoice => (
+                    <Command.Item 
+                      key={`inv-${invoice.id}`}
+                      value={`invoice ${invoice.invoiceNumber} ${invoice.client?.name || ''}`}
+                      onSelect={() => runCommand(() => router.push(`/dashboard/invoices/${invoice.id}`))}
+                      className={itemClass}
+                    >
+                      <div className="flex items-center gap-3 overflow-hidden">
+                        <Receipt strokeWidth={1.5} className={`${iconClass} shrink-0`} />
+                        <span className="truncate">{invoice.invoiceNumber}</span>
+                      </div>
+                      {invoice.client?.name && (
+                        <span className="text-[11px] text-[var(--gs-muted)] font-normal ml-4 shrink-0">
+                          Client: {invoice.client.name}
                         </span>
                       )}
                     </Command.Item>

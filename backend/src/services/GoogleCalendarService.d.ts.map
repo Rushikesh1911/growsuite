@@ -1,0 +1,1 @@
+{"version":3,"file":"GoogleCalendarService.d.ts","sourceRoot":"","sources":["GoogleCalendarService.ts"],"names":[],"mappings":"AAKA,qBAAa,qBAAqB;IAEhC,OAAO,CAAC,MAAM,CAAC,eAAe;IA4B9B,OAAa,kBAAkB,CAAC,MAAM,EAAE,MAAM,EAAE,IAAI,EAAE,GAAG,iBAkDxD;IAED,OAAa,sBAAsB,CAAC,MAAM,EAAE,MAAM,EAAE,aAAa,EAAE,MAAM,iBAexE;CACF"}

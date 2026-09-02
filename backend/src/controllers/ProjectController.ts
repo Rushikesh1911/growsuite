@@ -4,6 +4,7 @@ import { AuthRequest } from '../middleware/auth';
 import { ActivityService } from '../services/ActivityService';
 import { SocketService } from '../socket';
 import { PrismaClient, ProjectStatus, TaskStatus } from '../../generated/prisma';
+import { NotificationService } from '../services/NotificationService';
 
 const prisma = new PrismaClient();
 
@@ -51,7 +52,11 @@ export class ProjectController {
             take: 20,
             include: { actor: { select: { name: true, email: true } } }
           },
-          tasks: { include: { attachments: true } }
+          tasks: { include: { attachments: true } },
+          projectNotes: {
+            orderBy: { createdAt: 'desc' },
+            include: { author: { include: { user: { select: { name: true, email: true } } } } }
+          }
         },
       });
 
@@ -350,6 +355,74 @@ export class ProjectController {
     } catch (error) {
       console.error('Error fetching project tasks:', error);
       res.status(500).json({ error: 'Failed to fetch project tasks' });
+    }
+  }
+
+  // Add a note to a project
+  static async addNote(req: AuthRequest, res: Response) {
+    try {
+      const workspaceId = req.workspaceId!;
+      const projectId = parseInt(req.params.id as string, 10);
+      const { content } = req.body;
+      const userId = req.user!.userId;
+
+      if (isNaN(projectId) || !content) {
+        res.status(400).json({ error: 'Invalid input' });
+        return;
+      }
+
+      // get member
+      const member = await prisma.workspaceMember.findUnique({
+        where: { userId_workspaceId: { userId, workspaceId } }
+      });
+
+      if (!member) {
+        res.status(403).json({ error: 'Not a member of this workspace' });
+        return;
+      }
+
+      const note = await prisma.projectNote.create({
+        data: {
+          content,
+          projectId,
+          workspaceId,
+          authorId: member.id
+        },
+        include: {
+          author: { include: { user: { select: { name: true, email: true } } } }
+        }
+      });
+
+      // Parse mentions from content: @[Name](userId)
+      const mentionRegex = /@\[.*?\]\((.*?)\)/g;
+      const mentionedUserIds = new Set<number>();
+      let match;
+      while ((match = mentionRegex.exec(content)) !== null) {
+        const id = parseInt(match[1] as string, 10);
+        if (!isNaN(id) && id !== userId) {
+          mentionedUserIds.add(id);
+        }
+      }
+
+      // Send notifications
+      const project = await prisma.project.findUnique({ where: { id: projectId }, select: { name: true } });
+      const memberUser = await prisma.user.findUnique({ where: { id: userId }, select: { name: true, email: true } });
+      
+      for (const mentionedId of Array.from(mentionedUserIds)) {
+        await NotificationService.create({
+          userId: mentionedId,
+          workspaceId,
+          type: 'MENTION',
+          title: 'You were mentioned',
+          body: `${memberUser?.name || memberUser?.email} mentioned you in a note on ${project?.name || 'a project'}.`,
+          link: `/dashboard/projects/${projectId}?highlightNote=${note.id}`
+        });
+      }
+
+      res.status(201).json(note);
+    } catch (error) {
+      console.error('Error adding project note:', error);
+      res.status(500).json({ error: 'Failed to add note' });
     }
   }
 }

@@ -4,6 +4,7 @@ import { AuthRequest } from '../middleware/auth';
 import { PrismaClient } from '../../generated/prisma';
 import { SocketService } from '../socket';
 import { ActivityService } from '../services/ActivityService';
+import { NotificationService } from '../services/NotificationService';
 
 const prisma = new PrismaClient();
 
@@ -84,7 +85,7 @@ export class ClientController {
   static async createClient(req: AuthRequest, res: Response) {
     try {
       const workspaceId = req.workspaceId!;
-      const { name, company, email, phone, billingAddress } = req.body;
+      const { name, company, email, phone, billingAddress, customFields } = req.body;
 
       if (!name || !company) {
         res.status(400).json({ error: 'Name and company are required' });
@@ -108,6 +109,7 @@ export class ClientController {
           email,
           phone,
           billingAddress,
+          customFields,
           workspaceId,
         },
       });
@@ -125,16 +127,24 @@ export class ClientController {
     try {
       const workspaceId = req.workspaceId!;
       const clientId = parseInt(req.params.id as string, 10);
-      const { name, company, email, phone, billingAddress } = req.body;
+      const { name, company, email, phone, billingAddress, customFields } = req.body;
 
       if (isNaN(clientId)) {
         res.status(400).json({ error: 'Invalid client ID' });
         return;
       }
 
+      const updateData: any = {};
+      if (name !== undefined) updateData.name = name;
+      if (company !== undefined) updateData.company = company;
+      if (email !== undefined) updateData.email = email;
+      if (phone !== undefined) updateData.phone = phone;
+      if (billingAddress !== undefined) updateData.billingAddress = billingAddress;
+      if (customFields !== undefined) updateData.customFields = customFields;
+
       const client = await prisma.client.update({
         where: { id: clientId, workspaceId },
-        data: { name, company, email, phone, billingAddress }
+        data: updateData
       });
 
       res.json(client);
@@ -229,6 +239,32 @@ export class ClientController {
           author: { include: { user: { select: { name: true, email: true } } } }
         }
       });
+
+      // Parse mentions from content: @[Name](userId)
+      const mentionRegex = /@\[.*?\]\((.*?)\)/g;
+      const mentionedUserIds = new Set<number>();
+      let match;
+      while ((match = mentionRegex.exec(content)) !== null) {
+        const id = parseInt(match[1] as string, 10);
+        if (!isNaN(id) && id !== userId) {
+          mentionedUserIds.add(id);
+        }
+      }
+
+      // Send notifications
+      const client = await prisma.client.findUnique({ where: { id: clientId }, select: { name: true } });
+      const memberUser = await prisma.user.findUnique({ where: { id: userId }, select: { name: true, email: true } });
+      
+      for (const mentionedId of Array.from(mentionedUserIds)) {
+        await NotificationService.create({
+          userId: mentionedId,
+          workspaceId,
+          type: 'MENTION',
+          title: 'You were mentioned',
+          body: `${memberUser?.name || memberUser?.email} mentioned you in a note on ${client?.name || 'a client'}.`,
+          link: `/dashboard/clients/${clientId}?highlightNote=${note.id}`
+        });
+      }
 
       res.status(201).json(note);
     } catch (error) {

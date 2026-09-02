@@ -25,6 +25,8 @@ export function PreferencesSettings({ token }: PreferencesSettingsProps) {
     projectChanges: true,
   });
 
+  const [hideTimer, setHideTimer] = useState(false);
+
   const [isSaving, setIsSaving] = useState(false);
 
   const fetchPreferences = useCallback(async () => {
@@ -50,6 +52,7 @@ export function PreferencesSettings({ token }: PreferencesSettingsProps) {
 
   useEffect(() => {
     fetchPreferences();
+    setHideTimer(localStorage.getItem('growsuite_hide_timer') === 'true');
   }, [fetchPreferences]);
 
   const handleSave = async () => {
@@ -84,6 +87,13 @@ export function PreferencesSettings({ token }: PreferencesSettingsProps) {
 
   const toggleNotification = (key: keyof typeof notifications) => {
     setNotifications(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const toggleTimer = () => {
+    const newVal = !hideTimer;
+    setHideTimer(newVal);
+    localStorage.setItem('growsuite_hide_timer', newVal ? 'true' : 'false');
+    window.dispatchEvent(new Event('hideTimerChanged'));
   };
 
   if (loading) return <FormSkeleton />;
@@ -128,6 +138,32 @@ export function PreferencesSettings({ token }: PreferencesSettingsProps) {
                 ]}
                 placeholder="Select format..."
               />
+            </div>
+          </div>
+        </div>
+
+        {/* UI Preferences */}
+        <div className="flex flex-col gap-5">
+          <h3 className="text-[14px] font-medium text-[var(--gs-fg)] border-b border-[#262626] pb-2">Interface</h3>
+          
+          <div className="flex flex-col gap-4">
+            <div className="flex items-start gap-4">
+              <button
+                type="button"
+                role="switch"
+                aria-checked={hideTimer}
+                onClick={toggleTimer}
+                className={`relative inline-flex h-5 w-10 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none outline-none mt-0.5 ${hideTimer ? 'bg-[var(--gs-fg)]' : 'bg-[#262626]'}`}
+              >
+                <span
+                  aria-hidden="true"
+                  className={`pointer-events-none inline-block h-4 w-4 transform rounded-full shadow ring-0 transition duration-200 ease-in-out ${hideTimer ? 'translate-x-5 bg-[#141414]' : 'translate-x-0 bg-white'}`}
+                />
+              </button>
+              <div className="flex flex-col">
+                <span className="text-[14px] font-medium text-[var(--gs-fg)]">Hide Floating Timer</span>
+                <span className="text-[13px] text-[var(--gs-muted)]">Hide the floating time tracker widget from the bottom right corner.</span>
+              </div>
             </div>
           </div>
         </div>

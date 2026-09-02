@@ -38,9 +38,26 @@ export function Navbar() {
   const navRef = useRef<HTMLElement>(null);
   let timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  const [isDarkSection, setIsDarkSection] = useState(false);
+
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 8);
+      
+      const darkSections = document.querySelectorAll('.dark-section');
+      let overDark = false;
+      darkSections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= 32 && rect.bottom >= 32) {
+          overDark = true;
+        }
+      });
+      setIsDarkSection(overDark);
+    };
+    
     window.addEventListener("scroll", onScroll, { passive: true });
+    // Check initially in case of reload on scrolled page
+    onScroll();
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
@@ -60,13 +77,15 @@ export function Navbar() {
       ref={navRef} 
       className={`fixed top-0 left-0 right-0 z-50 flex justify-center transition-all duration-300 border-b ${
         scrolled 
-          ? "bg-white/90 backdrop-blur-md border-[rgba(0,0,0,0.08)] shadow-[0_4px_24px_rgba(0,0,0,0.02)]" 
+          ? isDarkSection
+            ? "bg-[#0A0A0A]/90 backdrop-blur-md border-[#222] shadow-[0_4px_24px_rgba(0,0,0,0.2)] text-white"
+            : "bg-white/90 backdrop-blur-md border-[rgba(0,0,0,0.08)] shadow-[0_4px_24px_rgba(0,0,0,0.02)]" 
           : "bg-transparent border-transparent"
       }`}
     >
       <nav className="w-full max-w-7xl flex items-center justify-between px-6 h-[64px] mx-auto relative">
         <Link href="/" aria-label="GrowSuite home" className="flex-shrink-0 z-10">
-          <Logo />
+          <Logo theme={isDarkSection ? "dark" : "light"} />
         </Link>
 
         {/* Desktop Nav Links container tracking mouse leave */}
@@ -78,7 +97,9 @@ export function Navbar() {
           <button
             onMouseEnter={() => handleMouseEnter("Product")}
             className={`flex items-center gap-1.5 px-3 py-1.5 text-[13px] font-medium rounded-[8px] transition-colors duration-200 ${
-              activeDropdown === "Product" ? "bg-[#F7F7F7] text-[var(--gs-bg-alt)]" : "text-[#5A5A5A] hover:text-[var(--gs-bg-alt)]"
+              activeDropdown === "Product" 
+                ? isDarkSection ? "bg-white/10 text-white" : "bg-[#F7F7F7] text-[var(--gs-bg-alt)]" 
+                : isDarkSection ? "text-[#A3A3A3] hover:text-white" : "text-[#5A5A5A] hover:text-[var(--gs-bg-alt)]"
             }`}
           >
             Product
@@ -92,7 +113,9 @@ export function Navbar() {
                 key={item.label}
                 onMouseEnter={() => handleMouseEnter(item.label)}
                 className={`flex items-center gap-1.5 px-3 py-1.5 text-[13px] font-medium rounded-[8px] transition-colors duration-200 ${
-                  activeDropdown === item.label ? "bg-[#F7F7F7] text-[var(--gs-bg-alt)]" : "text-[#5A5A5A] hover:text-[var(--gs-bg-alt)]"
+                  activeDropdown === item.label 
+                    ? isDarkSection ? "bg-white/10 text-white" : "bg-[#F7F7F7] text-[var(--gs-bg-alt)]" 
+                    : isDarkSection ? "text-[#A3A3A3] hover:text-white" : "text-[#5A5A5A] hover:text-[var(--gs-bg-alt)]"
                 }`}
               >
                 {item.label}
@@ -103,7 +126,9 @@ export function Navbar() {
                 key={item.label}
                 href={item.href}
                 onMouseEnter={() => handleMouseEnter(item.label)} // Set active for tracking but no dropdown
-                className="flex items-center gap-1.5 px-3.5 py-2 text-[13px] font-medium text-[#5A5A5A] hover:text-[var(--gs-bg-alt)] rounded-full transition-colors duration-200"
+                className={`flex items-center gap-1.5 px-3 py-1.5 text-[13px] font-medium rounded-[8px] transition-colors duration-200 ${
+                  isDarkSection ? "text-[#A3A3A3] hover:text-white" : "text-[#5A5A5A] hover:text-[var(--gs-bg-alt)]"
+                }`}
               >
                 {item.label}
               </a>
@@ -214,13 +239,19 @@ export function Navbar() {
         <div className="flex items-center gap-3 shrink-0 z-10">
           <Link
             href="/auth/sign-in"
-            className="hidden sm:inline-flex text-[14px] font-medium text-[#5A5A5A] hover:text-[var(--gs-bg-alt)] transition-colors duration-200"
+            className={`hidden sm:inline-flex text-[14px] font-medium transition-colors duration-200 ${
+              isDarkSection ? "text-[#A3A3A3] hover:text-white" : "text-[#5A5A5A] hover:text-[var(--gs-bg-alt)]"
+            }`}
           >
             Log in
           </Link>
           <Link
             href="/auth/sign-up"
-            className="hidden sm:inline-flex items-center justify-center px-5 py-2.5 bg-[var(--gs-bg-alt)] hover:bg-[var(--gs-border)] text-white text-[13px] font-medium rounded-[8px] transition-all duration-200 shadow-sm hover:shadow-md hover:-translate-y-px"
+            className={`hidden sm:inline-flex items-center justify-center px-5 py-2.5 text-[13px] font-medium rounded-[8px] transition-all duration-200 shadow-sm hover:shadow-md hover:-translate-y-px ${
+              isDarkSection 
+                ? "bg-white text-black hover:bg-gray-100"
+                : "bg-[var(--gs-bg-alt)] hover:bg-[var(--gs-border)] text-white"
+            }`}
           >
             Get started
           </Link>

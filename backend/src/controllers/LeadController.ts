@@ -5,6 +5,7 @@ import { ActivityService } from '../services/ActivityService';
 import { EmailService } from '../services/EmailService';
 import { NotificationService } from '../services/NotificationService';
 import { SocketService } from '../socket';
+import { AutomationEngine } from '../services/AutomationEngine';
 
 const prisma = new PrismaClient();
 
@@ -75,7 +76,7 @@ export class LeadController {
     try {
       const workspaceId = req.workspaceId!;
       const actorId = req.user!.userId;
-      const { contactName, company, email, phone, source, notes, assigneeId } = req.body;
+      const { contactName, company, email, phone, source, notes, assigneeId, customFields } = req.body;
 
       if (!contactName) {
         res.status(400).json({ error: 'Contact Name is required' });
@@ -91,6 +92,7 @@ export class LeadController {
             phone,
             source,
             notes,
+            customFields,
             workspaceId,
             assigneeId: assigneeId ? parseInt(assigneeId, 10) : null,
           },
@@ -202,7 +204,7 @@ export class LeadController {
       const workspaceId = req.workspaceId!;
       const actorId = req.user!.userId;
       const leadId = parseInt(req.params.id as string, 10);
-      const { contactName, company, email, phone, source, status, notes, archivedAt, assigneeId } = req.body;
+      const { contactName, company, email, phone, source, status, notes, archivedAt, assigneeId, customFields } = req.body;
 
       if (isNaN(leadId)) {
         res.status(400).json({ error: 'Invalid Lead ID' });
@@ -225,6 +227,7 @@ export class LeadController {
       if (notes !== undefined) updateData.notes = notes;
       if (archivedAt !== undefined) updateData.archivedAt = archivedAt ? new Date(archivedAt) : null;
       if (assigneeId !== undefined) updateData.assigneeId = assigneeId ? parseInt(assigneeId, 10) : null;
+      if (customFields !== undefined) updateData.customFields = customFields;
 
       const lead = await prisma.lead.update({
         where: { id: leadId, workspaceId },
@@ -260,6 +263,11 @@ export class LeadController {
             link: `/dashboard/leads/${lead.id}`
           });
         }
+      }
+
+      // ─── AUTOMATION TRIGGER ───
+      if (status !== undefined && status !== existingLead.status) {
+        AutomationEngine.executeWorkflow(workspaceId, 'LEAD_STATUS_CHANGED', { lead });
       }
 
       SocketService.emitToWorkspace(workspaceId, 'lead_updated', lead);

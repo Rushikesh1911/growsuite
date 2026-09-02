@@ -54,7 +54,8 @@ export function Sidebar({ currentView, setView }: SidebarProps) {
     const token = localStorage.getItem("growsuite_token");
     if (token) {
       fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/auth/me`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
+        cache: 'no-store'
       })
       .then(res => res.json())
       .then(data => {

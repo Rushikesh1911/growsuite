@@ -71,7 +71,6 @@ router.patch('/me', requireAuth, async (req: AuthRequest, res: Response): Promis
         timezone: true,
         dateFormat: true,
         notificationPreferences: true,
-        notificationPreferences: true,
         phone: true,
         hourlyRate: true
       }

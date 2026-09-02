@@ -13,6 +13,7 @@ router.get('/:id', ProjectController.getProjectById);
 router.post('/', ProjectController.createProject);
 router.get('/:id/tasks', ProjectController.getProjectTasks);
 router.post('/:id/tasks', ProjectController.createTask);
+router.post('/:id/notes', ProjectController.addNote);
 router.put('/:id', ProjectController.updateProject);
 router.patch('/:id/archive', ProjectController.archiveProject);
 router.patch('/:id/unarchive', ProjectController.unarchiveProject);

@@ -10,6 +10,7 @@ import { EditClientModal } from "@/components/dashboard/clients/EditClientModal"
 import { Topbar } from "@/components/dashboard/Topbar";
 import { EventToast } from "@/components/ui/event-toast";
 import { TimelineFeed } from "@/components/dashboard/crm/TimelineFeed";
+import { RichNoteEditor } from "@/components/dashboard/shared/RichNoteEditor";
 import { useDashboard } from "../../DashboardContext";
 import { formatCurrency } from "@/lib/currency";
 
@@ -57,9 +58,6 @@ export default function ClientProfilePage() {
   const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isActionMenuOpen, setIsActionMenuOpen] = useState(false);
-  
-  const [newNote, setNewNote] = useState("");
-  const [isSubmittingNote, setIsSubmittingNote] = useState(false);
   
   const actionMenuRef = useRef<HTMLDivElement>(null);
 
@@ -114,32 +112,6 @@ export default function ClientProfilePage() {
       }
     } catch (err) {
       console.error(err);
-    }
-  };
-
-  const handleAddNote = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newNote.trim()) return;
-    setIsSubmittingNote(true);
-    try {
-      const res = await fetch(`${API_URL}/api/clients/${clientId}/notes`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-          "x-workspace-id": workspaceId.toString(),
-        },
-        body: JSON.stringify({ content: newNote }),
-      });
-      if (res.ok) {
-        setNewNote("");
-        fetchClient();
-        window.dispatchEvent(new CustomEvent('showToast', { detail: { message: "Note added", type: "success" } }));
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsSubmittingNote(false);
     }
   };
 
@@ -525,8 +497,8 @@ export default function ClientProfilePage() {
             )}
 
             {activeTab === "activity" && (
-              <div className="py-6 flex flex-col items-start h-full max-w-[800px]">
-                <div className="w-full">
+              <div className="py-6 flex flex-col items-start h-full max-w-[800px] w-full mx-auto">
+                <div className="w-full flex flex-col gap-4">
                   <TimelineFeed 
                     token={token!}
                     workspaceId={workspaceId!}
